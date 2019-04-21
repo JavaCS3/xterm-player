@@ -1,17 +1,22 @@
 import 'xterm/src/xterm.css'
-import { Terminal } from 'xterm'
+import { Terminal, RendererType } from 'xterm'
 import { ICastObject, ICastHeader, ICastEvent } from './parser'
+import { findEvents } from './utils'
 
 export interface IPlayerOptions {
     rows?: number
     cols?: number,
     cast: ICastObject
     el: HTMLElement
+    cursorBlink?: boolean
+    rendererType?: RendererType
 }
 
 const DEFAULT_OPTIONS = {
     rows: 38,
-    cols: 130
+    cols: 130,
+    cursorBlink: true,
+    rendererType: 'canvas'
 }
 
 export class Player {
@@ -21,7 +26,7 @@ export class Player {
     private castEvents: ICastEvent[]
     private term: Terminal
 
-    private currenEventIndex: number = 0
+    private currenEventIndex: number = -1
     private timestampBeginSec: number = 0.0
 
     constructor(options: IPlayerOptions) {
@@ -54,11 +59,14 @@ export class Player {
             }
         }
 
-        if (this.currenEventIndex < this.castEvents.length) {
-            const e = this.castEvents[this.currenEventIndex++]
+        const pastEvents = findEvents(this.castEvents, durationSec, this.currenEventIndex)
 
+        pastEvents.forEach((e) => {
             this.term.write(e.data)
+            this.currenEventIndex++
+        })
 
+        if (this.currenEventIndex < this.castEvents.length) {
             requestAnimationFrame(this.tick.bind(this))
         }
     }
