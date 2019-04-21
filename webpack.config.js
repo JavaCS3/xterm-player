@@ -1,8 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TSLintPlugin = require('tslint-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: './src/main.ts',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
@@ -40,6 +41,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Demo',
       template: 'index.html'
+    }),
+    new TSLintPlugin({
+      files: ['./src/**/*.ts'],
+      config: path.resolve(__dirname, './tslint.json')
     })
   ]
 };
