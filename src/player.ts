@@ -13,8 +13,8 @@ export interface IPlayerOptions {
 }
 
 const DEFAULT_OPTIONS = {
-    rows: 38,
-    cols: 130,
+    rows: 24,
+    cols: 80,
     cursorBlink: true,
     rendererType: 'canvas'
 }
@@ -32,12 +32,17 @@ export class Player {
     constructor(options: IPlayerOptions) {
         this.options = Object.assign(DEFAULT_OPTIONS, options)
 
-        this.term = new Terminal(this.options)
-        this.term.open(this.options.el)
-
         this.cast = this.options.cast
         this.castHeader = this.cast.header
         this.castEvents = this.cast.events
+
+        this.options = Object.assign(this.options, {
+            rows: this.castHeader.height,
+            cols: this.castHeader.width
+        })
+
+        this.term = new Terminal(this.options)
+        this.term.open(this.options.el)
     }
 
     public play(): void {
@@ -58,6 +63,8 @@ export class Player {
                 this.timestampBeginSec = nowMs / 1000
             }
         }
+
+        durationSec *= 3
 
         const pastEvents = findEvents(this.castEvents, durationSec, this.currenEventIndex)
 
