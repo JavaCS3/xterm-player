@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
     "dev": "webpack-dev-server --open",
     "build": "webpack -p --mode production"
   },

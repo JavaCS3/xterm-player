@@ -1,62 +1,27 @@
 import 'xterm/src/xterm.css'
 import axios from 'axios'
-import { Terminal } from 'xterm'
+import { Player } from './player'
+import { AsciinemaCastV2Parser } from './parser'
 import cast from './demo.cast'
 
-interface IEvent {
-  ts: number
-  type: string
-  data: string
-}
-
-const term = new Terminal({
-  rendererType: 'canvas',
-  cols: 130,
-  rows: 38
-})
-
-const div = document.getElementById('terminal')
-
-if (div) {
-  term.open(div)
-}
 
 axios
   .get<string>(cast)
   .then(res => {
-    const lines: string[] = res.data.split('\n')
-    const events: IEvent[] = lines.map((line, index) => {
-      if (index !== 0 && line) {
-        const json = JSON.parse(line)
-        return {
-          ts: json[0],
-          type: json[1],
-          data: json[2]
-        }
-      } else {
-        return {
-          ts: 0.0,
-          type: 's',
-          data: ''
-        }
-      }
-    })
-    events.shift()
+    const parser = new AsciinemaCastV2Parser()
+    const castObject = parser.parse(res.data)
 
-    let i = 0
+    const div = document.getElementById('terminal')
 
-    // for (let i = 0 i < events.length / 2 i++) {
-    //   const e = events[i]
-    //   term.write(e.data)
-    // }
-    function animate() {
-      if (i < events.length) {
-        const e = events[i]
-        term.write(e.data)
-        i++
-        requestAnimationFrame(animate)
-      }
+    if (!div) {
+      return
     }
-    animate()
+
+    const player = new Player({
+      cast: castObject,
+      el: div
+    })
+
+    player.play()
   })
   .catch(console.error)
