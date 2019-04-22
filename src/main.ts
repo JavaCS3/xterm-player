@@ -2,7 +2,7 @@ import 'xterm/src/xterm.css'
 import axios from 'axios'
 import { Player } from './player'
 import { AsciinemaCastV2Parser } from './parser'
-import cast from './demo.cast'
+import cast from './232377.cast'
 
 
 axios
