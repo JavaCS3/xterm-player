@@ -31,6 +31,11 @@ export class Timer {
     }
   }
 
+  public reset(): void {
+    this.previousMs = 0.0
+    this.currentMs = 0.0
+  }
+
   public deltaMs(): number {
     return this.currentMs - this.previousMs
   }
