@@ -26,7 +26,7 @@ export class Player {
     private castEvents: ICastEvent[]
     private term: Terminal
 
-    private currenEventIndex: number = -1
+    private currenEventIndex: number = 0
     private timestampBeginSec: number = 0.0
 
     constructor(options: IPlayerOptions) {
