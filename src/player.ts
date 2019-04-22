@@ -1,6 +1,6 @@
 import 'xterm/src/xterm.css'
 import { Terminal, RendererType } from 'xterm'
-import { ICastObject, ICastHeader, ICastEvent } from './structs'
+import { ICastObject, ICastHeader, ICastEvent, Timer } from './structs'
 import { findEvents } from './helper'
 
 export interface IPlayerOptions {
@@ -27,7 +27,8 @@ export class Player {
   private term: Terminal
 
   private nextEventIndex: number = 0
-  private timestampBeginMs: number = 0.0
+  private duration: number = 0.0
+  private timer: Timer = new Timer()
 
   constructor(options: IPlayerOptions) {
     this.options = Object.assign(DEFAULT_OPTIONS, options)
@@ -53,18 +54,12 @@ export class Player {
     console.log()
   }
 
-  private tick(nowMs?: number): void {
-    let durationMs = 0.0
+  private tick(nowMs: number = -1): void {
+    this.timer.tick(nowMs)
 
-    if (nowMs) {
-      if (this.timestampBeginMs) {
-        durationMs = nowMs - this.timestampBeginMs
-      } else {
-        this.timestampBeginMs = nowMs
-      }
-    }
+    this.duration += this.timer.deltaSec()
 
-    const pastEvents = findEvents(this.castEvents, durationMs / 1000, this.nextEventIndex)
+    const pastEvents = findEvents(this.castEvents, this.duration, this.nextEventIndex)
 
     pastEvents.forEach((e) => {
       this.term.write(e.data)
