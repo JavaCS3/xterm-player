@@ -26,8 +26,8 @@ export class Player {
     private castEvents: ICastEvent[]
     private term: Terminal
 
-    private currenEventIndex: number = 0
-    private timestampBeginSec: number = 0.0
+    private nextEventIndex: number = 0
+    private timestampBeginMs: number = 0.0
 
     constructor(options: IPlayerOptions) {
         this.options = Object.assign(DEFAULT_OPTIONS, options)
@@ -54,26 +54,24 @@ export class Player {
     }
 
     private tick(nowMs?: number): void {
-        let durationSec = 0.0
+        let durationMs = 0.0
 
         if (nowMs) {
-            if (this.timestampBeginSec) {
-                durationSec = nowMs / 1000 - this.timestampBeginSec
+            if (this.timestampBeginMs) {
+                durationMs = nowMs - this.timestampBeginMs
             } else {
-                this.timestampBeginSec = nowMs / 1000
+                this.timestampBeginMs = nowMs
             }
         }
 
-        durationSec *= 3
-
-        const pastEvents = findEvents(this.castEvents, durationSec, this.currenEventIndex)
+        const pastEvents = findEvents(this.castEvents, durationMs / 1000, this.nextEventIndex)
 
         pastEvents.forEach((e) => {
             this.term.write(e.data)
-            this.currenEventIndex++
+            this.nextEventIndex++
         })
 
-        if (this.currenEventIndex < this.castEvents.length) {
+        if (this.nextEventIndex < this.castEvents.length) {
             requestAnimationFrame(this.tick.bind(this))
         }
     }
