@@ -1,4 +1,4 @@
-import { AsciinemaCastV2Parser } from './parser'
+import { AsciinemaCastV2Parser } from '../parser'
 
 const CAST = `
 {"version": 2, "width": 130, "height": 38, "timestamp": 1555641211, "env": {"SHELL": "/usr/local/bin/fish", "TERM": "xterm-256color"}}
