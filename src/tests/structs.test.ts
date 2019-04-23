@@ -6,12 +6,12 @@ test('test no tick delta time', () => {
   expect(timer.deltaMs()).toBe(0)
 })
 
-test('test 1 tick delta time', () => {
+test('test timer is not fully initialized', () => {
   const timer = new Timer()
 
   timer.tick(1)
 
-  expect(timer.deltaMs()).toBe(1)
+  expect(timer.deltaMs()).toBe(0)
 })
 
 test('test tick negative timestamp', () => {
@@ -27,8 +27,8 @@ test('test 1 tick with TimeUnit', () => {
 
   timer.tick(1, TimeUnit.Sec)
 
-  expect(timer.deltaMs()).toBe(1000)
-  expect(timer.deltaSec()).toBe(1)
+  expect(timer.deltaMs()).toBe(0)
+  expect(timer.deltaSec()).toBe(0)
 
   timer.tick(1001, TimeUnit.Ms)
 

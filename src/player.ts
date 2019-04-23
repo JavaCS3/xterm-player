@@ -1,6 +1,7 @@
 import 'xterm/src/xterm.css'
 import { Terminal, RendererType } from 'xterm'
 import { ICastObject, ICastHeader, ICastEvent, Timer } from './structs'
+import { State, AnimationLoop } from './AnimationLoop'
 import { findEvents } from './helper'
 
 export interface IPlayerOptions {
@@ -28,7 +29,7 @@ export class Player {
 
   private nextEventIndex: number = 0
   private duration: number = 0.0
-  private timer: Timer = new Timer()
+  private loop: AnimationLoop = new AnimationLoop(this.update.bind(this))
 
   constructor(options: IPlayerOptions) {
     this.options = Object.assign(DEFAULT_OPTIONS, options)
@@ -44,20 +45,28 @@ export class Player {
 
     this.term = new Terminal(this.options)
     this.term.open(this.options.el)
+
+    this.term.on('key', (e) => {
+      if (e === ' ') {
+        if (this.loop.getState() === State.Playing) {
+          this.pause()
+        } else {
+          this.play()
+        }
+      }
+    })
   }
 
   public play(): void {
-    this.tick()
+    this.loop.play()
   }
 
   public pause(): void {
-    console.log()
+    this.loop.pause()
   }
 
-  private tick(nowMs: number = -1): void {
-    this.timer.tick(nowMs)
-
-    this.duration += this.timer.deltaSec()
+  private update(loop: AnimationLoop): void {
+    this.duration += loop.timeDeltaSec()
 
     const pastEvents = findEvents(this.castEvents, this.duration, this.nextEventIndex)
 
@@ -66,8 +75,8 @@ export class Player {
       this.nextEventIndex++
     })
 
-    if (this.nextEventIndex < this.castEvents.length) {
-      requestAnimationFrame(this.tick.bind(this))
+    if (this.nextEventIndex >= this.castEvents.length) {
+      loop.stop()
     }
   }
 }
