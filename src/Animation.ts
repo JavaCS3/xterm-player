@@ -6,9 +6,9 @@ export const enum State {
   Stopped
 }
 
-export type IAnimationUpdateCallback = (loop: AnimationLoop) => void
+export type IAnimationUpdateCallback = (loop: Animation) => void
 
-export class AnimationLoop {
+export class Animation {
   private state: State = State.Stopped
   private timer: Timer = new Timer()
   private rafId: number = -1
