@@ -1,15 +1,15 @@
 import 'xterm/src/xterm.css'
 import axios from 'axios'
 import { Player } from './player'
-import { AsciinemaCastV2Parser } from './parser'
-import cast from './assets/232377.cast'
+import { AsciinemaCastParser } from './parser'
+import cast from './assets/1.cast'
 
 
 axios
-  .get<string>(cast)
+  .get<string>(cast, { transformResponse: undefined })
   .then(res => {
-    const parser = new AsciinemaCastV2Parser()
-    const castObject = parser.parse(res.data)
+    const parser = new AsciinemaCastParser()
+    const castObject = parser.parse(res.data as string)
 
     const div = document.getElementById('terminal')
 
