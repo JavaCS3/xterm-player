@@ -6,7 +6,7 @@ export const enum State {
   Stopped
 }
 
-export type IAnimationUpdateCallback = (loop: Animation) => void
+export type IAnimationUpdateCallback = (animation: Animation) => void
 
 export class Animation {
   private state: State = State.Stopped

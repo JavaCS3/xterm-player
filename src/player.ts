@@ -29,7 +29,7 @@ export class Player {
 
   private nextEventIndex: number = 0
   private duration: number = 0.0
-  private loop: Animation = new Animation(this.update.bind(this))
+  private animation: Animation = new Animation(this.update.bind(this))
 
   constructor(options: IPlayerOptions) {
     this.options = Object.assign(DEFAULT_OPTIONS, options)
@@ -48,7 +48,7 @@ export class Player {
 
     this.term.on('key', (e) => {
       if (e === ' ') {
-        if (this.loop.getState() === State.Playing) {
+        if (this.animation.getState() === State.Playing) {
           this.pause()
         } else {
           this.play()
@@ -58,15 +58,15 @@ export class Player {
   }
 
   public play(): void {
-    this.loop.play()
+    this.animation.play()
   }
 
   public pause(): void {
-    this.loop.pause()
+    this.animation.pause()
   }
 
-  private update(loop: Animation): void {
-    this.duration += loop.timeDeltaSec()
+  private update(animation: Animation): void {
+    this.duration += animation.timeDeltaSec()
 
     const pastEvents = findEvents(this.castEvents, this.duration, this.nextEventIndex)
 
@@ -76,7 +76,7 @@ export class Player {
     })
 
     if (this.nextEventIndex >= this.castEvents.length) {
-      loop.stop()
+      animation.stop()
     }
   }
 }
