@@ -28,6 +28,7 @@ export class AnimationLoop {
   }
 
   public play(): void {
+    this.timer.tick(performance.now())  // TODO: Use polyfill later
     this.rafId = requestAnimationFrame(this.tick.bind(this))
   }
 
