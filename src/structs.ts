@@ -21,23 +21,27 @@ export const enum TimeUnit {
 }
 
 export class Timer {
-  private previousMs: number = -1.0
-  private currentMs: number = -1.0
+  private previousMs: number = 0
+  private currentMs: number = 0
 
   public tick(time: number, unit: TimeUnit = TimeUnit.Ms): void {
-    if (time < 0) { return }
+    time = time * unit
 
-    if (this.previousMs < 0) {
-      this.previousMs = this.currentMs = time * unit
-    } else {
+    if (time < this.previousMs) {
+      throw Error('Time can not earlier than previous time')
+    }
+
+    if (this.previousMs) {
       this.previousMs = this.currentMs
-      this.currentMs = time * unit
+      this.currentMs = time
+    } else {
+      this.previousMs = this.currentMs = time
     }
   }
 
   public reset(): void {
-    this.previousMs = -1.0
-    this.currentMs = -1.0
+    this.previousMs = 0
+    this.currentMs = 0
   }
 
   /**

@@ -17,9 +17,9 @@ test('test timer is not fully initialized', () => {
 test('test tick negative timestamp', () => {
   const timer = new Timer()
 
-  timer.tick(-1)
-
-  expect(timer.deltaMs()).toBe(0)
+  expect(() => {
+    timer.tick(-1)
+  }).toThrowError('Time can not earlier than previous time')
 })
 
 test('test 1 tick with TimeUnit', () => {
