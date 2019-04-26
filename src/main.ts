@@ -22,6 +22,5 @@ axios
       el: div
     })
 
-    player.play()
   })
   .catch(console.error)
