@@ -13,7 +13,7 @@ $ npm run build
 
 ## Goals
 
-1. Support orginal asciinema [v2](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md) format and features
+1. Support orginal asciinema [v1](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v1.md), [v2](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md) format and features
 2. Support Vue/React/Angular
 3. Support Audio
 4. May Support Record Editing
