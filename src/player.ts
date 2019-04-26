@@ -1,6 +1,6 @@
 import 'xterm/src/xterm.css'
 import { Terminal, RendererType } from 'xterm'
-import { ICastObject, ICastHeader, ICastEvent, Timer } from './structs'
+import { ICastObject, ICastHeader, ICastEvent } from './structs'
 import { State, Animation } from './Animation'
 import { findEvents } from './helper'
 
@@ -28,7 +28,7 @@ export class Player {
   private term: Terminal
 
   private nextEventIndex: number = 0
-  private duration: number = 0.0
+  private currentTimeSec: number = 0.0
   private animation: Animation = new Animation(this.update.bind(this))
 
   constructor(options: IPlayerOptions) {
@@ -66,9 +66,9 @@ export class Player {
   }
 
   private update(animation: Animation): void {
-    this.duration += animation.timeDeltaSec()
+    this.currentTimeSec += animation.timeDeltaSec()
 
-    const pastEvents = findEvents(this.castEvents, this.duration, this.nextEventIndex)
+    const pastEvents = findEvents(this.castEvents, this.currentTimeSec, this.nextEventIndex)
 
     pastEvents.forEach((e) => {
       this.term.write(e.data)
