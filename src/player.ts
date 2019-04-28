@@ -70,10 +70,14 @@ export class Player {
 
     const pastEvents = findEvents(this.castEvents, this.currentTimeSec, this.nextEventIndex)
 
+    let data = ''
+
     pastEvents.forEach((e) => {
-      this.term.write(e.data)
+      data += e.data
       this.nextEventIndex++
     })
+
+    this.term.write(data)
 
     if (this.nextEventIndex >= this.castEvents.length) {
       animation.stop()
