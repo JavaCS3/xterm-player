@@ -38,7 +38,8 @@ export class AsciinemaCastV1Parser implements IParser {
       'header': {
         version: 1,
         width: json.width,
-        height: json.height
+        height: json.height,
+        duration: json.duration
       },
       'events': events
     }
@@ -58,7 +59,7 @@ export class AsciinemaCastV2Parser implements IParser {
       const header = JSON.parse(lines[0])
       const events = lines.slice(1)
 
-      return {
+      const cast: ICastObject = {
         'header': header,
         'events': events.map(e => {
           const json = JSON.parse(e)
@@ -69,6 +70,10 @@ export class AsciinemaCastV2Parser implements IParser {
           }
         })
       }
+
+      cast.header.duration = cast.events[cast.events.length - 1].time
+
+      return cast
     } else {
       throw new Error('Invalid cast format')
     }

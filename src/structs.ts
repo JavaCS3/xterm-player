@@ -1,7 +1,8 @@
 export interface ICastHeader {
   version: number
   width: number
-  height: number
+  height: number,
+  duration: number
 }
 
 export interface ICastEvent {

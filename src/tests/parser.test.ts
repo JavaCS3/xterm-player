@@ -33,6 +33,7 @@ test('test AsciinemaCastV2Parser', () => {
   expect(co.header.width).toBe(130)
   expect(co.header.height).toBe(38)
   expect(co.header.version).toBe(2)
+  expect(co.header.duration).toBe(2)
 
   expect(co.events).toEqual([
     { time: 0, type: 'o', data: 'A' },
@@ -48,6 +49,7 @@ test('test AsciinemaCastV1Parser', () => {
   expect(co.header.width).toBe(80)
   expect(co.header.height).toBe(24)
   expect(co.header.version).toBe(1)
+  expect(co.header.duration).toBe(1.515658)
 
   expect(co.events).toEqual([
     { time: 1, type: 'o', data: 'Hello' },
