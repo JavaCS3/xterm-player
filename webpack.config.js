@@ -1,6 +1,6 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TSLintPlugin = require('tslint-webpack-plugin');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const TSLintPlugin = require('tslint-webpack-plugin')
 
 module.exports = {
   entry: './src/main.ts',
@@ -21,7 +21,10 @@ module.exports = {
       {
         test: /\.(ts|tsx)?$/,
         loader: 'ts-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        options: {
+          configFile: path.resolve(__dirname, 'tsconfig-dev.json')
+        }
       },
       {
         test: /\.(cast)$/,
@@ -41,10 +44,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Demo',
       template: 'index.html'
-    }),
-    new TSLintPlugin({
-      files: ['./src/**/*.ts'],
-      config: path.resolve(__dirname, './tslint.json')
     })
+    // new TSLintPlugin({
+    //   files: ['./src/**/*.ts'],
+    //   config: path.resolve(__dirname, './tslint.json')
+    // })
   ]
-};
+}

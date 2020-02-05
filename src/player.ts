@@ -1,5 +1,6 @@
-import 'xterm/src/xterm.css'
-import { Terminal, RendererType } from 'xterm'
+import 'xterm/css/xterm.css'
+import * as StateAddon from './StateAddon'
+import { Terminal, RendererType, IBuffer } from 'xterm'
 import { ICastObject, ICastHeader, ICastEvent } from './structs'
 import { State, Animation } from './Animation'
 import { findEvents } from './helper'
@@ -17,6 +18,7 @@ const DEFAULT_OPTIONS = {
   rows: 24,
   cols: 80,
   cursorBlink: true,
+  debug: true,
   rendererType: 'canvas'
 }
 
@@ -44,17 +46,28 @@ export class Player {
     })
 
     this.term = new Terminal(this.options)
+    console.log(this.term)
     this.term.open(this.options.el)
+    this.play()
 
-    this.term.on('key', (e) => {
-      if (e === ' ') {
-        if (this.animation.getState() === State.Playing) {
-          this.pause()
-        } else {
-          this.play()
-        }
-      }
-    })
+    // this.term.on('key', (e) => {
+    //   if (e === ' ') {
+    //     if (this.animation.getState() === State.Playing) {
+    //       this.pause()
+    //     } else {
+    //       this.play()
+    //     }
+    //   }
+
+    //   if (e === 's') {
+    //     (this.term as any).saveState()
+    //   }
+
+    //   if (e === 'r') {
+    //     (this.term as any).restoreState()
+    //   }
+
+    // })
   }
 
   public play(): void {

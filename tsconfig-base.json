@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "outDir": "./out",
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "target": "es5",
+    "allowJs": true
+  }
+}

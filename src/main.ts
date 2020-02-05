@@ -1,4 +1,3 @@
-import 'xterm/src/xterm.css'
 import axios from 'axios'
 import { Player } from './player'
 import { AsciinemaCastParser } from './parser'
@@ -11,7 +10,7 @@ axios
     const parser = new AsciinemaCastParser()
     const castObject = parser.parse(res.data as string)
 
-    const div = document.getElementById('terminal')
+    const div = document.getElementById('app')
 
     if (!div) {
       return
