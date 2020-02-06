@@ -1,5 +1,5 @@
-import { ICastEvent } from '../structs'
-import { findEvents } from '../helper'
+import { ICastEvent } from './CastParser'
+import { findEvents } from './helper'
 
 test('test findEvents from in all events', () => {
   const events = [

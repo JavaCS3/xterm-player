@@ -1,9 +1,9 @@
 import 'xterm/css/xterm.css'
-import * as StateAddon from './StateAddon'
 import { Terminal, RendererType, IBuffer } from 'xterm'
-import { ICastObject, ICastHeader, ICastEvent } from './structs'
+import { ICastObject, ICastHeader, ICastEvent } from './CastParser'
 import { State, Animation } from './Animation'
 import { findEvents } from './helper'
+import { IntervalTicker, Timer, TimerState } from './Timer'
 
 export interface IPlayerOptions {
   rows?: number
@@ -50,6 +50,28 @@ export class Player {
     this.term.open(this.options.el)
     this.play()
 
+    const t = new Timer(new IntervalTicker(1000))
+    t.start()
+
+    this.term.onKey((arg: { key: string }) => {
+      console.log(`KEY "${arg.key}"`)
+      if (arg.key === '[A') {
+        t.timescale = 2
+      } else if (arg.key === '[B') {
+        t.timescale = 0.5
+      } else if (arg.key === ' ') {
+        if (t.isRunning()) {
+          console.log('PAUSED')
+          t.pause()
+        } else {
+          console.log('RUNNING')
+          t.start()
+        }
+      } else if (arg.key === 's') {
+        t.stop()
+        console.log('STOPPED')
+      }
+    })
     // this.term.on('key', (e) => {
     //   if (e === ' ') {
     //     if (this.animation.getState() === State.Playing) {

@@ -1,4 +1,4 @@
-import { Timer, TimeUnit } from '../structs'
+import { Timer, TimeUnit } from './structs'
 
 test('test no tick delta time', () => {
   const timer = new Timer()

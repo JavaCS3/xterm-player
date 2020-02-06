@@ -1,4 +1,4 @@
-import { ICastEvent } from './structs'
+import { ICastEvent } from './CastParser'
 
 function crop(low: number, high: number, value: number): number {
   if (value < low) {

@@ -1,4 +1,4 @@
-import { AsciinemaCastV2Parser, AsciinemaCastV1Parser } from '../parser'
+import { AsciinemaCastV2Parser, AsciinemaCastV1Parser } from './CastParser'
 
 const CAST_V1 = `
 {

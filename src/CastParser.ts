@@ -1,10 +1,26 @@
-import { ICastObject } from './structs'
+export interface ICastHeader {
+  version: number
+  width: number
+  height: number,
+  duration: number
+}
 
-export interface IParser {
+export interface ICastEvent {
+  time: number
+  type: string
+  data: string
+}
+
+export interface ICastObject {
+  header: ICastHeader
+  events: ICastEvent[]
+}
+
+export interface ICastParser {
   parse(text: string): ICastObject
 }
 
-export class AsciinemaCastParser implements IParser {
+export class AsciinemaCastParser implements ICastParser {
   public parse(text: string): ICastObject {
     try {
       return new AsciinemaCastV1Parser().parse(text)
@@ -19,10 +35,10 @@ export class AsciinemaCastParser implements IParser {
  * https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v1.md
  */
 // tslint:disable-next-line: max-classes-per-file
-export class AsciinemaCastV1Parser implements IParser {
+export class AsciinemaCastV1Parser implements ICastParser {
   public parse(text: string): ICastObject {
-    const json = JSON.parse(text)
-    const stdouts: Array<[number, string]> = json.stdout
+    const j = JSON.parse(text)
+    const stdouts: Array<[number, string]> = j.stdout
 
     let timestamp = 0.0
     const events = stdouts.map((e: [number, string]) => {
@@ -35,13 +51,13 @@ export class AsciinemaCastV1Parser implements IParser {
     })
 
     return {
-      'header': {
+      header: {
         version: 1,
-        width: json.width,
-        height: json.height,
-        duration: json.duration
+        width: j.width,
+        height: j.height,
+        duration: j.duration
       },
-      'events': events
+      events
     }
   }
 }
@@ -51,7 +67,7 @@ export class AsciinemaCastV1Parser implements IParser {
  * https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md
  */
 // tslint:disable-next-line: max-classes-per-file
-export class AsciinemaCastV2Parser implements IParser {
+export class AsciinemaCastV2Parser implements ICastParser {
   public parse(text: string): ICastObject {
     const lines = text.trim().split('\n').filter(txt => txt)
 
@@ -60,13 +76,13 @@ export class AsciinemaCastV2Parser implements IParser {
       const events = lines.slice(1)
 
       const cast: ICastObject = {
-        'header': header,
-        'events': events.map(e => {
-          const json = JSON.parse(e)
+        header,
+        events: events.map(e => {
+          const j = JSON.parse(e)
           return {
-            time: json[0],
-            type: json[1],
-            data: json[2]
+            time: j[0],
+            type: j[1],
+            data: j[2]
           }
         })
       }
