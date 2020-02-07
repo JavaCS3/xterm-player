@@ -1,6 +1,8 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "rulesDirectory": [
+    "tslint-consistent-codestyle"
+  ],
   "jsRules": {},
   "rules": {
     "no-console": false,
@@ -19,8 +21,5 @@
       {"type": "variable", "modifiers": ["const", "export"], "filter": "^I.+Service$", "format": "PascalCase", "prefix": "I"},
       {"type": "interface", "prefix": "I"}
     ]
-  },
-  "rulesDirectory": [
-    "tslint-consistent-codestyle"
-  ]
+  }
 }

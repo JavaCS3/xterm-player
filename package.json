@@ -4,9 +4,11 @@
   "description": "",
   "private": true,
   "scripts": {
+    "lint": "tslint 'src/**/*.ts'",
     "test": "jest",
-    "dev": "webpack-dev-server --open",
-    "build": "webpack -p --mode production"
+    "demo": "webpack-dev-server --config demo/webpack.config.js --open",
+    "dev": "yarn run demo",
+    "build": "tsc -b ./tsconfig.json"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +29,7 @@
     "ts-loader": "^5.3.3",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
+    "tslint-consistent-codestyle": "^1.16.0",
     "tslint-webpack-plugin": "^2.0.4",
     "typescript": "^3.4.4",
     "typescript-tslint-plugin": "^0.3.1",

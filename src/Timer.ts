@@ -1,8 +1,6 @@
 export const TICK_INTERVAL = 1000 / 30
 
-interface TickerCallback {
-  (): void
-}
+type TickerCallback = () => void
 
 export interface ITicker {
   start(cb: TickerCallback): void
@@ -26,10 +24,10 @@ export class DummyTicker implements ITicker {
     return this._time
   }
   public tick(): void {
+    this._time += this._interval
     if (this._cb) {
       this._cb()
     }
-    this._time += this._interval
   }
 }
 
@@ -73,33 +71,48 @@ export class AnimationFrameTicker implements ITicker {
   public now(): number { return Date.now() }
 }
 
+const TIMESCALE_MIN = 0, TIMESCALE_MAX = 5
+
 export enum TimerState {
   RUNNING,
   PAUSED,
   STOPPED
 }
 
-const TIMESCALE_MIN = 0, TIMESCALE_MAX = 5
+export type TickEventCallback = (duration?: number) => void
 
 export class Timer {
   private _lasttime: number = 0
   private _duration: number = 0
   private _state: TimerState = TimerState.STOPPED
+  private _cb: TickEventCallback = () => { }
 
   public constructor(
     private _ticker: ITicker,
     private _timescale: number = 1
   ) { }
 
+  public get timescale(): number { return this._timescale }
   public set timescale(timescale: number) {
     if (timescale <= TIMESCALE_MIN || timescale > TIMESCALE_MAX) {
       throw new Error(`timescale must be between ${TIMESCALE_MIN} and ${TIMESCALE_MAX}`)
     }
     this._timescale = timescale
   }
-  public get timescale(): number { return this._timescale }
+
   public get duration(): number { return this._duration }
+  public set duration(duration: number) {
+    if (duration < 0) {
+      throw new Error('duration must be greater than 0')
+    }
+    this._duration = duration
+    this._lasttime = this._ticker.now()
+    this._cb(this._duration)
+  }
+
   public get state(): TimerState { return this._state }
+
+  public onTick(cb: TickEventCallback): void { this._cb = cb }
 
   public isRunning(): boolean { return this._state === TimerState.RUNNING }
   public isPaused(): boolean { return this._state === TimerState.PAUSED }
@@ -112,6 +125,7 @@ export class Timer {
       const now = this._ticker.now()
       this._duration += (now - this._lasttime) * this._timescale
       this._lasttime = now
+      this._cb(this._duration)
     })
   }
   public pause(): void {

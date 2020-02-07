@@ -3,17 +3,25 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const TSLintPlugin = require('tslint-webpack-plugin')
 
 module.exports = {
-  entry: './src/main.ts',
+  entry: path.join(__dirname, './index.ts'),
+  mode: 'development',
+  watch: true,
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './dist'
+    contentBase: path.resolve(__dirname, 'dist')
   },
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        use: ["source-map-loader"],
+        enforce: "pre",
+        exclude: /node_modules/
+      },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
@@ -21,10 +29,7 @@ module.exports = {
       {
         test: /\.(ts|tsx)?$/,
         loader: 'ts-loader',
-        exclude: /node_modules/,
-        options: {
-          configFile: path.resolve(__dirname, 'tsconfig-dev.json')
-        }
+        exclude: /node_modules/
       },
       {
         test: /\.(cast)$/,
@@ -42,8 +47,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Demo',
-      template: 'index.html'
+      title: 'demo',
+      template: path.join(__dirname, 'index.html')
     })
     // new TSLintPlugin({
     //   files: ['./src/**/*.ts'],
