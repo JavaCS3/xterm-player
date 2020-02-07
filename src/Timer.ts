@@ -102,9 +102,8 @@ export class Timer {
 
   public get duration(): number { return this._duration }
   public set duration(duration: number) {
-    if (duration < 0) {
-      throw new Error('duration must be greater than 0')
-    }
+    if (duration < 0) { throw new Error('duration must be greater than 0') }
+    if (duration === this._duration) { return }
     this._duration = duration
     this._lasttime = this._ticker.now()
     this._cb(this._duration)
@@ -135,6 +134,6 @@ export class Timer {
   public stop(): void {
     this._state = TimerState.STOPPED
     this._ticker.stop()
-    this._duration = 0
+    // this._duration = 0
   }
 }

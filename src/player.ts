@@ -1,6 +1,6 @@
 import 'xterm/css/xterm.css'
 import { Terminal, RendererType, IBuffer } from 'xterm'
-import { ICastObject, ICastHeader, ICastEvent } from './CastParser'
+import { ICastObject, ICastHeader, ICastEvent } from './Cast'
 import { State, Animation } from './Animation'
 import { findEvents } from './helper'
 import { IntervalTicker, Timer, TimerState } from './Timer'

@@ -1,4 +1,4 @@
-import { ICastEvent } from './CastParser'
+import { ICastEvent } from './Cast'
 
 function crop(low: number, high: number, value: number): number {
   if (value < low) {

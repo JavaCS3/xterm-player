@@ -1,4 +1,4 @@
-import { ICastEvent } from './CastParser'
+import { ICastEvent } from './Cast'
 import { findEvents } from './helper'
 
 test('test findEvents from in all events', () => {

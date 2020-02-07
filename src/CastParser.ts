@@ -1,20 +1,4 @@
-export interface ICastHeader {
-  version: number
-  width: number
-  height: number,
-  duration: number
-}
-
-export interface ICastEvent {
-  time: number
-  type: string
-  data: string
-}
-
-export interface ICastObject {
-  header: ICastHeader
-  events: ICastEvent[]
-}
+import { ICastObject, ICastEvent } from "./Cast"
 
 export interface ICastParser {
   parse(text: string): ICastObject
@@ -34,7 +18,6 @@ export class AsciinemaCastParser implements ICastParser {
  * Asciinema cast v1 parser
  * https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v1.md
  */
-// tslint:disable-next-line: max-classes-per-file
 export class AsciinemaCastV1Parser implements ICastParser {
   public parse(text: string): ICastObject {
     const j = JSON.parse(text)
@@ -66,7 +49,6 @@ export class AsciinemaCastV1Parser implements ICastParser {
  * Asciinema cast v2 parser
  * https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md
  */
-// tslint:disable-next-line: max-classes-per-file
 export class AsciinemaCastV2Parser implements ICastParser {
   public parse(text: string): ICastObject {
     const lines = text.trim().split('\n').filter(txt => txt)
@@ -96,3 +78,28 @@ export class AsciinemaCastV2Parser implements ICastParser {
   }
 }
 
+export class CastIndexer {
+  private _frameIndex: number[] = []
+  constructor(
+    private _cast: ICastObject,
+    private _step: number = 3000
+  ) {
+    const events = _cast.events
+    for (let i = 0, n = 0; i < events.length; i++) {
+      const ev = events[i]
+      if (ev.time >= ((1 + n) * this._step)) {
+        this._frameIndex.push(i)
+        n++
+      }
+    }
+  }
+
+  private _getEventsIndexRange(t: number): [number, number] {
+    if (t < 0) { throw new Error('Invalid time') }
+    const v = Math.floor(t / this._step)
+    return [
+      this._frameIndex[v],
+      v < this._frameIndex.length ? this._frameIndex[v + 1] : this._cast.events.length
+    ]
+  }
+}
