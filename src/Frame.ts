@@ -25,6 +25,7 @@ export class CastEventsFrame implements IFrame {
   ) {
     if (!_events.len()) { throw new Error('Invalid frame: empty events') }
     if (time < 0 || size <= 0) { throw new Error('Invalid frame: inccorrect time or size') }
+    if (_events.get(0).time >= time + size) { throw new Error('Invalid frame: invalid events') }
   }
   public set prev(f: IFrame | null) {
     if (f !== this._prev) {
@@ -64,36 +65,57 @@ export class CastEventsFrame implements IFrame {
   }
 }
 
+const MAX_FRAME_EVENTS_COUNT = 10
+
 export class CastFrameQueue {
   private _frames: Array<IFrame> = []
 
-  constructor(
-    cast: ICastObject,
-    private _framesize: number = 3000
-  ) {
+  constructor(cast: ICastObject, private _maxFrameEventsCount: number = MAX_FRAME_EVENTS_COUNT) {
     const events = cast.events
-    const count = Math.ceil(cast.header.duration / _framesize)
-    this._frames = new Array<CastEventsFrame>(count)
+    this._frames = new Array<IFrame>(Math.ceil(events.length / _maxFrameEventsCount))
 
     let prev: IFrame | null = null
-    let n = 0, start = 0, end = 0
+    let start = 0, end = 1, n = 0
     for (; end < events.length; end++) {
-      const ev = events[end]
-      if (ev.time >= ((1 + n) * this._framesize)) {
-        const f = new CastEventsFrame(n * this._framesize, this._framesize, new Slice<ICastEvent>(cast.events, start, end))
+      if (0 === (end % this._maxFrameEventsCount)) {
+        const startTime = events[start].time
+        const endTime = events[end].time
+        const f = new CastEventsFrame(startTime, endTime - startTime, new Slice<ICastEvent>(cast.events, start, end))
         f.prev = prev
-        prev = this._frames[n++] = f
+        prev = f
         start = end
+        this._frames[n++] = f
       }
     }
-    if (n < count) {
-      const f = new CastEventsFrame(n * this._framesize, this._framesize, new Slice<ICastEvent>(cast.events, start, end))
+    if (start < events.length) {
+      const startTime = events[start].time
+      const endTime = events[events.length - 1].time
+      const f = new CastEventsFrame(startTime, endTime - startTime + 0.1, new Slice<ICastEvent>(cast.events, start, events.length))
       f.prev = prev
       this._frames[n] = f
     }
   }
   public len(): number { return this._frames.length }
   public frame(time: number): IFrame {
-    return this._frames[Math.floor(time / this._framesize)]
+    if (time < 0) { throw new Error('Time must be positive') }
+    if (!this._frames.length) { throw new Error('Empty frames') }
+    // bisearch
+    const frames = this._frames
+    let min = 0
+    let max = frames.length - 1
+    let mid = 0
+    while (max >= min) {
+      mid = (min + max) >> 1
+      const f = frames[mid]
+      const startTime = f.time, endTime = f.time + f.size
+      if (time >= endTime) {
+        min = mid + 1
+      } else if (time < startTime) {
+        max = mid - 1
+      } else {
+        return f
+      }
+    }
+    return frames[frames.length - 1]
   }
 }

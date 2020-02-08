@@ -71,33 +71,78 @@ test('CastEventsFrame: test snapshot', () => {
   expect(f2.snapshot()).toBe('FGHIJ')
 })
 
-test('CastFrameQueue: test', () => {
-  const q = new CastFrameQueue(cast, 4)
+const cast2: ICastObject = {
+  header: {
+    version: 1,
+    width: 10,
+    height: 10,
+    duration: 9
+  },
+  events: [
+    { time: 0, type: 'o', data: 'A' },
+    { time: 1, type: 'o', data: 'B' },
+    { time: 2, type: 'o', data: 'C' },
 
-  expect(q.len()).toBe(3)
+    { time: 13, type: 'o', data: 'D' },
+    { time: 14, type: 'o', data: 'E' },
+    { time: 15, type: 'o', data: 'F' },
 
-  expect(q.frame(0).time).toBe(0)
+    { time: 26, type: 'o', data: 'G' },
+    { time: 27, type: 'o', data: 'H' },
+    { time: 28, type: 'o', data: 'I' },
+
+    { time: 29, type: 'o', data: 'J' },
+  ]
+}
+
+test('CastFrameQueue: test sparse cast events', () => {
+  const q = new CastFrameQueue(cast2, 3)
+
+  expect(q.len()).toBe(4)
+
+  expect(q.frame(0.0).time).toBe(0)
   expect(q.frame(0.5).time).toBe(0)
-  expect(q.frame(1).time).toBe(0)
-  expect(q.frame(2).time).toBe(0)
-  expect(q.frame(3.5).time).toBe(0)
+  expect(q.frame(2.0).time).toBe(0)
+  expect(q.frame(10.0).time).toBe(0)
+  expect(q.frame(12.0).time).toBe(0)
 
-  expect(q.frame(4).time).toBe(4)
-  expect(q.frame(4.5).time).toBe(4)
-  expect(q.frame(7.8).time).toBe(4)
+  expect(q.frame(13.0).time).toBe(13)
+  expect(q.frame(14.5).time).toBe(13)
+  expect(q.frame(21.0).time).toBe(13)
+  expect(q.frame(25.0).time).toBe(13)
+  expect(q.frame(25.9).time).toBe(13)
 
-  expect(q.frame(8.0).time).toBe(8)
-  expect(q.frame(9.0).time).toBe(8)
+  expect(q.frame(26.0).time).toBe(26)
+  expect(q.frame(26.0).time).toBe(26)
+  expect(q.frame(28.5).time).toBe(26)
+
+  expect(q.frame(29.0).time).toBe(29)
+  expect(q.frame(50.0).time).toBe(29)
 
   const f1 = q.frame(0)
-  const f2 = q.frame(4)
-  const f3 = q.frame(8)
+  const f2 = q.frame(13)
+  const f3 = q.frame(26)
+  const f4 = q.frame(29)
 
   expect(f1.prev).toBe(null)
   expect(f2.prev).toBe(f1)
   expect(f3.prev).toBe(f2)
+  expect(f4.prev).toBe(f3)
 
-  expect(f1.data(3.99)).toBe('ABCD')
-  expect(f2.data(7.99)).toBe('EFGH')
-  expect(f3.data(11.00)).toBe('IJ')
+  expect(f1.data(0.0)).toBe('A')
+  expect(f1.data(1.5)).toBe('AB')
+  expect(f1.data(2.0)).toBe('ABC')
+  expect(f1.data(10.0)).toBe('ABC')
+
+  expect(f2.data(13.00)).toBe('D')
+  expect(f2.data(13.5)).toBe('D')
+  expect(f2.data(15.0)).toBe('DEF')
+  expect(f2.data(18.0)).toBe('DEF')
+
+  expect(f3.data(26.0)).toBe('G')
+  expect(f3.data(26.8)).toBe('G')
+  expect(f3.data(26.8)).toBe('G')
+  expect(f3.data(28.5)).toBe('GHI')
+
+  expect(f4.data(29.0)).toBe('J')
 })
