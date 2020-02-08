@@ -6,18 +6,34 @@ export interface IFrame {
   readonly size: number
   prev: IFrame | null
   data(endTime: number, startTime?: number): string
+  snapshot(): string
 }
 
+export type FrameSnapshortFn = (s: string) => string
+
+export const DEFAULT_FRAME_SNAPSHOT_FN = (s: string) => s
+
 export class CastEventsFrame implements IFrame {
-  public prev: IFrame | null = null
+  private _prev: IFrame | null = null
+  private _snapshortCache: string | null = null
 
   constructor(
     public readonly time: number,
     public readonly size: number,
-    private _events: Slice<ICastEvent>
+    private _events: Slice<ICastEvent>,
+    private _snapshotFn: FrameSnapshortFn = DEFAULT_FRAME_SNAPSHOT_FN
   ) {
     if (!_events.len()) { throw new Error('Invalid frame: empty events') }
     if (time < 0 || size <= 0) { throw new Error('Invalid frame: inccorrect time or size') }
+  }
+  public set prev(f: IFrame | null) {
+    if (f !== this._prev) {
+      this._prev = f
+      this._snapshortCache = null
+    }
+  }
+  public get prev(): IFrame | null {
+    return this._prev
   }
   data(endTime: number, startTime: number = -1): string {
     if ((endTime < this.time) || (endTime >= (this.time + this.size))) {
@@ -30,6 +46,19 @@ export class CastEventsFrame implements IFrame {
       if (startTime < ev.time && ev.time <= endTime) {
         tmp.push(ev.data)
       }
+    }
+    return tmp.join('')
+  }
+  snapshot(): string {
+    if (this._snapshortCache !== null) {
+      return this._snapshortCache
+    }
+    const tmp: string[] = new Array<string>(this._events.len())
+    for (let i = 0; i < this._events.len(); i++) {
+      tmp[i] = this._events.get(i).data
+    }
+    if (this.prev) {
+      return this._snapshotFn(this.prev.snapshot() + tmp.join(''))
     }
     return tmp.join('')
   }

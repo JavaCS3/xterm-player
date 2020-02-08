@@ -56,6 +56,21 @@ test('CastEventsFrame: test data', () => {
   expect(() => f.data(5.1)).toThrow(/Cannot get data of/)
 })
 
+test('CastEventsFrame: test snapshot', () => {
+  const f1 = new CastEventsFrame(0, 5, new Slice<ICastEvent>(cast.events, 0, 5))
+  const f2 = new CastEventsFrame(5, 10, new Slice<ICastEvent>(cast.events, 5, 10))
+
+  f2.prev = f1
+
+  expect(f1.snapshot()).toBe('ABCDE')
+  expect(f2.snapshot()).toBe('ABCDEFGHIJ')
+  expect(f2.snapshot()).toBe('ABCDEFGHIJ')
+
+  f2.prev = null
+
+  expect(f2.snapshot()).toBe('FGHIJ')
+})
+
 test('CastFrameQueue: test', () => {
   const q = new CastFrameQueue(cast, 4)
 
