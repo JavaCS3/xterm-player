@@ -1,4 +1,4 @@
-import { ICastObject, ICastEvent } from "./Cast"
+import { ICastObject } from "./Cast"
 
 export interface ICastParser {
   parse(text: string): ICastObject
@@ -75,31 +75,5 @@ export class AsciinemaCastV2Parser implements ICastParser {
     } else {
       throw new Error('Invalid cast format')
     }
-  }
-}
-
-export class CastIndexer {
-  private _frameIndex: number[] = []
-  constructor(
-    private _cast: ICastObject,
-    private _step: number = 3000
-  ) {
-    const events = _cast.events
-    for (let i = 0, n = 0; i < events.length; i++) {
-      const ev = events[i]
-      if (ev.time >= ((1 + n) * this._step)) {
-        this._frameIndex.push(i)
-        n++
-      }
-    }
-  }
-
-  private _getEventsIndexRange(t: number): [number, number] {
-    if (t < 0) { throw new Error('Invalid time') }
-    const v = Math.floor(t / this._step)
-    return [
-      this._frameIndex[v],
-      v < this._frameIndex.length ? this._frameIndex[v + 1] : this._cast.events.length
-    ]
   }
 }

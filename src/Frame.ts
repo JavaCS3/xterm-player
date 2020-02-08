@@ -1,69 +1,70 @@
 import { ICastEvent, ICastObject } from './Cast'
+import { Slice } from './Utils'
 
 export interface IFrame {
   readonly time: number
   readonly size: number
-  setPrev(f: IFrame | null): void
-  prev(): IFrame | null
-  dataOf(t: number): string
+  prev: IFrame | null
+  data(endTime: number, startTime?: number): string
 }
 
-export class CastFrame implements IFrame {
-  private _prev: IFrame | null = null
+export class CastEventsFrame implements IFrame {
+  public prev: IFrame | null = null
 
   constructor(
     public readonly time: number,
     public readonly size: number,
-    private _events: Array<ICastEvent>,
-    private _low: number = 0, private _high: number = 0
+    private _events: Slice<ICastEvent>
   ) {
-    if (!_events.length) { throw new Error('Empty events') }
-    if ((time < 0)
-      || (_low < 0)
-      || (_high > _events.length)
-      || (_events[_low].time < time)
-      || (_high === _events.length ? false : (_events[_high].time > (time + size)))) {
-      throw new Error('Invalid events range')
-    }
+    if (!_events.len()) { throw new Error('Invalid frame: empty events') }
+    if (time < 0 || size <= 0) { throw new Error('Invalid frame: inccorrect time or size') }
   }
-  setPrev(f: IFrame | null): void { this._prev = f }
-  prev(): IFrame | null { return this._prev }
-  dataOf(t: number): string {
-    if ((t < this.time) || (t > (this.time + this.size))) {
-      throw new Error(`Cannot get data of time(${t})`)
+  data(endTime: number, startTime: number = -1): string {
+    if ((endTime < this.time) || (endTime >= (this.time + this.size))) {
+      throw new Error(`Cannot get data of time(${endTime})`)
     }
     const tmp: string[] = []
-    for (let i = this._low; i < this._high; i++) {
-      const ev = this._events[i]
-      if (ev.time <= t) {
+    for (let i = 0; i < this._events.len(); i++) {
+      const ev = this._events.get(i)
+      if (ev.time > endTime) { break }
+      if (startTime < ev.time && ev.time <= endTime) {
         tmp.push(ev.data)
-      } else {
-        break
       }
     }
     return tmp.join('')
   }
 }
 
-export class FrameBuilder {
-  private _frames: CastFrame[] = []
+export class CastFrameQueue {
+  private _frames: Array<IFrame> = []
 
   constructor(
-    private _cast: ICastObject,
+    cast: ICastObject,
     private _framesize: number = 3000
   ) {
-    this._frames = new Array<CastFrame>(Math.floor(_cast.header.duration / _framesize))
-    const events = _cast.events
-    for (let i = 0, n = 0, prev: IFrame | null = null; i < events.length; i++) {
-      const ev = events[i]
+    const events = cast.events
+    const count = Math.ceil(cast.header.duration / _framesize)
+    this._frames = new Array<CastEventsFrame>(count)
+
+    let prev: IFrame | null = null
+    let n = 0, start = 0, end = 0
+    for (; end < events.length; end++) {
+      const ev = events[end]
       if (ev.time >= ((1 + n) * this._framesize)) {
-        const f = new CastFrame(n, _framesize, events, n, n + 1)
-        f.setPrev(prev)
-        this._frames[n++] = f
+        const f = new CastEventsFrame(n * this._framesize, this._framesize, new Slice<ICastEvent>(cast.events, start, end))
+        f.prev = prev
+        prev = this._frames[n++] = f
+        start = end
       }
     }
+    if (n < count) {
+      const f = new CastEventsFrame(n * this._framesize, this._framesize, new Slice<ICastEvent>(cast.events, start, end))
+      f.prev = prev
+      this._frames[n] = f
+    }
   }
-  public frameOf(t: number): IFrame {
-    return this._frames[0]
+  public len(): number { return this._frames.length }
+  public frame(time: number): IFrame {
+    return this._frames[Math.floor(time / this._framesize)]
   }
 }
