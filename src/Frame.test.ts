@@ -100,29 +100,33 @@ test('CastFrameQueue: test sparse cast events', () => {
 
   expect(q.len()).toBe(4)
 
-  expect(q.frame(0.0).time).toBe(0)
-  expect(q.frame(0.5).time).toBe(0)
-  expect(q.frame(2.0).time).toBe(0)
-  expect(q.frame(10.0).time).toBe(0)
-  expect(q.frame(12.0).time).toBe(0)
+  expect(q.frame(0.0).startTime).toBe(0)
+  expect(q.frame(0.5).startTime).toBe(0)
+  expect(q.frame(2.0).startTime).toBe(0)
+  expect(q.frame(10.0).startTime).toBe(0)
+  expect(q.frame(12.0).startTime).toBe(0)
 
-  expect(q.frame(13.0).time).toBe(13)
-  expect(q.frame(14.5).time).toBe(13)
-  expect(q.frame(21.0).time).toBe(13)
-  expect(q.frame(25.0).time).toBe(13)
-  expect(q.frame(25.9).time).toBe(13)
+  expect(q.frame(13.0).startTime).toBe(13)
+  expect(q.frame(14.5).startTime).toBe(13)
+  expect(q.frame(21.0).startTime).toBe(13)
+  expect(q.frame(25.0).startTime).toBe(13)
+  expect(q.frame(25.9).startTime).toBe(13)
 
-  expect(q.frame(26.0).time).toBe(26)
-  expect(q.frame(26.0).time).toBe(26)
-  expect(q.frame(28.5).time).toBe(26)
+  expect(q.frame(26.0).startTime).toBe(26)
+  expect(q.frame(26.0).startTime).toBe(26)
+  expect(q.frame(28.5).startTime).toBe(26)
 
-  expect(q.frame(29.0).time).toBe(29)
-  expect(q.frame(50.0).time).toBe(29)
+  expect(q.frame(29.0).startTime).toBe(29)
+  expect(q.frame(50.0).startTime).toBe(29)
 
   const f1 = q.frame(0)
   const f2 = q.frame(13)
   const f3 = q.frame(26)
   const f4 = q.frame(29)
+
+  expect(f1.duration()).toBe(13)
+  expect(f2.duration()).toBe(13)
+  expect(f3.duration()).toBe(3)
 
   expect(f1.prev).toBe(null)
   expect(f2.prev).toBe(f1)

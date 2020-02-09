@@ -2,9 +2,10 @@ import { ICastEvent, ICastObject } from './Cast'
 import { Slice } from './Utils'
 
 export interface IFrame {
-  readonly time: number
-  readonly size: number
+  readonly startTime: number
+  readonly endTime: number
   prev: IFrame | null
+  duration(): number
   data(endTime: number, startTime?: number): string
   snapshot(): string
 }
@@ -18,14 +19,14 @@ export class CastEventsFrame implements IFrame {
   private _snapshortCache: string | null = null
 
   constructor(
-    public readonly time: number,
-    public readonly size: number,
+    public readonly startTime: number,
+    public readonly endTime: number,
     private _events: Slice<ICastEvent>,
     private _snapshotFn: FrameSnapshortFn = DEFAULT_FRAME_SNAPSHOT_FN
   ) {
     if (!_events.len()) { throw new Error('Invalid frame: empty events') }
-    if (time < 0 || size <= 0) { throw new Error('Invalid frame: inccorrect time or size') }
-    if (_events.get(0).time >= time + size) { throw new Error('Invalid frame: invalid events') }
+    if ((startTime < 0) || ((endTime - startTime) <= 0)) { throw new Error('Invalid frame: inccorrect time or size') }
+    if (_events.get(0).time >= endTime) { throw new Error('Invalid frame: invalid events') }
   }
   public set prev(f: IFrame | null) {
     if (f !== this._prev) {
@@ -36,8 +37,11 @@ export class CastEventsFrame implements IFrame {
   public get prev(): IFrame | null {
     return this._prev
   }
+  public duration(): number {
+    return this.endTime - this.startTime
+  }
   data(endTime: number, startTime: number = -1): string {
-    if ((endTime < this.time) || (endTime >= (this.time + this.size))) {
+    if ((endTime < this.startTime) || (endTime >= this.endTime)) {
       throw new Error(`Cannot get data of time(${endTime})`)
     }
     const tmp: string[] = []
@@ -65,34 +69,25 @@ export class CastEventsFrame implements IFrame {
   }
 }
 
-const MAX_FRAME_EVENTS_COUNT = 10
+const DEFAULT_FRAME_EVENTS_STEP = 30
 
 export class CastFrameQueue {
   private _frames: Array<IFrame> = []
 
-  constructor(cast: ICastObject, private _maxFrameEventsCount: number = MAX_FRAME_EVENTS_COUNT) {
+  constructor(cast: ICastObject, frameEventsStep: number = DEFAULT_FRAME_EVENTS_STEP) {
     const events = cast.events
-    this._frames = new Array<IFrame>(Math.ceil(events.length / _maxFrameEventsCount))
+    this._frames = new Array<IFrame>(Math.ceil(events.length / frameEventsStep))
 
     let prev: IFrame | null = null
-    let start = 0, end = 1, n = 0
-    for (; end < events.length; end++) {
-      if (0 === (end % this._maxFrameEventsCount)) {
-        const startTime = events[start].time
-        const endTime = events[end].time
-        const f = new CastEventsFrame(startTime, endTime - startTime, new Slice<ICastEvent>(cast.events, start, end))
-        f.prev = prev
-        prev = f
-        start = end
-        this._frames[n++] = f
-      }
-    }
-    if (start < events.length) {
-      const startTime = events[start].time
-      const endTime = events[events.length - 1].time
-      const f = new CastEventsFrame(startTime, endTime - startTime + 0.1, new Slice<ICastEvent>(cast.events, start, events.length))
+    for (let start = 0, n = 0; start < events.length; start += frameEventsStep) {
+      const end = start + frameEventsStep
+      const slice = new Slice<ICastEvent>(cast.events, start, end)
+      const startTime = slice.get(0).time
+      const endTime = end < events.length ? events[end].time : (startTime + 0.1)
+      const f = new CastEventsFrame(startTime, endTime, slice)
       f.prev = prev
-      this._frames[n] = f
+      prev = f
+      this._frames[n++] = f
     }
   }
   public len(): number { return this._frames.length }
@@ -107,10 +102,9 @@ export class CastFrameQueue {
     while (max >= min) {
       mid = (min + max) >> 1
       const f = frames[mid]
-      const startTime = f.time, endTime = f.time + f.size
-      if (time >= endTime) {
+      if (time >= f.endTime) {
         min = mid + 1
-      } else if (time < startTime) {
+      } else if (time < f.startTime) {
         max = mid - 1
       } else {
         return f
