@@ -1,4 +1,4 @@
-import { CastEventsFrame, CastFrameQueue } from './Frame'
+import { CastEventsFrame, CastFrameQueue, NULL_FRAME } from './Frame'
 import { ICastObject, ICastEvent } from './Cast'
 import { Slice } from './Utils'
 
@@ -92,6 +92,7 @@ const cast2: ICastObject = {
     { time: 28, type: 'o', data: 'I' },
 
     { time: 29, type: 'o', data: 'J' },
+    { time: 30, type: 'o', data: 'K' },
   ]
 }
 
@@ -117,7 +118,8 @@ test('CastFrameQueue: test sparse cast events', () => {
   expect(q.frame(28.5).startTime).toBe(26)
 
   expect(q.frame(29.0).startTime).toBe(29)
-  expect(q.frame(50.0).startTime).toBe(29)
+  expect(q.frame(30.0).startTime).toBe(29)
+  expect(q.isStopFrame(q.frame(50.0))).toBeTruthy()
 
   const f1 = q.frame(0)
   const f2 = q.frame(13)
@@ -128,7 +130,7 @@ test('CastFrameQueue: test sparse cast events', () => {
   expect(f2.duration()).toBe(13)
   expect(f3.duration()).toBe(3)
 
-  expect(f1.prev).toBe(null)
+  expect(f1.prev).toBe(NULL_FRAME)
   expect(f2.prev).toBe(f1)
   expect(f3.prev).toBe(f2)
   expect(f4.prev).toBe(f3)

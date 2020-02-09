@@ -79,7 +79,7 @@ export enum TimerState {
   STOPPED
 }
 
-export type TickEventCallback = (duration?: number) => void
+export type TickEventCallback = (duration: number) => void
 
 export class Timer {
   private _lasttime: number = 0
