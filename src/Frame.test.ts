@@ -119,7 +119,7 @@ test('CastFrameQueue: test sparse cast events', () => {
 
   expect(q.frame(29.0).startTime).toBe(29)
   expect(q.frame(30.0).startTime).toBe(29)
-  expect(q.isStopFrame(q.frame(50.0))).toBeTruthy()
+  expect(q.isEnd(q.frame(50.0))).toBeTruthy()
 
   const f1 = q.frame(0)
   const f2 = q.frame(13)
@@ -151,4 +151,20 @@ test('CastFrameQueue: test sparse cast events', () => {
   expect(f3.data(28.5)).toBe('GHI')
 
   expect(f4.data(29.0)).toBe('J')
+})
+
+const cast3: ICastObject = {
+  header: {
+    version: 1,
+    width: 10,
+    height: 10,
+    duration: 9
+  },
+  events: []
+}
+
+test('CastFrameQueue: test empty events cast', () => {
+  const q = new CastFrameQueue(cast3, 1)
+
+  expect(q.len()).toBe(0)
 })

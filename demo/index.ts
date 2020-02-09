@@ -5,7 +5,7 @@ import { Timer, IntervalTicker, AnimationFrameTicker } from '../src/Timer'
 import { ICastEvent } from '../src/Cast'
 import { AsciinemaCastParser } from '../src/CastParser'
 import { CastFrameQueue, IFrame, NULL_FRAME } from '../src/Frame'
-import cast from '../src/assets/1.cast'
+import cast from '../assets/2.cast'
 
 function writeSync(term: Terminal, data: string) {
   (<any>term)._core.writeSync(data)
@@ -13,18 +13,28 @@ function writeSync(term: Terminal, data: string) {
 
 const div = document.getElementById('app')
 if (div) {
-  const term = new Terminal()
-  // const term2 = new Terminal()
-  // const serializer = new SerializeAddon()
-  const t = new Timer(new AnimationFrameTicker())
-  term.open(div)
-  // term2.loadAddon(serializer)
-
   fetch(cast).then(res => {
     res.text().then(text => {
       const parser = new AsciinemaCastParser()
       const castObject = parser.parse(text)
-      const q = new CastFrameQueue(castObject)
+      const term = new Terminal({
+        cols: castObject.header.width,
+        rows: castObject.header.height,
+      })
+      const termShadow = new Terminal({
+        cols: castObject.header.width,
+        rows: castObject.header.height,
+      })
+      const serializer = new SerializeAddon()
+      termShadow.loadAddon(serializer)
+      term.open(div)
+      const t = new Timer(new AnimationFrameTicker())
+      const q = new CastFrameQueue(castObject, 30, (s: string): string => {
+        console.log('snapshoting...')
+        termShadow.reset()
+        writeSync(termShadow, s)
+        return serializer.serialize()
+      })
 
       console.log('duration', q)
 
@@ -39,7 +49,7 @@ if (div) {
           }
         }
       })
-      t.timescale = 3
+      t.timescale = 5
       // t.duration = 60000
 
       let lastDuration = 0
@@ -54,7 +64,7 @@ if (div) {
           term.reset()
           writeSync(term, f.prev?.snapshot() + f.data(time))
         }
-        if (q.isStopFrame(f)) {
+        if (q.isEnd(f)) {
           console.log('STOP')
           t.pause()
           return
