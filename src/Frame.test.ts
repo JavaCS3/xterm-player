@@ -76,7 +76,7 @@ const cast2: ICastObject = {
     version: 1,
     width: 10,
     height: 10,
-    duration: 9
+    duration: 35
   },
   events: [
     { time: 0, type: 'o', data: 'A' },

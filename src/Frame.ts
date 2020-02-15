@@ -29,6 +29,7 @@ class NullFrame implements IFrame {
 export type FrameSnapshotFn = (s: string) => string
 export const DEFAULT_FRAME_SNAPSHOT_FN = (s: string) => s
 export const NULL_FRAME: IFrame = Object.freeze<NullFrame>(new NullFrame())
+export const START_FRAME: IFrame = NULL_FRAME
 
 export class CastEventsFrame implements IFrame {
   private _prev: IFrame | null = null
@@ -86,7 +87,7 @@ export class CastEventsFrame implements IFrame {
 const DEFAULT_FRAME_EVENTS_STEP = 30
 
 export class CastFrameQueue {
-  private _tailFrame: IFrame
+  private _endFrame: IFrame
   private _frames: Array<IFrame> = []
 
   constructor(
@@ -94,37 +95,34 @@ export class CastFrameQueue {
     step: number = DEFAULT_FRAME_EVENTS_STEP,
     snapshotFn: FrameSnapshotFn = DEFAULT_FRAME_SNAPSHOT_FN
   ) {
+    const duration = cast.header.duration
     const events = cast.events
-    this._frames = new Array<IFrame>(2 + Math.ceil(events.length / step))
-    this._frames[0] = NULL_FRAME
 
-    for (let start = 0, n = 1, prev: IFrame = NULL_FRAME; start < events.length; start += step) {
+    this._frames = new Array<IFrame>(2 + Math.ceil(events.length / step))
+    this._frames[0] = START_FRAME
+    this._frames[this._frames.length - 1] = this._endFrame = new NullFrame(duration, duration)
+
+    for (let start = 0, n = 1, prev: IFrame = START_FRAME; start < events.length; start += step) {
       const end = start + step
-      const slice = new Slice<ICastEvent>(cast.events, start, end)
+      const slice = new Slice<ICastEvent>(cast.events, start, end) // TODO: Do a benchmark of [].slice vs Slice
       const startTime = slice.get(0).time
-      const endTime = end < events.length ? events[end].time : (events[events.length - 1].time + 0.1)
+      const endTime = end < events.length ? events[end].time : duration
       const f = new CastEventsFrame(startTime, endTime, slice, snapshotFn)
       f.prev = prev
       this._frames[n++] = prev = f
     }
 
-    const lastFrame = this._frames[this._frames.length - 2]
-    const tailFrame = new NullFrame(lastFrame.endTime, lastFrame.endTime)
-
-    tailFrame.prev = lastFrame
-
-    this._frames[this._frames.length - 1] = tailFrame
-    this._tailFrame = tailFrame
+    this._endFrame.prev = this._frames[this._frames.length - 2]
   }
-  public isEnd(frame: IFrame): boolean { return frame === this._tailFrame }
+  public isEnd(frame: IFrame): boolean { return frame === this._endFrame }
   public len(): number { return this._frames.length - 2 }
   public frame(time: number): IFrame {
-    if (time < 0) { throw new Error('Time must be positive') }
+    if (time < 0) { throw new Error('Time must not be negative') }
     if (!this.len()) { throw new Error('Empty frames') }
     // bisearch
     const frames = this._frames
-    let min = 1, mid = 0, max = frames.length - 2
-    if (time > this._frames[max].endTime) { return this._tailFrame }
+    let min = 1, mid = 0, max = this.len()
+    if (time >= this._frames[max].endTime) { return this._endFrame }
     while (max >= min) {
       mid = (min + max) >> 1
       const f = frames[mid]
