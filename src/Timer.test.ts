@@ -68,7 +68,7 @@ test('DummyTicker: test tick', () => {
   expect(t.now()).toBe(n)
 })
 
-test('Timer: test duration', () => {
+test('Timer: test time', () => {
   const ticker = new DummyTicker(1)
   const t = new Timer(ticker)
   ticker.tick()
@@ -79,7 +79,7 @@ test('Timer: test duration', () => {
   ticker.tick()
   ticker.tick()
   ticker.tick()
-  expect(t.duration).toBe(5)
+  expect(t.time).toBe(5)
 })
 
 test('Timer: test set timescale in constructor', () => {
@@ -93,7 +93,7 @@ test('Timer: test set timescale in constructor', () => {
   ticker.tick()
   ticker.tick()
   ticker.tick()
-  expect(t.duration).toBe(5 * t.timescale)
+  expect(t.time).toBe(5 * t.timescale)
 })
 
 test('Timer: test set timescale use property', () => {
@@ -108,7 +108,7 @@ test('Timer: test set timescale use property', () => {
   ticker.tick()
   ticker.tick()
   ticker.tick()
-  expect(t.duration).toBe(5 * t.timescale)
+  expect(t.time).toBe(5 * t.timescale)
 })
 
 test('Timer: dynamic set timescale #1', () => {
@@ -123,7 +123,7 @@ test('Timer: dynamic set timescale #1', () => {
   t.timescale = 2
   ticker.tick()
   ticker.tick()
-  expect(t.duration).toBe(7)
+  expect(t.time).toBe(7)
 })
 
 test('Timer: dynamic set timescale #2', () => {
@@ -139,7 +139,7 @@ test('Timer: dynamic set timescale #2', () => {
   ticker.tick()
   t.timescale = 3
   ticker.tick()
-  expect(t.duration).toBe(8)
+  expect(t.time).toBe(8)
 })
 
 test('Timer: test pause', () => {
@@ -160,7 +160,7 @@ test('Timer: test pause', () => {
   ticker.tick()
   ticker.tick()
   ticker.tick()
-  expect(t.duration).toBe(6)
+  expect(t.time).toBe(6)
 })
 
 test('Timer: test state', () => {
@@ -196,10 +196,10 @@ test('Timer: test onTick event', () => {
   ticker.tick(); expect(mock).toBeCalledWith(4)
   ticker.tick(); expect(mock).toBeCalledWith(5)
   ticker.tick(); expect(mock).toBeCalledWith(6)
-  expect(t.duration).toBe(6)
+  expect(t.time).toBe(6)
 })
 
-test('Timer: test set duration', () => {
+test('Timer: test set time', () => {
   const ticker = new DummyTicker(1)
   const t = new Timer(ticker)
   const mock = jest.fn()
@@ -210,17 +210,17 @@ test('Timer: test set duration', () => {
   ticker.tick()
   ticker.tick()
   ticker.tick()
-  expect(t.duration).toBe(3)
-  t.duration = 0
+  expect(t.time).toBe(3)
+  t.time = 0
   expect(mock).toBeCalledWith(0)
-  expect(t.duration).toBe(0)
+  expect(t.time).toBe(0)
   ticker.tick()
   ticker.tick()
   ticker.tick()
-  expect(t.duration).toBe(3)
+  expect(t.time).toBe(3)
 })
 
-test('Timer: test maxDuration', () => {
+test('Timer: test duration', () => {
   const ticker = new DummyTicker(1)
   const t = new Timer(ticker, undefined, 3)
   const mock = jest.fn()
@@ -231,9 +231,9 @@ test('Timer: test maxDuration', () => {
   ticker.tick()
   ticker.tick()
   ticker.tick()
-  expect(t.duration).toBe(3)
+  expect(t.time).toBe(3)
   expect(mock).toBeCalledTimes(4)
   expect(t.isStopped()).toBeTruthy()
-  t.duration = 100
-  expect(t.duration).toBe(3)
+  t.time = 100
+  expect(t.time).toBe(3)
 })

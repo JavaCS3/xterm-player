@@ -57,10 +57,10 @@ export class CastPlayer {
           }
           break
         case 'ArrowRight':
-          timer.duration += 3000
+          timer.time += 3000
           break
         case 'ArrowLeft':
-          timer.duration -= 3000
+          timer.time -= 3000
           break
       }
     })

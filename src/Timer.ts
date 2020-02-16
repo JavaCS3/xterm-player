@@ -79,18 +79,18 @@ export enum TimerState {
   STOPPED
 }
 
-export type TickEventCallback = (duration: number) => void
+export type TickEventCallback = (time: number) => void
 
 export class Timer {
   private _lasttime: number = 0
-  private _duration: number = 0
+  private _time: number = 0
   private _state: TimerState = TimerState.STOPPED
   private _cb: TickEventCallback = () => { }
 
   public constructor(
     private _ticker: ITicker,
     private _timescale: number = 1,
-    private _maxDuration: number = 0
+    private _duration: number = 0
   ) { }
 
   public get timescale(): number { return this._timescale }
@@ -101,18 +101,18 @@ export class Timer {
     this._timescale = timescale
   }
 
-  public get duration(): number { return this._duration }
-  public set duration(duration: number) {
-    if (duration < 0) { duration = 0 }
-    if (duration === this._duration) { return }
-    if (this._maxDuration && (duration > this._maxDuration)) {
-      this._duration = this._maxDuration
+  public get time(): number { return this._time }
+  public set time(time: number) {
+    if (time < 0) { time = 0 }
+    if (time === this._time) { return }
+    if (this._duration && (time > this._duration)) {
+      this._time = this._duration
       this.stop()
     } else {
-      this._duration = duration
+      this._time = time
     }
     this._lasttime = this._ticker.now()
-    this._cb(this._duration)
+    this._cb(this._time)
   }
 
   public get state(): TimerState { return this._state }
@@ -129,14 +129,14 @@ export class Timer {
     this._ticker.start(() => {
       const now = this._ticker.now()
       const delta = (now - this._lasttime) * this._timescale
-      if (this._maxDuration && ((this._duration + delta) > this._maxDuration)) {
-        this._duration = this._maxDuration
+      if (this._duration && ((this._time + delta) > this._duration)) {
+        this._time = this._duration
         this.stop()
       } else {
-        this._duration += delta
+        this._time += delta
       }
       this._lasttime = now
-      this._cb(this._duration)
+      this._cb(this._time)
     })
   }
   public pause(): void {
