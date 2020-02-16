@@ -219,3 +219,21 @@ test('Timer: test set duration', () => {
   ticker.tick()
   expect(t.duration).toBe(3)
 })
+
+test('Timer: test maxDuration', () => {
+  const ticker = new DummyTicker(1)
+  const t = new Timer(ticker, undefined, 3)
+  const mock = jest.fn()
+  t.onTick(mock)
+  t.start()
+  ticker.tick()
+  ticker.tick()
+  ticker.tick()
+  ticker.tick()
+  ticker.tick()
+  expect(t.duration).toBe(3)
+  expect(mock).toBeCalledTimes(4)
+  expect(t.isStopped()).toBeTruthy()
+  t.duration = 100
+  expect(t.duration).toBe(3)
+})

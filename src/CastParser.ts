@@ -14,6 +14,8 @@ export class AsciinemaCastParser implements ICastParser {
   }
 }
 
+const MS = 1000
+
 /**
  * Asciinema cast v1 parser
  * https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v1.md
@@ -25,7 +27,7 @@ export class AsciinemaCastV1Parser implements ICastParser {
 
     let timestamp = 0.0
     const events = stdouts.map((e: [number, string]) => {
-      timestamp += e[0]
+      timestamp += e[0] * MS
       return {
         time: timestamp,
         type: 'o',
@@ -38,7 +40,7 @@ export class AsciinemaCastV1Parser implements ICastParser {
         version: 1,
         width: j.width,
         height: j.height,
-        duration: j.duration
+        duration: j.duration * MS
       },
       events
     }
@@ -62,7 +64,7 @@ export class AsciinemaCastV2Parser implements ICastParser {
         events: events.map(e => {
           const j = JSON.parse(e)
           return {
-            time: j[0],
+            time: j[0] * MS,
             type: j[1],
             data: j[2]
           }

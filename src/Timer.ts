@@ -103,7 +103,7 @@ export class Timer {
 
   public get duration(): number { return this._duration }
   public set duration(duration: number) {
-    if (duration < 0) { throw new Error('duration must not be negative') }
+    if (duration < 0) { duration = 0 }
     if (duration === this._duration) { return }
     if (this._maxDuration && (duration > this._maxDuration)) {
       this._duration = this._maxDuration

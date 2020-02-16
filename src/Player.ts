@@ -24,14 +24,13 @@ export class CastPlayer {
       rows: _cast.header.height,
       fontFamily: 'Consolas, Menlo'
     })
-    const timer = this._timer = new Timer(new AnimationFrameTicker(), 1.0, _cast.header.duration * 1000)
+    const timer = this._timer = new Timer(new AnimationFrameTicker(), 1.0, _cast.header.duration)
     const queue = this._queue = new CastFrameQueue(_cast, 30)
     this._term.open(_el)
 
     let lastTime: number = 0
     let prevFrame: IFrame = NULL_FRAME
-    timer.onTick((timeMs: number) => {
-      const now = timeMs / 1000
+    timer.onTick((now: number) => {
       const frame = queue.frame(now)
       if (prevFrame === frame && now > lastTime) {
         writeSync(term, frame.data(now, lastTime))

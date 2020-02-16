@@ -33,12 +33,12 @@ test('test AsciinemaCastV2Parser', () => {
   expect(co.header.width).toBe(130)
   expect(co.header.height).toBe(38)
   expect(co.header.version).toBe(2)
-  expect(co.header.duration).toBe(2)
+  expect(co.header.duration).toBe(2000)
 
   expect(co.events).toEqual([
     { time: 0, type: 'o', data: 'A' },
-    { time: 1, type: 'o', data: 'B' },
-    { time: 2, type: 'o', data: 'C' }
+    { time: 1000, type: 'o', data: 'B' },
+    { time: 2000, type: 'o', data: 'C' }
   ])
 })
 
@@ -49,10 +49,10 @@ test('test AsciinemaCastV1Parser', () => {
   expect(co.header.width).toBe(80)
   expect(co.header.height).toBe(24)
   expect(co.header.version).toBe(1)
-  expect(co.header.duration).toBe(1.515658)
+  expect(co.header.duration).toBe(1.515658 * 1000)
 
   expect(co.events).toEqual([
-    { time: 1, type: 'o', data: 'Hello' },
-    { time: 2, type: 'o', data: 'World' },
+    { time: 1000, type: 'o', data: 'Hello' },
+    { time: 2000, type: 'o', data: 'World' },
   ])
 })
