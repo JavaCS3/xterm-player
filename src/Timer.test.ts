@@ -224,6 +224,7 @@ test('Timer: test duration', () => {
   const ticker = new DummyTicker(1)
   const t = new Timer(ticker, undefined, 3)
   const mock = jest.fn()
+  expect(t.progress).toBe(0.0)
   t.onTick(mock)
   t.start()
   ticker.tick()
@@ -236,4 +237,5 @@ test('Timer: test duration', () => {
   expect(t.isStopped()).toBeTruthy()
   t.time = 100
   expect(t.time).toBe(3)
+  expect(t.progress).toBe(1.0)
 })

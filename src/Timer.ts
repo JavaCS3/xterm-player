@@ -116,6 +116,12 @@ export class Timer {
   }
 
   public get state(): TimerState { return this._state }
+  public get progress(): number {
+    if (this._duration) {
+      return this.time / this._duration
+    }
+    return 0.0
+  }
 
   public onTick(cb: TickEventCallback): void { this._cb = cb }
 
