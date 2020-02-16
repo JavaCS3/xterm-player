@@ -89,7 +89,8 @@ export class Timer {
 
   public constructor(
     private _ticker: ITicker,
-    private _timescale: number = 1
+    private _timescale: number = 1,
+    private _maxDuration: number = 0
   ) { }
 
   public get timescale(): number { return this._timescale }
@@ -102,9 +103,14 @@ export class Timer {
 
   public get duration(): number { return this._duration }
   public set duration(duration: number) {
-    if (duration < 0) { throw new Error('duration must be greater than 0') }
+    if (duration < 0) { throw new Error('duration must not be negative') }
     if (duration === this._duration) { return }
-    this._duration = duration
+    if (this._maxDuration && (duration > this._maxDuration)) {
+      this._duration = this._maxDuration
+      this.stop()
+    } else {
+      this._duration = duration
+    }
     this._lasttime = this._ticker.now()
     this._cb(this._duration)
   }
@@ -122,7 +128,13 @@ export class Timer {
     this._lasttime = this._ticker.now()
     this._ticker.start(() => {
       const now = this._ticker.now()
-      this._duration += (now - this._lasttime) * this._timescale
+      const delta = (now - this._lasttime) * this._timescale
+      if (this._maxDuration && ((this._duration + delta) > this._maxDuration)) {
+        this._duration = this._maxDuration
+        this.stop()
+      } else {
+        this._duration += delta
+      }
       this._lasttime = now
       this._cb(this._duration)
     })
@@ -134,6 +146,5 @@ export class Timer {
   public stop(): void {
     this._state = TimerState.STOPPED
     this._ticker.stop()
-    // this._duration = 0
   }
 }

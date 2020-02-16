@@ -5,7 +5,9 @@ import { Timer, AnimationFrameTicker } from './Timer'
 import { CastFrameQueue, NULL_FRAME, IFrame } from './Frame'
 
 function writeSync(term: Terminal, data: string) {
-  (<any>term)._core.writeSync(data)
+  if (data.length) {
+    (<any>term)._core.writeSync(data)
+  }
 }
 
 export class CastPlayer {
@@ -20,8 +22,9 @@ export class CastPlayer {
     const term = this._term = new Terminal({
       cols: _cast.header.width,
       rows: _cast.header.height,
+      fontFamily: 'Consolas, Menlo'
     })
-    const timer = this._timer = new Timer(new AnimationFrameTicker())
+    const timer = this._timer = new Timer(new AnimationFrameTicker(), 1.0, _cast.header.duration * 1000)
     const queue = this._queue = new CastFrameQueue(_cast, 30)
     this._term.open(_el)
 
@@ -42,9 +45,6 @@ export class CastPlayer {
       }
       prevFrame = frame
       lastTime = now
-      if (queue.isEnd(frame)) {
-        this.stop()
-      }
     })
 
     term.onKey((ev: { domEvent: KeyboardEvent }) => {
@@ -58,10 +58,11 @@ export class CastPlayer {
           }
           break
         case 'ArrowRight':
-          timer.duration = Math.min(this._cast.header.duration * 1000, timer.duration + 1000)
+          timer.duration += 3000
           break
         case 'ArrowLeft':
-          timer.duration = Math.max(0, timer.duration - 1000)
+          timer.duration -= 3000
+          break
       }
     })
   }
@@ -72,8 +73,5 @@ export class CastPlayer {
 
   public play(): void { this._timer.start() }
   public pause(): void { this._timer.pause() }
-  public stop(): void {
-    console.log('STOP TIME', this._timer.duration)
-    this._timer.stop()
-  }
+  public stop(): void { this._timer.stop() }
 }
