@@ -1,7 +1,7 @@
 import 'xterm/css/xterm.css'
 import { AsciinemaCastParser } from '../src/CastParser'
 import { CastPlayer } from '../src/Player'
-import cast from '../assets/6.cast'
+import cast from '../assets/5.cast'
 
 const div = document.getElementById('app')
 if (div) {
@@ -10,7 +10,7 @@ if (div) {
       const parser = new AsciinemaCastParser()
       const co = parser.parse(text)
       const player = new CastPlayer(div, co)
-      player.timescale = 3
+      player.playbackRate = 3
     })
   })
 

@@ -1,4 +1,4 @@
-import { IntervalTicker, AnimationFrameTicker, DummyTicker, Timer, TICK_INTERVAL } from './Timer'
+import { IntervalTicker, AnimationFrameTicker, DummyTicker, Timer, TICK_INTERVAL, TimerState } from './Timer'
 
 const intervalTicker = new IntervalTicker()
 const animationFrameTicker = new AnimationFrameTicker()
@@ -197,6 +197,44 @@ test('Timer: test onTick event', () => {
   ticker.tick(); expect(mock).toBeCalledWith(5)
   ticker.tick(); expect(mock).toBeCalledWith(6)
   expect(t.time).toBe(6)
+})
+
+test('Timer: test onStateChange', () => {
+  const ticker = new DummyTicker(1)
+  const t = new Timer(ticker)
+  const mock = jest.fn()
+  t.onStateChange(mock)
+  expect(mock).not.toBeCalled()
+  t.start()
+  expect(mock).toBeCalledWith(TimerState.RUNNING)
+  t.pause()
+  expect(mock).toBeCalledWith(TimerState.PAUSED)
+  t.stop()
+  expect(mock).toBeCalledWith(TimerState.STOPPED)
+  t.start()
+  expect(mock).toBeCalledWith(TimerState.RUNNING)
+
+  const mock2 = jest.fn()
+  t.onStateChange(mock2)
+  t.start()
+  t.start()
+  expect(mock2).not.toBeCalled()
+
+  t.stop()
+
+  const mock3 = jest.fn()
+  t.onStateChange(mock2)
+  t.stop()
+  t.stop()
+  expect(mock3).not.toBeCalled()
+
+  t.pause()
+
+  const mock4 = jest.fn()
+  t.onStateChange(mock4)
+  t.pause()
+  t.pause()
+  expect(mock4).not.toBeCalled()
 })
 
 test('Timer: test set time', () => {

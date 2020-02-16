@@ -80,12 +80,14 @@ export enum TimerState {
 }
 
 export type TickEventCallback = (time: number) => void
+export type StateChangeCallback = (state: TimerState) => void
 
 export class Timer {
   private _lasttime: number = 0
   private _time: number = 0
   private _state: TimerState = TimerState.STOPPED
-  private _cb: TickEventCallback = () => { }
+  private _onTickCb: TickEventCallback = () => { }
+  private _onStateChangeCb: StateChangeCallback = () => { }
 
   public constructor(
     private _ticker: ITicker,
@@ -112,7 +114,14 @@ export class Timer {
       this._time = time
     }
     this._lasttime = this._ticker.now()
-    this._cb(this._time)
+    this._onTickCb(this._time)
+  }
+
+  private _setState(state: TimerState): void {
+    if (this._state !== state) {
+      this._state = state
+      this._onStateChangeCb(this._state)
+    }
   }
 
   public get state(): TimerState { return this._state }
@@ -123,14 +132,21 @@ export class Timer {
     return 0.0
   }
 
-  public onTick(cb: TickEventCallback): void { this._cb = cb }
+  public onTick(cb: TickEventCallback): Timer {
+    this._onTickCb = cb
+    return this
+  }
+  public onStateChange(cb: StateChangeCallback): Timer {
+    this._onStateChangeCb = cb
+    return this
+  }
 
   public isRunning(): boolean { return this._state === TimerState.RUNNING }
   public isPaused(): boolean { return this._state === TimerState.PAUSED }
   public isStopped(): boolean { return this._state === TimerState.STOPPED }
 
   public start(): void {
-    this._state = TimerState.RUNNING
+    this._setState(TimerState.RUNNING)
     this._lasttime = this._ticker.now()
     this._ticker.start(() => {
       const now = this._ticker.now()
@@ -142,15 +158,15 @@ export class Timer {
         this._time += delta
       }
       this._lasttime = now
-      this._cb(this._time)
+      this._onTickCb(this._time)
     })
   }
   public pause(): void {
-    this._state = TimerState.PAUSED
     this._ticker.stop()
+    this._setState(TimerState.PAUSED)
   }
   public stop(): void {
-    this._state = TimerState.STOPPED
     this._ticker.stop()
+    this._setState(TimerState.STOPPED)
   }
 }
