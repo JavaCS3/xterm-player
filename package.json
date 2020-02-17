@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "lint": "tslint 'src/**/*.ts'",
+    "clean": "rm -rf out/",
     "test": "jest",
     "demo": "webpack-dev-server --config demo/webpack.config.js --open",
     "dev": "yarn run demo",
