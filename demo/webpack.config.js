@@ -32,7 +32,7 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(cast)$/,
+        test: /\.(cast|svg)$/,
         use: [
           {
             loader: 'file-loader',

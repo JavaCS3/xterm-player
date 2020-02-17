@@ -2,7 +2,26 @@
   position: relative;
 }
 
+.xterm-player .icon {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+.xterm-player .icon.icon-play {
+  background-image: url('./icons/play.svg');
+}
+
+.xterm-player .icon.icon-pause {
+  background-image: url('./icons/pause.svg');
+}
+
 .xterm-player .video-wrapper {
+}
+
+.xterm-player .control-bar * {
+  box-sizing: inherit;
+  font-size: 0;
 }
 
 .xterm-player .control-bar {
@@ -12,7 +31,7 @@
   z-index: 99;
 
   width: 100%;
-  height: 50px;
+  height: 32px;
   background-color: cadetblue;
 }
 
@@ -24,3 +43,7 @@
   width: 12px;
   padding: 10px;
 }
+
+/* .xterm-player .control-bar .playback-button.playing {
+  background-color: red;
+} */

@@ -55,22 +55,14 @@ export class CastPlayer {
         lastTime = now
       })
       .onStateChange(() => {
-        if (timer.isRunning()) {
-          this._view.controlBar.play()
-        } else {
-          this._view.controlBar.pause()
-        }
+        this._view.controlBar.playing = timer.isRunning()
       })
 
     term.onKey((ev: { domEvent: KeyboardEvent }) => {
       const timer = this._timer
       switch (ev.domEvent.code) {
         case 'Space':
-          if (timer.isRunning()) {
-            this.pause()
-          } else {
-            this.play()
-          }
+          this._togglePlayPause()
           break
         case 'ArrowRight':
           timer.time += 3000
@@ -80,6 +72,8 @@ export class CastPlayer {
           break
       }
     })
+
+    this._view.controlBar.onPlayButtonClick(this._togglePlayPause.bind(this))
   }
   public get playbackRate(): number { return this._timer.timescale }
   public set playbackRate(ts: number) { this._timer.timescale = ts }
@@ -87,4 +81,12 @@ export class CastPlayer {
   public play(): void { this._timer.start() }
   public pause(): void { this._timer.pause() }
   public stop(): void { this._timer.stop() }
+
+  private _togglePlayPause(): void {
+    if (this._timer.isRunning()) {
+      this.pause()
+    } else {
+      this.play()
+    }
+  }
 }
