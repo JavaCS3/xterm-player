@@ -17,6 +17,7 @@ export class CastPlayer {
   private _timer: Timer
   private _queue: CastFrameQueue
   private _view: PlayerView
+  private _duration: number = 0
 
   constructor(
     private _el: HTMLElement,
@@ -30,10 +31,11 @@ export class CastPlayer {
 
     this._view = new PlayerView()
     _el.append(this._view.element)
-    this._term.open(this._view.videoWrapperElement)
+    this._term.open(this._view.videoWrapper)
 
+    this._duration = _cast.header.duration
 
-    const timer = this._timer = new Timer(new AnimationFrameTicker(), 1.0, _cast.header.duration)
+    const timer = this._timer = new Timer(new AnimationFrameTicker(), 1.0, this._duration)
     const queue = this._queue = new CastFrameQueue(_cast, 30)
 
     let lastTime: number = 0
@@ -77,7 +79,7 @@ export class CastPlayer {
 
     this._view.controlBar.onPlayButtonClick(this._togglePlayPause.bind(this))
     this._view.progressBar.onSeek((percent: number) => {
-      this._timer.time = percent * _cast.header.duration
+      this._timer.time = percent * this._duration
     })
   }
   public get playbackRate(): number { return this._timer.timescale }

@@ -1,7 +1,7 @@
 import { createElement } from './DomHelper'
 import { IComponent } from './Component'
 
-type OnSeekCallback = (percent: number) => void
+type SeekCallback = (percent: number) => void
 
 export class ProgressBarView implements IComponent {
   public readonly element: HTMLElement
@@ -9,28 +9,27 @@ export class ProgressBarView implements IComponent {
   private _progressElement: HTMLElement
   private _progressHover: HTMLElement
 
-  private _onSeek: OnSeekCallback = () => { }
+  private _onSeek: SeekCallback = () => { }
 
   private _progress: number = 0
 
   constructor() {
-    this.element = createElement('div', { class: 'progress-bar' },
+    const el = this.element = createElement('div', { class: 'progress-bar' },
       this._progressElement = createElement('div', { class: 'progress' }),
       this._progressHover = createElement('div', { class: 'progress-hover', attrs: { style: 'opacity: 0' } })
     )
 
-    this.element.addEventListener('mousemove', this._updateProgressHover.bind(this))
-    this.element.addEventListener('mouseenter', () => {
+    el.addEventListener('mousemove', this._updateProgressHover.bind(this))
+    el.addEventListener('mouseenter', () => {
       this._progressHover.style.opacity = '1'
     })
-    this.element.addEventListener('mouseleave', () => {
+    el.addEventListener('mouseleave', () => {
       this._progressHover.style.opacity = '0'
     })
-    this.element.addEventListener('mousedown', (evt: MouseEvent) => {
-      const percent = (evt.clientX - this.element.getBoundingClientRect().left) / this.element.clientWidth
+    el.addEventListener('mousedown', (evt: MouseEvent) => {
+      const percent = (evt.clientX - el.getBoundingClientRect().left) / el.clientWidth
       this._onSeek(percent)
     })
-
     this._updateProgress()
   }
 
@@ -39,11 +38,11 @@ export class ProgressBarView implements IComponent {
   }
   public set progress(value: number) {
     if (value !== this._progress) {
-      this._progress = Math.min(value, 1.0)
+      this._progress = Math.max(0.0, Math.min(value, 1.0))
       this._updateProgress()
     }
   }
-  public onSeek(cb: OnSeekCallback): void {
+  public onSeek(cb: SeekCallback): void {
     this._onSeek = cb
   }
 
