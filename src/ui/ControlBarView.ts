@@ -1,5 +1,7 @@
 import { IComponent } from "./Component"
 import { createElement } from './DomHelper'
+import IconPlay from './icons/play.svg'
+import IconPause from './icons/pause.svg'
 
 function msToTime(t: number) {
   return new Date(t).toISOString().slice(11, -5)
@@ -58,12 +60,10 @@ export class ControlBarView implements IComponent {
   }
 
   private _updatePlaybackButton() {
-    const icon = this._playbackIcon
-    icon.classList.remove('icon-pause', 'icon-play')
     if (this._playing) {
-      icon.classList.add('icon-pause')
+      this._playbackButton.innerHTML = IconPause
     } else {
-      icon.classList.add('icon-play')
+      this._playbackButton.innerHTML = IconPlay
     }
   }
 

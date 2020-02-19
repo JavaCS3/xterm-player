@@ -18,8 +18,8 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: ["source-map-loader"],
-        enforce: "pre",
+        use: ['source-map-loader'],
+        enforce: 'pre',
         exclude: /node_modules/
       },
       {
@@ -32,13 +32,12 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(cast|svg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {}
-          }
-        ]
+        test: /\.cast$/,
+        loader: 'file-loader'
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader'
       }
     ]
   },
