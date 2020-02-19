@@ -54,6 +54,7 @@ export class CastPlayer {
         prevFrame = frame
         lastTime = now
         this._view.progressBar.progress = timer.progress
+        this._view.controlBar.currentTime = now
       })
       .onStateChange(() => {
         this._view.controlBar.playing = timer.isRunning()

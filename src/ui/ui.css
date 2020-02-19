@@ -54,6 +54,15 @@
   padding: 10px;
 }
 
+.xterm-player .control-bar .time-display {
+  display: inline-block;
+  padding: 0 5px;
+  white-space: nowrap;
+  font-size: 100%;
+  line-height: normal;
+  color: #eee;
+}
+
 .xterm-player .progress-bar {
   position: absolute;
   bottom: 35px;
