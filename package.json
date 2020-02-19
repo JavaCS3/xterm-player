@@ -9,7 +9,7 @@
     "test": "jest",
     "demo": "webpack-dev-server --config demo/webpack.config.js --open",
     "dev": "yarn run demo",
-    "build": "tsc -b ./tsconfig.json"
+    "build": "tsc -b ./tsconfig.json && yarn lint"
   },
   "author": "",
   "license": "ISC",

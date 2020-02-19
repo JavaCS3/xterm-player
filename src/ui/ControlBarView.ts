@@ -15,7 +15,6 @@ export class ControlBarView implements IComponent {
         this._playbackIcon = createElement('i', { class: 'icon' })
       )
     )
-
     this._updatePlaybackButton()
   }
 

@@ -53,6 +53,7 @@ export class CastPlayer {
         }
         prevFrame = frame
         lastTime = now
+        this._view.progressBar.progress = timer.progress
       })
       .onStateChange(() => {
         this._view.controlBar.playing = timer.isRunning()
@@ -74,6 +75,9 @@ export class CastPlayer {
     })
 
     this._view.controlBar.onPlayButtonClick(this._togglePlayPause.bind(this))
+    this._view.progressBar.onSeek((percent: number) => {
+      this._timer.time = percent * _cast.header.duration
+    })
   }
   public get playbackRate(): number { return this._timer.timescale }
   public set playbackRate(ts: number) { this._timer.timescale = ts }
