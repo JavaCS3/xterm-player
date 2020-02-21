@@ -5,10 +5,9 @@ This repo is intended to provide an alternative asciinema player. The original [
 ## Instructions
 
 ```shell
-$ cd <repo> && npm install
-$ npm run dev
-$ npm run test
-$ npm run build
+$ cd <repo> && yarn
+$ yarn demo
+$ yarn test
 ```
 
 ## Goals

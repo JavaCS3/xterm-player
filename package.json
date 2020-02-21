@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "tslint 'src/**/*.ts'",
     "clean": "rm -rf out/",
-    "test": "jest",
+    "test": "jest && yarn lint",
+    "watch": "jest --watch --color",
     "demo": "webpack-dev-server --config demo/webpack.config.js --open",
     "dev": "yarn run demo",
     "build": "tsc -b ./tsconfig.json && yarn lint"
