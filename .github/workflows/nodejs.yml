@@ -13,18 +13,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Check yarn
-      run: which yarn || true
 
-    - name: NPM or Yarn install with caching
-      uses: bahmutov/npm-install@v1.1.0
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install Deps
+      run: yarn
+      
+    - name: Build
+      run: yarn build
     
-    - name: Check status
-      run: which yarn
-#     - name: Use Node.js ${{ matrix.node-version }}
-#       uses: actions/setup-node@v1
-#       with:
-#         node-version: ${{ matrix.node-version }}
-      env:
-        CI: true
+    - name: Test
+      run: yarn test
