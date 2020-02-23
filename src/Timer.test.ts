@@ -308,3 +308,14 @@ test('Timer: onStateChange should not be called when reaching it\'s duration', (
   t.start()
   expect(stateChangedFn).toBeCalledTimes(1)
 })
+
+test('Timer: onStateChange double start', () => {
+  const ticker = new DummyTicker(1)
+  const t = new Timer(ticker)
+  const mock = jest.fn()
+
+  t.onStateChange(mock)
+  t.start()
+  t.start()
+  expect(mock).toBeCalledTimes(1)
+})

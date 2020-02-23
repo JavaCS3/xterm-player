@@ -146,6 +146,9 @@ export class Timer {
   public isStopped(): boolean { return this._state === TimerState.STOPPED }
 
   public start(): void {
+    if (this.isRunning()) {
+      return
+    }
     if (this._duration && (!this.isRunning()) && (this.time >= this._duration)) {
       return
     }
