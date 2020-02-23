@@ -68,7 +68,7 @@ export class AnimationFrameTicker implements ITicker {
       this._cb = null
     }
   }
-  public now(): number { return Date.now() }
+  public now(): number { return performance.now() }
 }
 
 const TIMESCALE_MIN = 0, TIMESCALE_MAX = 5
