@@ -42,7 +42,9 @@ export class CastEventsFrame implements IFrame {
     private _snapshotFn: FrameSnapshotFn = DEFAULT_FRAME_SNAPSHOT_FN
   ) {
     if (!_events.len()) { throw new Error('Invalid frame: empty events') }
-    if ((startTime < 0) || ((endTime - startTime) <= 0)) { throw new Error('Invalid frame: inccorrect time or size') }
+    if ((startTime < 0) || ((endTime - startTime) <= 0)) { // TODO: re-evaluate if endTime - startTime can be ZERO
+      throw new Error('Invalid frame: inccorrect time or size')
+    }
     if (_events.get(0).time >= endTime) { throw new Error('Invalid frame: invalid events') }
   }
   public set prev(f: IFrame | null) {
