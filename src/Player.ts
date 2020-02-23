@@ -66,7 +66,7 @@ export class CastPlayer {
       const timer = this._timer
       switch (ev.domEvent.code) {
         case 'Space':
-          this._togglePlayPause()
+          this._togglePlayPauseReplay()
           break
         case 'ArrowRight':
           timer.time += 3000
@@ -77,7 +77,7 @@ export class CastPlayer {
       }
     })
 
-    this._view.controlBar.onPlayButtonClick(this._togglePlayPause.bind(this))
+    this._view.controlBar.onPlayButtonClick(this._togglePlayPauseReplay.bind(this))
     this._view.progressBar.onSeek((percent: number) => {
       this._timer.time = percent * this._duration
     })
@@ -88,12 +88,18 @@ export class CastPlayer {
   public play(): void { this._timer.start() }
   public pause(): void { this._timer.pause() }
   public stop(): void { this._timer.stop() }
+  public replay(): void {
+    this._timer.time = 0
+    this._timer.start()
+  }
 
-  private _togglePlayPause(): void {
+  private _togglePlayPauseReplay(): void {
     if (this._timer.isRunning()) {
       this.pause()
-    } else {
+    } else if (this._timer.isPaused()) {
       this.play()
+    } else {
+      this.replay()
     }
   }
 }
