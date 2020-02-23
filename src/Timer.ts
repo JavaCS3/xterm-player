@@ -65,8 +65,8 @@ export class AnimationFrameTicker implements ITicker {
     if (this._rafid) {
       cancelAnimationFrame(this._rafid)
       this._rafid = 0
-      this._cb = null
     }
+    this._cb = null
   }
   public now(): number { return performance.now() }
 }
