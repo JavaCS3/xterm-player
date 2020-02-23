@@ -3,8 +3,11 @@ import { createElement } from './DomHelper'
 import IconPlay from './icons/play.svg'
 import IconPause from './icons/pause.svg'
 
-function msToTime(t: number) {
-  return new Date(t).toISOString().slice(11, -5)
+function formatTime(time: number) {
+  let minutes = Math.floor(time / 60000)
+  let seconds = Math.floor((time - (minutes * 60000)) / 1000)
+
+  return `${minutes < 10 ? ('0' + minutes) : minutes}:${seconds < 10 ? ('0' + seconds) : seconds}`
 }
 
 export class ControlBarView implements IComponent {
@@ -68,6 +71,6 @@ export class ControlBarView implements IComponent {
   }
 
   private _updateTimeDisplay() {
-    this._timeDisplay.innerText = msToTime(this._currentTime)
+    this._timeDisplay.innerText = formatTime(this._currentTime) + '/' + formatTime(this._duration)
   }
 }
