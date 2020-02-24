@@ -319,3 +319,18 @@ test('Timer: onStateChange double start', () => {
   t.start()
   expect(mock).toBeCalledTimes(1)
 })
+
+test('Timer: delay', () => {
+  const ticker = new DummyTicker(1)
+  const t = new Timer(ticker)
+  const mock = jest.fn()
+
+  t.onTick(mock)
+  t.start()
+  ticker.tick(); expect(mock).toBeCalledTimes(1); expect(mock).toBeCalledWith(1)
+  t.delay(2)
+  ticker.tick(); expect(mock).toBeCalledTimes(1); expect(mock).toBeCalledWith(1)
+  ticker.tick(); expect(mock).toBeCalledTimes(1); expect(mock).toBeCalledWith(1)
+  ticker.tick(); expect(mock).toBeCalledTimes(2); expect(mock).toBeCalledWith(2)
+  ticker.tick(); expect(mock).toBeCalledTimes(3); expect(mock).toBeCalledWith(3)
+})

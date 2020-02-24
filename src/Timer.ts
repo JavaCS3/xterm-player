@@ -85,6 +85,7 @@ export type StateChangeCallback = (state: TimerState) => void
 export class Timer {
   private _lasttime: number = 0
   private _time: number = 0
+  private _delay: number = 0
   private _state: TimerState = TimerState.STOPPED
   private _onTickCb: TickEventCallback = () => { }
   private _onStateChangeCb: StateChangeCallback = () => { }
@@ -105,11 +106,6 @@ export class Timer {
 
   public get time(): number { return this._time }
   public set time(time: number) {
-    this.syncTime(time)
-    this._onTickCb(this._time)
-  }
-
-  public syncTime(time: number) {
     if (time < 0) { time = 0 }
     if (time === this._time) { return }
     if (this._duration && (time > this._duration)) {
@@ -119,6 +115,7 @@ export class Timer {
       this._time = time
     }
     this._lasttime = this._ticker.now()
+    this._onTickCb(this._time)
   }
 
   private _setState(state: TimerState): void {
@@ -160,7 +157,20 @@ export class Timer {
     this._lasttime = this._ticker.now()
     this._ticker.start(() => {
       const now = this._ticker.now()
-      const delta = (now - this._lasttime) * this._timescale
+
+      let elapsed = now - this._lasttime
+      if (this._delay) {
+        if (elapsed > this._delay) {
+          elapsed -= this._delay
+          this._delay = 0
+        } else {
+          this._delay -= elapsed
+        }
+        this._lasttime = now
+        return
+      }
+
+      const delta = elapsed * this._timescale
       if (this._duration && ((this._time + delta) > this._duration)) {
         this._time = this._duration
         this.stop()
@@ -178,5 +188,10 @@ export class Timer {
   public stop(): void {
     this._ticker.stop()
     this._setState(TimerState.STOPPED)
+  }
+  public delay(t: number): void {
+    if (t > 0) {
+      this._delay += t
+    }
   }
 }

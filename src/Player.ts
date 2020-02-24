@@ -59,10 +59,13 @@ export class CastPlayer {
         this._updateDuration()
       }
       audio.ontimeupdate = () => {
-        const delta = this._audio.currentTime * 1000 - this._vtimer.time
-        if (Math.abs(delta) > 30) {
-          console.debug('av sync delta', delta)
-          this._vtimer.syncTime(this._audio.currentTime * 1000)
+        const delta = this._vtimer.time - this._audio.currentTime * 1000
+        if (delta > 25) {
+          console.debug('av sync delay')
+          this._vtimer.delay(25)
+        } else if (delta < -75) {
+          console.debug('av sync fast forward')
+          this._vtimer.time = this._audio.currentTime * 1000
         }
       }
       audio.onended = () => {
