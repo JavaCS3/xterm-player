@@ -114,6 +114,7 @@ export class Timer {
     } else {
       this._time = time
     }
+    this._delay = 0
     this._lasttime = this._ticker.now()
     this._onTickCb(this._time)
   }

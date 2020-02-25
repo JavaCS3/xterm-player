@@ -61,10 +61,10 @@ export class CastPlayer {
       audio.ontimeupdate = () => {
         const delta = this._vtimer.time - this._audio.currentTime * 1000
         if (delta > 25) {
-          console.debug('av sync delay')
-          this._vtimer.delay(25)
-        } else if (delta < -75) {
-          console.debug('av sync fast forward')
+          console.debug(`av sync delay (delta: ${delta.toFixed(2)} ms)`)
+          this._vtimer.delay(delta)
+        } else if (delta < -50) {
+          console.debug(`av sync fast forward (delta: ${delta.toFixed(2)} ms)`)
           this._vtimer.time = this._audio.currentTime * 1000
         }
       }
@@ -89,11 +89,11 @@ export class CastPlayer {
           break
         case 'ArrowRight':
           this._audio.currentTime += 3
-          this._vtimer.time += 3000
+          this._vtimer.time = this._audio.currentTime * 1000
           break
         case 'ArrowLeft':
           this._audio.currentTime -= 3
-          this._vtimer.time -= 3000
+          this._vtimer.time = this._audio.currentTime * 1000
           break
       }
     })
@@ -102,8 +102,8 @@ export class CastPlayer {
     this._view.progressBar.onSeek((percent: number) => {
       if (!this._canplay) { return }
 
-      this._vtimer.time = percent * this._durationMs
       this._audio.currentTime = percent * this._durationMs / 1000
+      this._vtimer.time = percent * this._durationMs
     })
   }
   public get playbackRate(): number {
