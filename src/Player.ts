@@ -60,10 +60,10 @@ export class CastPlayer {
       }
       audio.ontimeupdate = () => {
         const delta = this._vtimer.time - this._audio.currentTime * 1000
-        if (delta > 25) {
+        if (25 < delta && delta < 100) {
           console.debug(`av sync delay (delta: ${delta.toFixed(2)} ms)`)
-          this._vtimer.delay(delta)
-        } else if (delta < -50) {
+          this._vtimer.delay(delta - 25)
+        } else if (delta < -25 || delta > 100) {
           console.debug(`av sync fast forward (delta: ${delta.toFixed(2)} ms)`)
           this._vtimer.time = this._audio.currentTime * 1000
         }
