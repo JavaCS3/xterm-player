@@ -93,8 +93,10 @@ export class Timer {
   public constructor(
     private _ticker: ITicker,
     private _timescale: number = 1,
-    private _duration: number = 0
+    private _duration: number = Infinity
   ) { }
+
+  public get duration(): number { return this._duration }
 
   public get timescale(): number { return this._timescale }
   public set timescale(timescale: number) {
@@ -108,7 +110,7 @@ export class Timer {
   public set time(time: number) {
     if (time < 0) { time = 0 }
     if (time === this._time) { return }
-    if (this._duration && (time > this._duration)) {
+    if (time > this._duration) {
       this._time = this._duration
       this.stop()
     } else {
@@ -151,7 +153,7 @@ export class Timer {
     if (this.isRunning()) {
       return
     }
-    if (this._duration && (!this.isRunning()) && (this.time >= this._duration)) {
+    if ((!this.isRunning()) && (this.time >= this._duration)) {
       return
     }
     this._setState(TimerState.RUNNING)
@@ -172,7 +174,7 @@ export class Timer {
       }
 
       const delta = elapsed * this._timescale
-      if (this._duration && ((this._time + delta) > this._duration)) {
+      if ((this._time + delta) > this._duration) {
         this._time = this._duration
         this.stop()
       } else {
