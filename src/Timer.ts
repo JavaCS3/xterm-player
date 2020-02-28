@@ -73,26 +73,45 @@ export class AnimationFrameTicker implements ITicker {
 
 const TIMESCALE_MIN = 0, TIMESCALE_MAX = 5
 
-export enum TimerState {
-  RUNNING,
-  PAUSED,
-  STOPPED
+export enum ITimerState { RUNNING, PAUSED, STOPPED }
+export type ITimerReadyCallback = () => void
+export type ITimerTickCallback = (time: number) => void
+export type ITimerStateChangeCallback = (state: ITimerState) => void
+
+export interface ITimer {
+  readonly ready: boolean
+  readonly state: ITimerState
+  readonly duration: number
+  readonly progress: number
+  timescale: number
+  time: number
+
+  start(): void
+  pause(): void
+  stop(): void
+
+  isRunning(): boolean
+  isPaused(): boolean
+  isStopped(): boolean
+
+  onReady(cb: ITimerReadyCallback): ITimer
+  onTick(cb: ITimerTickCallback): ITimer
+  onStateChange(cb: ITimerStateChangeCallback): ITimer
 }
 
-export type TickEventCallback = (time: number) => void
-export type StateChangeCallback = (state: TimerState) => void
-
-export class Timer {
+export class Timer implements ITimer {
+  public readonly ready = true
   private _lasttime: number = 0
   private _time: number = 0
   private _delay: number = 0
-  private _state: TimerState = TimerState.STOPPED
-  private _onTickCb: TickEventCallback = () => { }
-  private _onStateChangeCb: StateChangeCallback = () => { }
+  private _timescale: number = 1
+  private _state: ITimerState = ITimerState.PAUSED
+  private _onReadyCb: ITimerReadyCallback = () => { }
+  private _onTickCb: ITimerTickCallback = () => { }
+  private _onStateChangeCb: ITimerStateChangeCallback = () => { }
 
   public constructor(
     private _ticker: ITicker,
-    private _timescale: number = 1,
     private _duration: number = Infinity
   ) { }
 
@@ -121,33 +140,33 @@ export class Timer {
     this._onTickCb(this._time)
   }
 
-  private _setState(state: TimerState): void {
+  private _setState(state: ITimerState): void {
     if (this._state !== state) {
       this._state = state
       this._onStateChangeCb(this._state)
     }
   }
 
-  public get state(): TimerState { return this._state }
-  public get progress(): number {
-    if (this._duration) {
-      return this.time / this._duration
-    }
-    return 0.0
-  }
+  public get state(): ITimerState { return this._state }
+  public get progress(): number { return this.time / this._duration }
 
-  public onTick(cb: TickEventCallback): Timer {
+  public onReady(cb: ITimerReadyCallback): ITimer {
+    this._onReadyCb = cb
+    this._onReadyCb() // This is intended to make initialization process the same as MediaTimer
+    return this
+  }
+  public onTick(cb: ITimerTickCallback): ITimer {
     this._onTickCb = cb
     return this
   }
-  public onStateChange(cb: StateChangeCallback): Timer {
+  public onStateChange(cb: ITimerStateChangeCallback): ITimer {
     this._onStateChangeCb = cb
     return this
   }
 
-  public isRunning(): boolean { return this._state === TimerState.RUNNING }
-  public isPaused(): boolean { return this._state === TimerState.PAUSED }
-  public isStopped(): boolean { return this._state === TimerState.STOPPED }
+  public isRunning(): boolean { return this._state === ITimerState.RUNNING }
+  public isPaused(): boolean { return this._state === ITimerState.PAUSED }
+  public isStopped(): boolean { return this._state === ITimerState.STOPPED }
 
   public start(): void {
     if (this.isRunning()) {
@@ -156,7 +175,7 @@ export class Timer {
     if ((!this.isRunning()) && (this.time >= this._duration)) {
       return
     }
-    this._setState(TimerState.RUNNING)
+    this._setState(ITimerState.RUNNING)
     this._lasttime = this._ticker.now()
     this._ticker.start(() => {
       const now = this._ticker.now()
@@ -186,15 +205,84 @@ export class Timer {
   }
   public pause(): void {
     this._ticker.stop()
-    this._setState(TimerState.PAUSED)
+    this._setState(ITimerState.PAUSED)
   }
   public stop(): void {
     this._ticker.stop()
-    this._setState(TimerState.STOPPED)
+    this._setState(ITimerState.STOPPED)
   }
   public delay(t: number): void {
     if (t > 0) {
       this._delay += t
     }
+  }
+}
+
+export class MediaTimer implements ITimer { // TODO: Add unit test
+  private _ready: boolean = false
+  private _state: ITimerState = ITimerState.PAUSED
+  private _ticker = new AnimationFrameTicker()
+  private _onReadyCb: ITimerReadyCallback = () => { }
+  private _onTickCb: ITimerTickCallback = () => { }
+  private _onStateChangeCb: ITimerStateChangeCallback = () => { }
+
+  constructor(private _media: HTMLMediaElement) {
+    this._media.addEventListener('canplay', () => { this._ready = true; this._onReadyCb() })
+    this._media.addEventListener('play', () => { this._setState(ITimerState.RUNNING) })
+    this._media.addEventListener('pause', () => { this._setState(ITimerState.PAUSED) })
+    this._media.addEventListener('ended', () => {
+      this.stop()
+      this._onTickCb(this.time)
+    })
+  }
+
+  public get ready(): boolean { return this._ready }
+  public get progress(): number { return this._media.currentTime / this._media.duration }
+  public get duration(): number { return this._media.duration * 1000 }
+  public get state(): ITimerState { return this._state }
+  public get time(): number { return this._media.currentTime * 1000 }
+  public set time(t: number) { if (this._ready) { this._media.currentTime = t / 1000 } }
+  public get timescale(): number { return this._media.playbackRate }
+  public set timescale(s: number) { this._media.playbackRate = s }
+
+  private _setState(state: ITimerState) {
+    if (this._state !== state) {
+      this._state = state
+      this._onStateChangeCb(this._state)
+    }
+  }
+
+  public start(): void {
+    if (!this._ready) { return }
+    this._ticker.start(() => {
+      this._onTickCb(this.time)
+    })
+    this._media.play()
+  }
+  public pause(): void {
+    if (!this._ready) { return }
+    this._ticker.stop()
+    this._media.pause()
+  }
+  public stop(): void {
+    if (!this._ready) { return }
+    this._ticker.stop()
+    this._setState(ITimerState.STOPPED)
+  }
+  public isRunning(): boolean { return !this._media.paused && !this._media.ended }
+  public isPaused(): boolean { return this._media.paused }
+  public isStopped(): boolean { return this._media.ended || (this._media.currentTime >= this._media.duration) }
+
+  public onReady(cb: ITimerReadyCallback): ITimer {
+    this._onReadyCb = cb
+    return this
+  }
+  public onTick(cb: ITimerTickCallback): ITimer {
+    this._onTickCb = cb
+    return this
+  }
+  public onStateChange(cb: ITimerStateChangeCallback): ITimer {
+    this._onStateChangeCb = cb
+    return this
   }
 }
