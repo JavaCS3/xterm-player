@@ -71,6 +71,7 @@ export class CastPlayer {
     this._view.controlBar.onPlayButtonClick(this._togglePlayPauseReplay.bind(this))
     this._view.progressBar.onSeek((percent: number) => {
       this._timer.time = percent * this._timer.duration
+      this._updateProgressAndCurrentTime()
     })
   }
   public get playbackRate(): number { return this._timer.timescale }
@@ -78,7 +79,6 @@ export class CastPlayer {
 
   public play(): void { this._timer.start() }
   public replay(): void {
-    // this._timer.pause()
     this._timer.time = 0
     this._timer.start()
   }
@@ -103,6 +103,7 @@ export class CastPlayer {
   }
 
   private _render(now: number): void {
+    // console.log('now ' + now.toFixed(2) + ' duration: ' + this._timer.duration.toFixed(2))
     const frame = this._queue.frame(now)
     if (this._lastframe === frame && now > this._lasttime) {
       writeSync(this._term, frame.data(now, this._lasttime))

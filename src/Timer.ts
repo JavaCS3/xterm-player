@@ -3,6 +3,7 @@ export const TICK_INTERVAL = 1000 / 30
 type TickerCallback = () => void
 
 export interface ITicker {
+  readonly running: boolean
   start(cb: TickerCallback): void
   stop(): void
   now(): number
@@ -13,6 +14,8 @@ export class DummyTicker implements ITicker {
   private _time: number = 0
 
   constructor(private _interval: number = TICK_INTERVAL) { }
+
+  public get running(): boolean { return this._cb !== null }
 
   public start(cb: TickerCallback): void {
     this._cb = cb
@@ -33,7 +36,10 @@ export class DummyTicker implements ITicker {
 
 export class IntervalTicker implements ITicker {
   private _tid: NodeJS.Timeout | null = null
+
   public constructor(public interval: number = TICK_INTERVAL) { }
+
+  public get running(): boolean { return this._tid != null }
   public start(cb: TickerCallback): void {
     this.stop()
     this._tid = setInterval(cb, this.interval)
@@ -50,6 +56,9 @@ export class IntervalTicker implements ITicker {
 export class AnimationFrameTicker implements ITicker {
   private _rafid: number = 0
   private _cb: TickerCallback | null = null
+
+  public get running(): boolean { return this._rafid != 0 }
+
   private _tick() {
     if (this._cb) { this._cb() }
     if (this._rafid) {
@@ -226,12 +235,24 @@ export class MediaTimer implements ITimer {
   private _onStateChangeCb: ITimerStateChangeCallback = () => { }
 
   constructor(private _media: HTMLMediaElement) {
-    this._media.addEventListener('canplay', () => { this._ready = true; this._onReadyCb() })
-    this._media.addEventListener('play', () => { this._setState(ITimerState.RUNNING) })
-    this._media.addEventListener('pause', () => { this._setState(ITimerState.PAUSED) })
-    this._media.addEventListener('ended', () => {
+    _media.addEventListener('waiting', () => { console.log('waiting') })
+    _media.addEventListener('durationchange', () => { console.log('durationchange') })
+    _media.addEventListener('canplay', () => { this._ready = true; this._onReadyCb() })
+    _media.addEventListener('play', () => { this._setState(ITimerState.RUNNING) })
+    _media.addEventListener('pause', () => { this._setState(ITimerState.PAUSED) })
+    _media.addEventListener('ended', () => {
       this.stop()
       this._onTickCb(this.time)
+    })
+    _media.addEventListener('seeking', () => {
+      if (this.isRunning()) {
+        this._ticker.stop()
+      }
+    })
+    _media.addEventListener('seeked', () => {
+      if (this.isRunning()) {
+        this._ticker.start(this._tick.bind(this))
+      }
     })
   }
 
@@ -251,11 +272,18 @@ export class MediaTimer implements ITimer {
     }
   }
 
+  private _tick() {
+    // In Safari, the audio currentTime may exceed it's duration,
+    // or a little bit less than the duration
+    if (this.isStopped() && this._ticker.running) {
+      this.stop()
+    }
+    this._onTickCb(this.time)
+  }
+
   public start(): void {
     if (!this._ready) { return }
-    this._ticker.start(() => {
-      this._onTickCb(this.time)
-    })
+    this._ticker.start(this._tick.bind(this))
     this._media.play()
   }
   public pause(): void {
