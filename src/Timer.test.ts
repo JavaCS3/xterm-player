@@ -240,9 +240,10 @@ test(title(SimpleTimer, 'test set time'), () => {
   ticker.tick()
   expect(t.time).toBe(3)
   t.time = 0
-  expect(mock).toBeCalledWith(0)
+  expect(mock).toBeCalledTimes(3)
   expect(t.time).toBe(0)
   ticker.tick()
+  expect(mock).toBeCalledWith(1)
   ticker.tick()
   ticker.tick()
   expect(t.time).toBe(3)

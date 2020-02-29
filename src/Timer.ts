@@ -137,7 +137,6 @@ export class SimpleTimer implements ITimer {
     }
     this._delay = 0
     this._lasttime = this._ticker.now()
-    this._onTickCb(this._time)
   }
 
   private _setState(state: ITimerState): void {
