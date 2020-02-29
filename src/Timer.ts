@@ -217,7 +217,7 @@ export class SimpleTimer implements ITimer {
   }
 }
 
-export class MediaTimer implements ITimer { // TODO: Add unit test
+export class MediaTimer implements ITimer {
   private _ready: boolean = false
   private _state: ITimerState = ITimerState.PAUSED
   private _ticker = new AnimationFrameTicker()
@@ -270,7 +270,7 @@ export class MediaTimer implements ITimer { // TODO: Add unit test
   }
   public isRunning(): boolean { return !this._media.paused && !this._media.ended }
   public isPaused(): boolean { return this._media.paused }
-  public isStopped(): boolean { return this._media.ended || (this._media.currentTime >= this._media.duration) }
+  public isStopped(): boolean { return this._media.ended || (this._ready && (this._media.currentTime >= this._media.duration)) }
 
   public onReady(cb: ITimerReadyCallback): ITimer {
     this._onReadyCb = cb

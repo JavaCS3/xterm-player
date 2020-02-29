@@ -1,4 +1,4 @@
-import { IntervalTicker, AnimationFrameTicker, DummyTicker, SimpleTimer, TICK_INTERVAL, ITimerState } from './Timer'
+import { IntervalTicker, AnimationFrameTicker, DummyTicker, SimpleTimer, TICK_INTERVAL, ITimerState, MediaTimer } from './Timer'
 
 const intervalTicker = new IntervalTicker()
 const animationFrameTicker = new AnimationFrameTicker()
@@ -165,6 +165,16 @@ test(title(SimpleTimer, 'test state'), () => {
   expect(t.isStopped()).toBeTruthy()
 })
 
+test(title(SimpleTimer, 'test onReady event'), () => {
+  const ticker = new DummyTicker(1)
+  const t = new SimpleTimer(ticker)
+  const mock = jest.fn()
+
+  t.onReady(mock)
+  expect(mock).toBeCalled()
+  expect(t.ready).toBeTruthy()
+})
+
 test(title(SimpleTimer, 'test onTick event'), () => {
   const ticker = new DummyTicker(1)
   const t = new SimpleTimer(ticker)
@@ -324,4 +334,42 @@ test(title(SimpleTimer, 'delay'), () => {
   ticker.tick(); expect(mock).toBeCalledTimes(1); expect(mock).toBeCalledWith(1)
   ticker.tick(); expect(mock).toBeCalledTimes(2); expect(mock).toBeCalledWith(2)
   ticker.tick(); expect(mock).toBeCalledTimes(3); expect(mock).toBeCalledWith(3)
+})
+
+test(title(MediaTimer, 'test onReady'), () => {
+  const audio = new Audio()
+  const t = new MediaTimer(audio)
+  const mock = jest.fn()
+
+  t.onReady(mock)
+
+  expect(t.ready).toBeFalsy()
+  expect(t.progress).toBeNaN()
+  expect(t.isPaused()).toBeTruthy()
+  expect(t.isRunning()).toBeFalsy()
+  expect(t.isStopped()).toBeFalsy()
+
+  audio.dispatchEvent(new Event('canplay'))
+
+  expect(mock).toBeCalled()
+  expect(t.ready).toBeTruthy()
+})
+
+test(title(MediaTimer, 'test properties'), () => {
+  const audio = new Audio()
+  const t = new MediaTimer(audio)
+
+  audio.dispatchEvent(new Event('canplay'))
+
+  Object.defineProperty(audio, 'currentTime', { writable: true, value: 10 })
+  Object.defineProperty(audio, 'duration', { writable: true, value: 100 })
+
+  expect(t.time).toBe(10 * 1000)
+  expect(t.duration).toBe(100 * 1000)
+  expect(t.progress).toBe(10 / 100)
+
+  t.time = 100
+
+  expect(t.time).toBe(100)
+  expect(t.progress).toBe(100 / (100 * 1000))
 })
