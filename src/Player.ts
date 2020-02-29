@@ -2,7 +2,7 @@ import 'xterm/css/xterm.css'
 import './ui/ui.css'
 import { Terminal } from 'xterm'
 import { ICastObject } from './Cast'
-import { Timer, MediaTimer, AnimationFrameTicker, IntervalTicker, ITimer } from './Timer'
+import { SimpleTimer, MediaTimer, AnimationFrameTicker, IntervalTicker, ITimer } from './Timer'
 import { CastFrameQueue, NULL_FRAME, IFrame } from './Frame'
 import { PlayerView } from './ui/PlayerView'
 
@@ -42,7 +42,7 @@ export class CastPlayer {
     if (_cast.header.audio) {
       this._timer = new MediaTimer(this._audio)
     } else {
-      this._timer = new Timer(new AnimationFrameTicker(), _cast.header.duration)
+      this._timer = new SimpleTimer(new AnimationFrameTicker(), _cast.header.duration)
     }
 
     this._timer.onReady(() => {

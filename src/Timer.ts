@@ -99,7 +99,7 @@ export interface ITimer {
   onStateChange(cb: ITimerStateChangeCallback): ITimer
 }
 
-export class Timer implements ITimer {
+export class SimpleTimer implements ITimer {
   public readonly ready = true
   private _lasttime: number = 0
   private _time: number = 0

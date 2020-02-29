@@ -1,4 +1,4 @@
-import { IntervalTicker, AnimationFrameTicker, DummyTicker, Timer, TICK_INTERVAL, ITimerState } from './Timer'
+import { IntervalTicker, AnimationFrameTicker, DummyTicker, SimpleTimer, TICK_INTERVAL, ITimerState } from './Timer'
 
 const intervalTicker = new IntervalTicker()
 const animationFrameTicker = new AnimationFrameTicker()
@@ -72,9 +72,9 @@ test(title(DummyTicker, 'test tick'), () => {
   expect(t.now()).toBe(n)
 })
 
-test(title(Timer, 'test time'), () => {
+test(title(SimpleTimer, 'test time'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   ticker.tick()
   ticker.tick()
   t.start()
@@ -86,9 +86,9 @@ test(title(Timer, 'test time'), () => {
   expect(t.time).toBe(5)
 })
 
-test(title(Timer, 'test set timescale use property'), () => {
+test(title(SimpleTimer, 'test set timescale use property'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   t.timescale = 2
   ticker.tick()
   ticker.tick()
@@ -101,9 +101,9 @@ test(title(Timer, 'test set timescale use property'), () => {
   expect(t.time).toBe(5 * t.timescale)
 })
 
-test(title(Timer, 'dynamic set timescale #1'), () => {
+test(title(SimpleTimer, 'dynamic set timescale #1'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   ticker.tick()
   ticker.tick()
   t.start()
@@ -116,9 +116,9 @@ test(title(Timer, 'dynamic set timescale #1'), () => {
   expect(t.time).toBe(7)
 })
 
-test(title(Timer, 'dynamic set timescale #2'), () => {
+test(title(SimpleTimer, 'dynamic set timescale #2'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   ticker.tick()
   ticker.tick()
   t.start()
@@ -132,9 +132,9 @@ test(title(Timer, 'dynamic set timescale #2'), () => {
   expect(t.time).toBe(8)
 })
 
-test(title(Timer, 'test pause'), () => {
+test(title(SimpleTimer, 'test pause'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   ticker.tick()
   ticker.tick()
   t.start()
@@ -153,9 +153,9 @@ test(title(Timer, 'test pause'), () => {
   expect(t.time).toBe(6)
 })
 
-test(title(Timer, 'test state'), () => {
+test(title(SimpleTimer, 'test state'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   expect(t.isPaused()).toBeTruthy()
   t.start()
   expect(t.isRunning()).toBeTruthy()
@@ -165,9 +165,9 @@ test(title(Timer, 'test state'), () => {
   expect(t.isStopped()).toBeTruthy()
 })
 
-test(title(Timer, 'test onTick event'), () => {
+test(title(SimpleTimer, 'test onTick event'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   const mock = jest.fn()
   t.onTick(mock)
   ticker.tick()
@@ -189,9 +189,9 @@ test(title(Timer, 'test onTick event'), () => {
   expect(t.time).toBe(6)
 })
 
-test(title(Timer, 'test onStateChange'), () => {
+test(title(SimpleTimer, 'test onStateChange'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   const mock = jest.fn()
   t.onStateChange(mock)
   expect(mock).not.toBeCalled()
@@ -227,9 +227,9 @@ test(title(Timer, 'test onStateChange'), () => {
   expect(mock4).not.toBeCalled()
 })
 
-test(title(Timer, 'test set time'), () => {
+test(title(SimpleTimer, 'test set time'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   const mock = jest.fn()
   t.onTick(mock)
   ticker.tick()
@@ -248,9 +248,9 @@ test(title(Timer, 'test set time'), () => {
   expect(t.time).toBe(3)
 })
 
-test(title(Timer, 'test duration'), () => {
+test(title(SimpleTimer, 'test duration'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker, 3)
+  const t = new SimpleTimer(ticker, 3)
   const mock = jest.fn()
   expect(t.progress).toBe(0.0)
   t.onTick(mock)
@@ -268,9 +268,9 @@ test(title(Timer, 'test duration'), () => {
   expect(t.progress).toBe(1.0)
 })
 
-test(title(Timer, 'onStateChange should not be called when reaching it\'s duration'), () => {
+test(title(SimpleTimer, 'onStateChange should not be called when reaching it\'s duration'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker, 3)
+  const t = new SimpleTimer(ticker, 3)
   const mock = jest.fn()
 
   expect(t.progress).toBe(0.0)
@@ -299,9 +299,9 @@ test(title(Timer, 'onStateChange should not be called when reaching it\'s durati
   expect(stateChangedFn).toBeCalledTimes(1)
 })
 
-test(title(Timer, 'onStateChange double start'), () => {
+test(title(SimpleTimer, 'onStateChange double start'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   const mock = jest.fn()
 
   t.onStateChange(mock)
@@ -310,9 +310,9 @@ test(title(Timer, 'onStateChange double start'), () => {
   expect(mock).toBeCalledTimes(1)
 })
 
-test(title(Timer, 'delay'), () => {
+test(title(SimpleTimer, 'delay'), () => {
   const ticker = new DummyTicker(1)
-  const t = new Timer(ticker)
+  const t = new SimpleTimer(ticker)
   const mock = jest.fn()
 
   t.onTick(mock)
