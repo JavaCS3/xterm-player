@@ -32,7 +32,7 @@ export class CastPlayer {
       fontFamily: 'Consolas, Menlo'
     })
 
-    this._view = new PlayerView()
+    const view = this._view = new PlayerView()
     _el.append(this._view.element)
     this._term.open(this._view.videoWrapper)
 
@@ -52,8 +52,14 @@ export class CastPlayer {
         .onStateChange(this._updatePlaying.bind(this))
     })
 
-    term.onKey((ev: { domEvent: KeyboardEvent }) => {
-      switch (ev.domEvent.code) {
+    view.element.addEventListener('mouseenter', () => {
+      view.showBottom()
+    })
+    view.element.addEventListener('mouseleave', () => {
+      view.hideBottom()
+    })
+    view.element.addEventListener('keyup', (ev: KeyboardEvent) => {
+      switch (ev.code) {
         case 'Space':
           this._togglePlayPauseReplay()
           break
@@ -67,9 +73,8 @@ export class CastPlayer {
           break
       }
     })
-
-    this._view.controlBar.onPlayButtonClick(this._togglePlayPauseReplay.bind(this))
-    this._view.progressBar.onSeek((percent: number) => {
+    view.controlBar.onPlayButtonClick(this._togglePlayPauseReplay.bind(this))
+    view.progressBar.onSeek((percent: number) => {
       this._timer.time = percent * this._timer.duration
       this._updateProgressAndCurrentTime()
     })

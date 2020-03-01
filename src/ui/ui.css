@@ -1,5 +1,7 @@
 .xterm-player {
+  outline: none;
   position: relative;
+  display: inline-block;
 }
 
 .xterm-player .xterm-viewport {
@@ -21,6 +23,7 @@
   height: 36px;
   z-index: 60;
   text-align: left;
+  transition: opacity 0.2s ease-in-out 0.1s;
 }
 
 .xterm-player .control-bar * {
