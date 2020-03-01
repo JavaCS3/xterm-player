@@ -53,10 +53,10 @@ export class CastPlayer {
     })
 
     view.element.addEventListener('mouseenter', () => {
-      view.showBottom()
+      view.showBottom(true)
     })
     view.element.addEventListener('mouseleave', () => {
-      view.hideBottom()
+      view.showBottom(false)
     })
     view.element.addEventListener('keyup', (ev: KeyboardEvent) => {
       switch (ev.code) {
@@ -101,7 +101,10 @@ export class CastPlayer {
   }
 
   private _updateDuration(): void { this._view.controlBar.duration = this._timer.duration }
-  private _updatePlaying(): void { this._view.controlBar.playing = this._timer.isRunning() }
+  private _updatePlaying(): void {
+    this._view.controlBar.playing = this._timer.isRunning()
+    this._view.showPause(!this._timer.isRunning())
+  }
   private _updateProgressAndCurrentTime(): void {
     this._view.progressBar.progress = this._timer.progress
     this._view.controlBar.currentTime = this._timer.time
