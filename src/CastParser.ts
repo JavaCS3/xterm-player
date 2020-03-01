@@ -1,4 +1,4 @@
-import { ICastObject } from "./Cast"
+import { ICastObject } from './Cast'
 
 export interface ICastParser {
   parse(text: string): ICastObject
@@ -14,7 +14,7 @@ export class AsciinemaCastParser implements ICastParser {
   }
 }
 
-const MS = 1000
+const MILLISECOND = 1000
 
 /**
  * Asciinema cast v1 parser
@@ -27,7 +27,7 @@ export class AsciinemaCastV1Parser implements ICastParser {
 
     let timestamp = 0.0
     const events = stdouts.map((e: [number, string]) => {
-      timestamp += e[0] * MS
+      timestamp += e[0] * MILLISECOND
       return {
         time: timestamp,
         type: 'o',
@@ -40,7 +40,7 @@ export class AsciinemaCastV1Parser implements ICastParser {
         version: 1,
         width: j.width,
         height: j.height,
-        duration: j.duration * MS
+        duration: j.duration * MILLISECOND
       },
       events
     }
@@ -64,7 +64,7 @@ export class AsciinemaCastV2Parser implements ICastParser {
         events: events.map(e => {
           const j = JSON.parse(e)
           return {
-            time: j[0] * MS,
+            time: j[0] * MILLISECOND,
             type: j[1],
             data: j[2]
           }

@@ -1,5 +1,6 @@
 import { ICastEvent, ICastObject } from './Cast'
 import { Slice } from './Utils'
+import { IDisposable } from './Types'
 
 export interface IFrame {
   readonly startTime: number
@@ -88,7 +89,21 @@ export class CastEventsFrame implements IFrame {
 
 const DEFAULT_FRAME_EVENTS_STEP = 30
 
-export class CastFrameQueue {
+
+export interface IFrameQueue extends IDisposable {
+  isEnd(frame: IFrame): boolean
+  len(): number
+  frame(time: number): IFrame
+}
+
+export class NullFrameQueue implements IFrameQueue {
+  isEnd(frame: IFrame): boolean { return true }
+  len(): number { return 0 }
+  frame(time: number): IFrame { return NULL_FRAME }
+  dispose(): void { }
+}
+
+export class CastFrameQueue implements IFrameQueue {
   private _endFrame: IFrame
   private _frames: Array<IFrame> = []
 
@@ -138,4 +153,5 @@ export class CastFrameQueue {
     }
     return NULL_FRAME
   }
+  public dispose(): void { this._frames = [] }
 }

@@ -1,9 +1,10 @@
 import 'xterm/css/xterm.css'
 import './ui/ui.css'
 import { Terminal } from 'xterm'
-import { ICastObject } from './Cast'
-import { SimpleTimer, MediaTimer, AnimationFrameTicker, IntervalTicker, ITimer } from './Timer'
-import { CastFrameQueue, NULL_FRAME, IFrame } from './Frame'
+import { XTermPlayer as XTermPlayerApi } from 'xterm-player'
+import fetchCast from './CastFetcher'
+import { SimpleTimer, MediaTimer, AnimationFrameTicker, IntervalTicker, ITimer, NullTimer } from './Timer'
+import { CastFrameQueue, NULL_FRAME, IFrame, NullFrameQueue, IFrameQueue } from './Frame'
 import { PlayerView } from './ui/PlayerView'
 
 function writeSync(term: Terminal, data: string) {
@@ -12,45 +13,33 @@ function writeSync(term: Terminal, data: string) {
   }
 }
 
-export class CastPlayer {
+export class CastPlayer implements XTermPlayerApi {
+  public readonly el: HTMLElement
+
+  private _url: string = ''
   private _term: Terminal
-  private _timer: ITimer
-  private _queue: CastFrameQueue
   private _view: PlayerView
+  private _timer: ITimer = new NullTimer()
+  private _queue: IFrameQueue = new NullFrameQueue()
   private _audio: HTMLAudioElement
 
   private _lasttime: number = 0
   private _lastframe: IFrame = NULL_FRAME
 
   constructor(
-    private _el: HTMLElement,
-    private _cast: ICastObject
+    url: string,
+    el: HTMLElement
   ) {
-    const term = this._term = new Terminal({
-      cols: _cast.header.width,
-      rows: _cast.header.height,
-      fontFamily: 'Consolas, Menlo'
-    })
+    this.el = el
+    this._url = url
+    this._term = new Terminal({ fontFamily: 'Consolas, Menlo' })
+    this._audio = new Audio()
 
     const view = this._view = new PlayerView()
-    _el.append(this._view.element)
+    el.append(this._view.element)
     this._term.open(this._view.videoWrapper)
 
-    this._queue = new CastFrameQueue(_cast, 30)
-    this._audio = new Audio(_cast.header.audio)
-
-    if (_cast.header.audio) {
-      this._timer = new MediaTimer(this._audio)
-    } else {
-      this._timer = new SimpleTimer(new AnimationFrameTicker(), _cast.header.duration)
-    }
-
-    this._timer.onReady(() => {
-      this._updateDuration()
-      this._timer
-        .onTick(this._render.bind(this))
-        .onStateChange(this._updatePlaying.bind(this))
-    })
+    this._load()
 
     view.element.addEventListener('mouseenter', () => {
       view.showBottom(true)
@@ -79,6 +68,48 @@ export class CastPlayer {
       this._updateProgressAndCurrentTime()
     })
   }
+
+  private _load(): void {
+    fetchCast(this._url).then((cast) => {
+      this._term.reset()
+      this._term.resize(cast.header.width, cast.header.height)
+
+      this._timer.dispose()
+      this._queue.dispose()
+
+      if (cast.header.audio) {
+        this._audio.src = cast.header.audio
+      }
+
+      if (cast.header.audio) {
+        this._timer = new MediaTimer(this._audio)
+      } else {
+        this._timer = new SimpleTimer(new AnimationFrameTicker(), cast.header.duration)
+      }
+
+      if (cast.header.audio) {
+        this._audio.load()
+      }
+
+      this._queue = new CastFrameQueue(cast, 30)
+
+      this._timer.onReady(() => {
+        this._updateDuration()
+        this._timer
+          .onTick(this._render.bind(this))
+          .onStateChange(this._updatePlaying.bind(this))
+      })
+    }).catch(console.error)
+  }
+
+  public get url(): string { return this._url }
+  public set url(url: string) {
+    if (url !== this._url) {
+      this._url = url
+      this._load()
+    }
+  }
+
   public get playbackRate(): number { return this._timer.timescale }
   public set playbackRate(rate: number) { this._timer.timescale = rate }
 

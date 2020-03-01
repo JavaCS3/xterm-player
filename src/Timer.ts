@@ -1,3 +1,6 @@
+import { IDisposable } from './Types'
+import { addDisposableDomListener } from './Utils'
+
 export const TICK_INTERVAL = 1000 / 30
 
 type TickerCallback = () => void
@@ -87,7 +90,9 @@ export type ITimerReadyCallback = () => void
 export type ITimerTickCallback = (time: number) => void
 export type ITimerStateChangeCallback = (state: ITimerState) => void
 
-export interface ITimer {
+const NULL_FN = () => { }
+
+export interface ITimer extends IDisposable {
   readonly ready: boolean
   readonly state: ITimerState
   readonly duration: number
@@ -108,6 +113,26 @@ export interface ITimer {
   onStateChange(cb: ITimerStateChangeCallback): ITimer
 }
 
+export class NullTimer implements ITimer {
+  ready: boolean = false
+  state: ITimerState = ITimerState.PAUSED
+  duration: number = NaN
+  progress: number = NaN
+  timescale: number = 1
+  time: number = 0
+
+  start(): void { }
+  pause(): void { }
+  stop(): void { }
+  isRunning(): boolean { return false }
+  isPaused(): boolean { return true }
+  isStopped(): boolean { return false }
+  onReady(cb: ITimerReadyCallback): ITimer { return this }
+  onTick(cb: ITimerTickCallback): ITimer { return this }
+  onStateChange(cb: ITimerStateChangeCallback): ITimer { return this }
+  dispose(): void { }
+}
+
 export class SimpleTimer implements ITimer {
   public readonly ready = true
   private _lasttime: number = 0
@@ -115,9 +140,9 @@ export class SimpleTimer implements ITimer {
   private _delay: number = 0
   private _timescale: number = 1
   private _state: ITimerState = ITimerState.PAUSED
-  private _onReadyCb: ITimerReadyCallback = () => { }
-  private _onTickCb: ITimerTickCallback = () => { }
-  private _onStateChangeCb: ITimerStateChangeCallback = () => { }
+  private _onReadyCb: ITimerReadyCallback = NULL_FN
+  private _onTickCb: ITimerTickCallback = NULL_FN
+  private _onStateChangeCb: ITimerStateChangeCallback = NULL_FN
 
   public constructor(
     private _ticker: ITicker,
@@ -224,36 +249,44 @@ export class SimpleTimer implements ITimer {
       this._delay += t
     }
   }
+  public dispose(): void {
+    this.stop()
+    this._onReadyCb = this._onStateChangeCb = this._onTickCb = NULL_FN
+  }
 }
 
 export class MediaTimer implements ITimer {
   private _ready: boolean = false
   private _state: ITimerState = ITimerState.PAUSED
   private _ticker = new AnimationFrameTicker()
-  private _onReadyCb: ITimerReadyCallback = () => { }
-  private _onTickCb: ITimerTickCallback = () => { }
-  private _onStateChangeCb: ITimerStateChangeCallback = () => { }
+  private _onReadyCb: ITimerReadyCallback = NULL_FN
+  private _onTickCb: ITimerTickCallback = NULL_FN
+  private _onStateChangeCb: ITimerStateChangeCallback = NULL_FN
+
+  private _disposes: IDisposable[] = []
 
   constructor(private _media: HTMLMediaElement) {
-    _media.addEventListener('waiting', () => { console.log('waiting') })
-    _media.addEventListener('durationchange', () => { console.log('durationchange') })
-    _media.addEventListener('canplay', () => { this._ready = true; this._onReadyCb() })
-    _media.addEventListener('play', () => { this._setState(ITimerState.RUNNING) })
-    _media.addEventListener('pause', () => { this._setState(ITimerState.PAUSED) })
-    _media.addEventListener('ended', () => {
-      this.stop()
-      this._onTickCb(this.time)
-    })
-    _media.addEventListener('seeking', () => {
-      if (this.isRunning()) {
-        this._ticker.stop()
-      }
-    })
-    _media.addEventListener('seeked', () => {
-      if (this.isRunning()) {
-        this._ticker.start(this._tick.bind(this))
-      }
-    })
+    this._disposes = [
+      addDisposableDomListener(_media, 'waiting', () => { console.log('waiting') }),
+      addDisposableDomListener(_media, 'durationchange', () => { console.log('durationchange') }),
+      addDisposableDomListener(_media, 'canplay', () => { this._ready = true; this._onReadyCb() }),
+      addDisposableDomListener(_media, 'play', () => { this._setState(ITimerState.RUNNING) }),
+      addDisposableDomListener(_media, 'pause', () => { this._setState(ITimerState.PAUSED) }),
+      addDisposableDomListener(_media, 'ended', () => {
+        this.stop()
+        this._onTickCb(this.time)
+      }),
+      addDisposableDomListener(_media, 'seeking', () => {
+        if (this.isRunning()) {
+          this._ticker.stop()
+        }
+      }),
+      addDisposableDomListener(_media, 'seeked', () => {
+        if (this.isRunning()) {
+          this._ticker.start(this._tick.bind(this))
+        }
+      }),
+    ]
   }
 
   public get ready(): boolean { return this._ready }
@@ -311,5 +344,8 @@ export class MediaTimer implements ITimer {
   public onStateChange(cb: ITimerStateChangeCallback): ITimer {
     this._onStateChangeCb = cb
     return this
+  }
+  public dispose(): void {
+    this._disposes.forEach(d => d.dispose())
   }
 }

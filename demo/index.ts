@@ -1,18 +1,12 @@
-import 'xterm/css/xterm.css'
-import { AsciinemaCastParser } from '../src/CastParser'
 import { CastPlayer } from '../src/Player'
-import cast from '../assets/5.cast'
+import cast1 from '../assets/1.cast'
+import cast5 from '../assets/5.cast'
 
 const div = document.getElementById('app')
 if (div) {
-  fetch(cast).then(res => {
-    res.text().then(text => {
-      const parser = new AsciinemaCastParser()
-      const co = parser.parse(text)
-      const player = new CastPlayer(div, co)
-      player.playbackRate = 3
-    })
-  })
-
+  const player = new CastPlayer(cast1, div)
+  // setTimeout(() => {
+  //   player.url = cast5
+  // }, 5000)
 }
 

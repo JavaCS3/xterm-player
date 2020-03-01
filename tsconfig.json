@@ -12,6 +12,9 @@
     "allowJs": true,
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["./src/**/*"],
+  "include": [
+    "./src/**/*",
+    "./typings/xterm-player.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
