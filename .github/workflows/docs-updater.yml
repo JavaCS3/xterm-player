@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Docs Updater
 
 on: [push]
 
@@ -39,7 +39,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git commit -m "update docs"
 
-#     - name: Push changes
-#       uses: ad-m/github-push-action@master
-#       with:
-#         github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
