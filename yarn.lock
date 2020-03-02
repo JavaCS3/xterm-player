@@ -7160,10 +7160,10 @@ xtend@^4.0.0, xtend@~4.0.1:
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
 
-xterm-addon-serialize@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/xterm-addon-serialize/-/xterm-addon-serialize-0.1.1.tgz#0fdff59702c00ed8288181198153ec47fd3df8da"
-  integrity sha512-6ykkAnyVsMZhKhUAR6Uml1t8kwpmPqoZm8qERfQX+kI4+m6UGf9ec4SLteDGpYMh/6hLrN7WZqSukfsU3Eof9g==
+xterm-addon-serialize@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/xterm-addon-serialize/-/xterm-addon-serialize-0.1.2.tgz#339a38520bf90cf51f447cb74f3ae0e530d5ee39"
+  integrity sha512-etSTiN+I3lqWefMixiiVo1V4lPjmfInFmwtjbYDYWyUwPU5tveEZZSu15b52Q26IPaJdl8RxBgNTYu6Q3YauLQ==
 
 xterm@^4.4.0:
   version "4.4.0"

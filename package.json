@@ -18,7 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "xterm": "^4.4.0",
-    "xterm-addon-serialize": "^0.1.1"
+    "xterm-addon-serialize": "^0.1.2"
   },
   "devDependencies": {
     "@types/jest": "^25.1.1",
