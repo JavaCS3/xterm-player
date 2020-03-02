@@ -44,6 +44,7 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vue": "^2.6.10",
     "webpack": "^4.30.0",
+    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.3.1"
   }
