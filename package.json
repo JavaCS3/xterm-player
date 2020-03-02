@@ -9,10 +9,11 @@
     "clean": "rm -rf out/",
     "test": "jest && yarn lint",
     "watch": "jest --watch --color",
-    "demo": "webpack-dev-server --config demo/webpack.config.js --open",
+    "demo": "webpack-dev-server --config build/webpack.config.dev.js --open",
     "dev": "yarn run demo",
     "build": "tsc -b ./tsconfig.json && yarn lint",
-    "package": "NODE_ENV=production webpack --optimize-minimize --config ./webpack.config.js"
+    "build:docs": "NODE_ENV=production webpack --optimize-minimize --config ./build/webpack.config.docs.js",
+    "package": "NODE_ENV=production webpack --optimize-minimize --config ./build/webpack.config.prod.js"
   },
   "author": "javacs3",
   "license": "ISC",

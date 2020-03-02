@@ -1,19 +1,23 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const TSLintPlugin = require('tslint-webpack-plugin')
+const { basedir } = require('./utils')
+const configBase = require('./webpack.config.base')
 
-module.exports = {
-  entry: path.join(__dirname, './index.ts'),
-  mode: 'development',
-  watch: true,
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
+module.exports = Object.assign(configBase, {
+  devtool: 'inline-source-map',
+
+  devServer: {
+    contentBase: basedir('../demo/dist')
+  },
+
+  entry: basedir('../demo/index.ts'),
+
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: basedir('../demo/dist')
   },
-  devtool: 'inline-source-map',
-  devServer: {
-    contentBase: path.resolve(__dirname, 'dist')
-  },
+
   module: {
     rules: [
       {
@@ -41,17 +45,12 @@ module.exports = {
       }
     ]
   },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js']
-  },
+
   plugins: [
+    new CleanWebpackPlugin({ verbose: true }),
     new HtmlWebpackPlugin({
       title: 'demo',
-      template: path.join(__dirname, 'index.html')
+      template: basedir('../demo/index.html')
     })
-    // new TSLintPlugin({
-    //   files: ['./src/**/*.ts'],
-    //   config: path.resolve(__dirname, './tslint.json')
-    // })
   ]
-}
+})
