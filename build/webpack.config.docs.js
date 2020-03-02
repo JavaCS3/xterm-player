@@ -10,7 +10,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = Object.assign(configBase, {
-  devtool: config.isProdEnv ? 'source-map' : 'eval',
+  // devtool: config.isProdEnv ? 'source-map' : 'eval',
 
   entry: {
     'index.min': basedir('../demo/index.ts')
