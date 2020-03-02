@@ -35,16 +35,9 @@ jobs:
             echo "::set-env name=update_docs::true"
           fi
       
-      - name: Commit docs update
+      - name: Update docs
         if: env.update_docs && matrix.node-version == '12.x'
-        run: |
-          git config --local user.email 'action@github.com'
-          git config --local user.name 'GitHub Action'
-          git commit -m 'update docs'
-
-      - name: Push docs update
-        if: env.update_docs && matrix.node-version == '12.x'
-        uses: ad-m/github-push-action@master
+        run: echo update docs
 
       - name: Test
         run: yarn test
