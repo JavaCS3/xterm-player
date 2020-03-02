@@ -7,7 +7,6 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -33,13 +32,14 @@ jobs:
         fi
     
     - name: Update docs
-      if: env.update_docs && matrix.node-version == '12.x'
+      if: env.update_docs
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -m "update docs"
 
     - name: Push changes
+      if: env.update_docs
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
