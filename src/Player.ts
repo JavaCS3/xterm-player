@@ -62,6 +62,7 @@ export class CastPlayer implements XTermPlayerApi {
           break
       }
     })
+    view.onBigPauseClick(this._togglePlayPauseReplay.bind(this))
     view.controlBar.onPlayButtonClick(this._togglePlayPauseReplay.bind(this))
     view.progressBar.onSeek((percent: number) => {
       this._timer.time = percent * this._timer.duration
@@ -134,7 +135,7 @@ export class CastPlayer implements XTermPlayerApi {
   private _updateDuration(): void { this._view.controlBar.duration = this._timer.duration }
   private _updatePlaying(): void {
     this._view.controlBar.playing = this._timer.isRunning()
-    this._view.showPause(!this._timer.isRunning())
+    this._view.showBigPause(!this._timer.isRunning())
   }
   private _updateProgressAndCurrentTime(): void {
     this._view.progressBar.progress = this._timer.progress

@@ -17,13 +17,18 @@
 
 .xterm-player .overlay {
   position: absolute;
-  font-size: 0;
+  z-index: 999;
+}
+
+.xterm-player .overlay.center {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
 
-.xterm-player .overlay.state-overlay {
+.xterm-player .overlay.big-pause {
+  cursor: pointer;
+  font-size: 0;
   width: 80px;
   background-color: red;
   -webkit-box-shadow: 0px 0px 80px 0px rgba(0, 0, 0, 0.5);
