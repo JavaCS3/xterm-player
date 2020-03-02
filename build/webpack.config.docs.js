@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = Object.assign(configBase, {
   devtool: config.isProdEnv ? 'source-map' : 'eval',
@@ -53,12 +54,7 @@ module.exports = Object.assign(configBase, {
   },
 
   externals: {
-    'xterm/Terminal': {
-      commonjs: 'xterm/Terminal',
-      commonjs2: 'xterm/Terminal',
-      amd: 'xterm/Terminal',
-      root: 'Terminal'
-    }
+    xterm: '{ Terminal: Terminal }'
   },
 
   optimization: {
@@ -89,5 +85,6 @@ module.exports = Object.assign(configBase, {
         collapseWhitespace: true
       }
     })
+    // new BundleAnalyzerPlugin()
   ]
 })
