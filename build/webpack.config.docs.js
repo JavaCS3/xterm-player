@@ -67,10 +67,10 @@ module.exports = Object.assign(configBase, {
         include: /\.min\.js$/
       }),
       new OptimizeCSSAssetsPlugin({
-        assetNameRegExp: /\.min\.css$/,
-        cssProcessorOptions: {
-          map: { inline: false, annotation: true }
-        }
+        assetNameRegExp: /\.min\.css$/
+        // cssProcessorOptions: {
+        //   map: { inline: false, annotation: false }
+        // }
       })
     ]
   },
