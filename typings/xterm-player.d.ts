@@ -1,9 +1,9 @@
 /// <reference lib="dom"/>
 
 declare module 'xterm-player' {
-  export class XTermPlayer {
+  export class XtermPlayer {
     /**
-     * The element containing the xterm player
+     * The element containing the XtermPlayer
      */
     readonly el: HTMLElement
 
@@ -13,14 +13,14 @@ declare module 'xterm-player' {
     url: string
 
     /**
-     * The playback rate of xterm player
+     * The playback rate of XtermPlayer
      */
     playbackRate: number
 
     /**
-     * Create XTermPlayer object
+     * Create XtermPlayer object
      * @param url The url of xterm video cast file
-     * @param el The element to create the xterm player within
+     * @param el The element to create the XtermPlayer within
      */
     constructor(url: string, el: HTMLElement)
 

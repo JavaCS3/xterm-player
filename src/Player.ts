@@ -1,7 +1,7 @@
 import 'xterm/css/xterm.css'
 import './ui/ui.css'
 import { Terminal } from 'xterm'
-import { XTermPlayer as XTermPlayerApi } from 'xterm-player'
+import { XtermPlayer as XtermPlayerApi } from 'xterm-player'
 import fetchCast from './CastFetcher'
 import { SimpleTimer, MediaTimer, AnimationFrameTicker, IntervalTicker, ITimer, NullTimer } from './Timer'
 import { CastFrameQueue, NULL_FRAME, IFrame, NullFrameQueue, IFrameQueue } from './Frame'
@@ -13,7 +13,7 @@ function writeSync(term: Terminal, data: string) {
   }
 }
 
-export class CastPlayer implements XTermPlayerApi {
+export class CastPlayer implements XtermPlayerApi {
   public readonly el: HTMLElement
 
   private _url: string = ''
