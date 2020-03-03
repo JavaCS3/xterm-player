@@ -13,6 +13,7 @@ declare module '*.mp3' {
   export default content
 }
 
+// tslint:disable-next-line
 interface Window {
   Terminal: any
 }
