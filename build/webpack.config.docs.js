@@ -18,7 +18,9 @@ module.exports = Object.assign(configBase, {
 
   output: {
     filename: 'bundle.min.js',
-    path: basedir('../docs')
+    path: basedir('../docs'),
+    library: 'XtermPlayerDemo',
+    libraryTarget: 'umd'
   },
 
   module: {
@@ -54,7 +56,12 @@ module.exports = Object.assign(configBase, {
   },
 
   externals: {
-    xterm: '{ Terminal: Terminal }'
+    xterm: {
+      commonjs: ['xterm', 'Terminal'],
+      commonjs2: ['xterm', 'Terminal'],
+      amd: ['xterm', 'Terminal'],
+      root: 'Terminal'
+    }
   },
 
   optimization: {

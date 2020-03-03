@@ -1,23 +1,36 @@
 import 'xterm/css/xterm.css'
 import './ui/ui.css'
-import { Terminal } from 'xterm'
+import * as xterm from 'xterm'
 import { XtermPlayer as XtermPlayerApi } from 'xterm-player'
 import fetchCast from './CastFetcher'
 import { SimpleTimer, MediaTimer, AnimationFrameTicker, IntervalTicker, ITimer, NullTimer } from './Timer'
 import { CastFrameQueue, NULL_FRAME, IFrame, NullFrameQueue, IFrameQueue } from './Frame'
 import { PlayerView } from './ui/PlayerView'
 
-function writeSync(term: Terminal, data: string) {
+function writeSync(term: xterm.Terminal, data: string) {
   if (data.length) {
     (<any>term)._core.writeSync(data)
   }
+}
+
+function createTerminal(options?: xterm.ITerminalOptions): xterm.Terminal {
+  // Workaround: xterm.js only supports browser env via global variable Terminal,
+  // which is different from typescript usage.
+  // Use constructor from window.Terminal if it's browser env
+  if (xterm.Terminal) {
+    return new xterm.Terminal(options)
+  }
+  if (window) {
+    return new window.Terminal(options)
+  }
+  throw new Error('Cannot create xterm Terminal object')
 }
 
 export class CastPlayer implements XtermPlayerApi {
   public readonly el: HTMLElement
 
   private _url: string = ''
-  private _term: Terminal
+  private _term: xterm.Terminal
   private _view: PlayerView
   private _timer: ITimer = new NullTimer()
   private _queue: IFrameQueue = new NullFrameQueue()
@@ -32,7 +45,7 @@ export class CastPlayer implements XtermPlayerApi {
   ) {
     this.el = el
     this._url = url
-    this._term = new Terminal({ fontFamily: 'Consolas, Menlo' })
+    this._term = createTerminal({ fontFamily: 'Consolas, Menlo' })
     this._audio = new Audio()
 
     const view = this._view = new PlayerView()
