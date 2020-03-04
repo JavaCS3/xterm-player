@@ -3,7 +3,7 @@ name: Node.js CI
 on: [push]
 
 jobs:
-  build:
+  build-test-package:
     runs-on: ubuntu-18.04
 
     strategy:
@@ -38,3 +38,46 @@ jobs:
         with:
           name: xterm-player-pkg
           path: dist
+          
+  update-docs:
+    needs: [build-test-package]
+
+    runs-on: ubuntu-18.04
+
+    env:
+      node-version: 12.x
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Install Deps
+        run: yarn
+
+      - name: Build docs
+        run: yarn build:docs
+
+      - name: Check if docs needs to update
+        run: |
+          git add docs
+          if [ $(git diff --cached --numstat | wc -l) -ne 0 ]; then
+            echo "docs updated found!"
+            echo "::set-env name=update_docs::true"
+          fi
+
+      - name: Update docs
+        if: env.update_docs
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "update docs"
+
+      - name: Push changes
+        if: env.update_docs
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
