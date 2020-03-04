@@ -1,10 +1,12 @@
-![Node.js CI](https://github.com/JavaCS3/xterm-player/workflows/Node.js%20CI/badge.svg) [![codecov](https://codecov.io/gh/JavaCS3/xterm-player/branch/master/graph/badge.svg)](https://codecov.io/gh/JavaCS3/xterm-player)
+![Node.js CI](https://github.com/JavaCS3/xterm-player/workflows/Node.js%20CI/badge.svg)
+[![codecov](https://codecov.io/gh/JavaCS3/xterm-player/branch/master/graph/badge.svg)](https://codecov.io/gh/JavaCS3/xterm-player)
+![npm version](https://img.shields.io/npm/v/xterm-player)
 
 # XtermPlayer
 
-This repo is intended to provide an alternative asciinema player. The original [player](<(https://github.com/asciinema/asciinema-player)>) is writtern in `Clojure`. I think it's hard for frontend people to contribute that directly. This project is intended to make it easier for people to contribute by using `Typescript`.
+This repo is intended to provide an alternative asciinema player. The original [player](https://github.com/asciinema/asciinema-player) is writtern in `Clojure`. I think it's hard for frontend people to contribute that directly. This project is intended to make it easier for people to contribute by using `Typescript`.
 
-## [Live demo](https://javacs3.github.io/xterm-player/)
+## [Demo](https://javacs3.github.io/xterm-player/)
 
 ## Instructions
 
