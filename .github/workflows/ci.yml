@@ -1,9 +1,14 @@
 name: Node.js CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
 
 jobs:
-  build-test-package:
+  build-and-test:
     runs-on: ubuntu-18.04
 
     strategy:
@@ -51,17 +56,14 @@ jobs:
           name: codecov-umbrella
           file: ./coverage/clover.xml
 
-      - name: Package
-        run: yarn package
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v1.0.0
+      #   with:
+      #     name: xterm-player-pkg
+      #     path: dist
 
-#       - name: Upload Artifact
-#         uses: actions/upload-artifact@v1.0.0
-#         with:
-#           name: xterm-player-pkg
-#           path: dist
-          
   update-docs:
-    needs: [build-test-package]
+    needs: [build-and-test]
 
     runs-on: ubuntu-18.04
 
@@ -102,3 +104,30 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    needs: [build-and-test, update-docs]
+
+    runs-on: ubuntu-18.04
+
+    env:
+      node-version: 12.x
+
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Install Deps
+        run: yarn
+
+      - name: Packaging
+        run: yarn package
