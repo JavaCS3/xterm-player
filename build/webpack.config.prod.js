@@ -26,7 +26,9 @@ module.exports = Object.assign(configBase, {
     path: basedir('../dist'),
     filename: 'js/[name].js',
     library: 'XtermPlayer',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
+    globalObject: 'this'
   },
 
   module: {
