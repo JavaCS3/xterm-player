@@ -1,0 +1,50 @@
+# Blacklist - exclude everything except npm defaults such as LICENSE, etc
+*
+!*/
+
+# Whitelist - entries to be included must be negated with "!"
+!*.js
+!*.json
+
+# Whitelist - dist/
+!dist/**/*.js
+!dist/**/*.js.map
+
+!dist/**/*.css
+!dist/**/*.css.map
+
+# Whitelist - src/
+!src/**/*.ts
+!src/**/*.d.ts
+
+!src/**/*.js
+!src/**/*.js.map
+
+!src/**/*.css
+
+# Whitelist - typings/
+!typings/*.d.ts
+
+# Blacklist - (normal behavior) these will override any whitelist
+*.d.ts.map
+*.test.ts
+*.test.d.ts
+*.test.js
+*.test.js.map
+lib/test/
+tslint.json
+webpack.config.js
+jest.config.js
+
+docs/
+/.idea/
+.vscode/
+.github/
+coverage/
+bin/
+build/
+fixtures/
+demo/
+.devcontainer/
+out/
+addons/
