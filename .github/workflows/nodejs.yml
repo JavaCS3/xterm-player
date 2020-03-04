@@ -31,7 +31,6 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install Deps
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn
 
       - name: Build
