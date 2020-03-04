@@ -43,9 +43,12 @@ jobs:
         run: yarn test
 
       - name: Upload to codecov
+        if: matrix.node-version == '12.x'
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittests
+          name: codecov-umbrella
           file: ./coverage/clover.xml
 
       - name: Package
