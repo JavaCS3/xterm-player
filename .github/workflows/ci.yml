@@ -108,6 +108,8 @@ jobs:
   release:
     needs: [build-and-test, update-docs]
 
+    if: startsWith(github.ref, 'refs/tags/v')
+
     runs-on: ubuntu-18.04
 
     steps:
@@ -128,3 +130,9 @@ jobs:
 
       - name: Packaging
         run: yarn package
+      
+      - name: Setup authentication
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+      
+      - name: Publish
+        run: npm publish
