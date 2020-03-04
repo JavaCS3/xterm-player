@@ -1,9 +1,14 @@
 {
-  "name": "xterm-demo",
-  "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "main": "dist/js/xterm-player.js",
+  "name": "@javacs3/xterm-player",
+  "version": "0.0.1",
+  "description": "A web player for xterm recording",
+  "style": "./dist/css/xterm-player.css",
+  "main": "./dist/js/xterm-player.js",
+  "types": "./typings/xterm-player.d.ts",
+  "repository": "https://github.com/JavaCS3/xterm-player",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
+  "author": "javacs3",
+  "license": "MIT",
   "scripts": {
     "lint": "tslint 'src/**/*.ts'",
     "clean": "rm -rf out/",
@@ -15,8 +20,6 @@
     "build:docs": "NODE_ENV=production webpack --optimize-minimize --config ./build/webpack.config.docs.js",
     "package": "NODE_ENV=production webpack --optimize-minimize --config ./build/webpack.config.prod.js"
   },
-  "author": "javacs3",
-  "license": "ISC",
   "dependencies": {
     "xterm": "^4.4.0",
     "xterm-addon-serialize": "^0.1.2"

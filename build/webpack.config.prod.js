@@ -12,17 +12,21 @@ module.exports = Object.assign(configBase, {
   devtool: config.isProdEnv ? 'source-map' : 'eval',
 
   entry: {
-    'xterm-player': basedir('../src/Player.ts'),
-    'xterm-player.min': basedir('../src/Player.ts')
+    'xterm-player': [
+      basedir('../src/Player.ts'),
+      basedir('../src/ui/ui.css')
+    ],
+    'xterm-player.min': [
+      basedir('../src/Player.ts'),
+      basedir('../src/ui/ui.css')
+    ]
   },
 
   output: {
     path: basedir('../dist'),
     filename: 'js/[name].js',
-    library: 'webpackNumbers',
-    libraryTarget: 'umd',
-    globalObject: 'this',
-    umdNamedDefine: true
+    library: 'XtermPlayer',
+    libraryTarget: 'umd'
   },
 
   module: {
@@ -51,10 +55,10 @@ module.exports = Object.assign(configBase, {
   },
 
   externals: {
-    'xterm/Terminal': {
-      commonjs: 'xterm/Terminal',
-      commonjs2: 'xterm/Terminal',
-      amd: 'xterm/Terminal',
+    xterm: {
+      commonjs: ['xterm', 'Terminal'],
+      commonjs2: ['xterm', 'Terminal'],
+      amd: ['xterm', 'Terminal'],
       root: 'Terminal'
     }
   },
