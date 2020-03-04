@@ -7,6 +7,9 @@ on:
     tags:
       - v*
 
+env:
+  node-version: 12.x
+
 jobs:
   build-and-test:
     runs-on: ubuntu-18.04
@@ -67,9 +70,6 @@ jobs:
 
     runs-on: ubuntu-18.04
 
-    env:
-      node-version: 12.x
-
     steps:
       - uses: actions/checkout@v2
 
@@ -109,9 +109,6 @@ jobs:
     needs: [build-and-test, update-docs]
 
     runs-on: ubuntu-18.04
-
-    env:
-      node-version: 12.x
 
     steps:
       - name: Dump GitHub context
