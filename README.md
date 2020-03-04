@@ -1,4 +1,4 @@
-![Node.js CI](https://github.com/JavaCS3/xterm-player/workflows/Node.js%20CI/badge.svg)
+![Node.js CI](https://github.com/JavaCS3/xterm-player/workflows/Node.js%20CI/badge.svg) [![codecov](https://codecov.io/gh/JavaCS3/xterm-player/branch/master/graph/badge.svg)](https://codecov.io/gh/JavaCS3/xterm-player)
 
 # XtermPlayer
 
