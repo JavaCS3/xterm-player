@@ -46,11 +46,11 @@ jobs:
       - name: Package
         run: yarn package
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1.0.0
-        with:
-          name: xterm-player-pkg
-          path: dist
+#       - name: Upload Artifact
+#         uses: actions/upload-artifact@v1.0.0
+#         with:
+#           name: xterm-player-pkg
+#           path: dist
           
   update-docs:
     needs: [build-test-package]
