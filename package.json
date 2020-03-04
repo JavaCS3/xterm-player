@@ -1,12 +1,14 @@
 {
   "name": "@javacs3/xterm-player",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A web player for xterm recording",
   "style": "./dist/css/xterm-player.css",
   "main": "./dist/js/xterm-player.js",
   "types": "./typings/xterm-player.d.ts",
   "repository": "https://github.com/JavaCS3/xterm-player",
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "author": "javacs3",
   "license": "MIT",
   "scripts": {
