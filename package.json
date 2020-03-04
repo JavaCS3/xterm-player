@@ -23,6 +23,13 @@
     "package": "NODE_ENV=production webpack --optimize-minimize --config ./build/webpack.config.prod.js",
     "release": "yarn version"
   },
+  "keywords": [
+    "xterm-player",
+    "xterm",
+    "player",
+    "terminal",
+    "tty"
+  ],
   "dependencies": {
     "xterm": "^4.4.0",
     "xterm-addon-serialize": "^0.1.2"
