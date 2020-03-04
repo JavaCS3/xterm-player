@@ -20,7 +20,8 @@
     "dev": "yarn run demo",
     "build": "tsc -b ./tsconfig.json && yarn lint",
     "build:docs": "NODE_ENV=production webpack --optimize-minimize --config ./build/webpack.config.docs.js",
-    "package": "NODE_ENV=production webpack --optimize-minimize --config ./build/webpack.config.prod.js"
+    "package": "NODE_ENV=production webpack --optimize-minimize --config ./build/webpack.config.prod.js",
+    "release": "yarn version"
   },
   "dependencies": {
     "xterm": "^4.4.0",
