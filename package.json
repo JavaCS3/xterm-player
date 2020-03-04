@@ -1,5 +1,5 @@
 {
-  "name": "@javacs3/xterm-player",
+  "name": "xterm-player",
   "version": "0.0.4",
   "description": "A web player for xterm recording",
   "style": "./dist/css/xterm-player.css",
