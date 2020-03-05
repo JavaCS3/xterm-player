@@ -1,6 +1,7 @@
-![Node.js CI](https://github.com/JavaCS3/xterm-player/workflows/Node.js%20CI/badge.svg)
+![ci](https://github.com/JavaCS3/xterm-player/workflows/Node.js%20CI/badge.svg)
 [![codecov](https://codecov.io/gh/JavaCS3/xterm-player/branch/master/graph/badge.svg)](https://codecov.io/gh/JavaCS3/xterm-player)
 [![npm version](https://img.shields.io/npm/v/xterm-player)](https://www.npmjs.com/package/xterm-player)
+![downloads](https://img.shields.io/npm/dw/xterm-player)
 
 # XtermPlayer
 
