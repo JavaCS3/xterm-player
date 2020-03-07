@@ -17,8 +17,8 @@ $ yarn demo
 $ yarn test
 ```
 
-## Goals
+## Features
 
 1. Support orginal asciinema [v1](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v1.md), [v2](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md) format and features
-2. Support Audio
-3. May Support Record Editing
+2. Support [Terminalizer](https://github.com/faressoft/terminalizer-player) format
+3. Support Audio

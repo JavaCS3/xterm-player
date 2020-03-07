@@ -1,11 +1,8 @@
 import { IntervalTicker, AnimationFrameTicker, DummyTicker, SimpleTimer, TICK_INTERVAL, ITimerState, MediaTimer } from './Timer'
+import { title } from './Utils'
 
 const intervalTicker = new IntervalTicker()
 const animationFrameTicker = new AnimationFrameTicker()
-
-function title(cls: Function, str: string) {
-  return cls.name + ': ' + str
-}
 
 beforeEach(() => {
   intervalTicker.stop()

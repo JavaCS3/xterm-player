@@ -1,7 +1,23 @@
 import { ICastObject } from './Cast'
+import { MILLISECOND } from './Types'
 
 export interface ICastParser {
   parse(text: string): ICastObject
+}
+
+export function parse(text: string): ICastObject {
+  const factories = [
+    AsciinemaCastParser,
+    TerminalizerParser
+  ]
+  for (let i = 0; i < factories.length; i++) {
+    const cls = factories[i]
+    try {
+      console.debug('trying ' + cls.name)
+      return (new cls()).parse(text)
+    } catch (e) { }
+  }
+  throw new Error('None of the available parsers can parse the cast')
 }
 
 export class AsciinemaCastParser implements ICastParser {
@@ -14,8 +30,6 @@ export class AsciinemaCastParser implements ICastParser {
   }
 }
 
-const MILLISECOND = 1000
-
 /**
  * Asciinema cast v1 parser
  * https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v1.md
@@ -26,7 +40,7 @@ export class AsciinemaCastV1Parser implements ICastParser {
     const stdouts: Array<[number, string]> = j.stdout
 
     let timestamp = 0.0
-    const events = stdouts.map((e: [number, string]) => {
+    const events = stdouts.map(e => {
       timestamp += e[0] * MILLISECOND
       return {
         time: timestamp,
@@ -76,6 +90,33 @@ export class AsciinemaCastV2Parser implements ICastParser {
       return cast
     } else {
       throw new Error('Invalid cast format')
+    }
+  }
+}
+
+export class TerminalizerParser implements ICastParser {
+  public parse(text: string): ICastObject {
+    const j = JSON.parse(text)
+    const records: Array<{ delay: number, content: string }> = j.records
+
+    let timestamp = 0.0
+    const events = records.map(rec => {
+      timestamp += rec.delay
+      return {
+        time: timestamp,
+        type: 'o',
+        data: rec.content
+      }
+    })
+
+    return {
+      header: {
+        version: 1,
+        width: j.config.cols,
+        height: j.config.rows,
+        duration: timestamp
+      },
+      events
     }
   }
 }

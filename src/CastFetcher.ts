@@ -1,12 +1,10 @@
 import { ICastObject } from './Cast'
-import { AsciinemaCastParser } from './CastParser'
+import { parse } from './CastParser'
 
 async function innerFetchCast(url: string): Promise<ICastObject> {
-  const res = await fetch(url)
-  const txt = await res.text()
-  const parser = new AsciinemaCastParser()
+  const res = await fetch(url, { mode: 'no-cors' })
 
-  return parser.parse(txt)
+  return parse(await res.text())
 }
 
 export default function fetchCast(url: string): Promise<ICastObject> {

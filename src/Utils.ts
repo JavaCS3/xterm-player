@@ -1,5 +1,9 @@
 import { IDisposable } from './Types'
 
+export function title(cls: Function, str: string) {
+  return cls.name + ': ' + str
+}
+
 export class Slice<T> {
   constructor(
     private _arr: Array<T>,
