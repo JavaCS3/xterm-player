@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/xterm@4.4.0/css/xterm.css"
-      integrity="sha256-I3n7q4Kl55oWvltoLRCCpA5HW8W3O34RUeC/ob43fWY="
+      href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
     <script
@@ -14,23 +20,32 @@
     ></script>
   </head>
   <body>
-    <h1>XtermPlayer Demo</h1>
-    <div id="app"></div>
-    <h2>Sample cast files</h2>
-    <select id="cast-option">
-      <option
-        value="https://raw.githubusercontent.com/JavaCS3/xterm-player/master/assets/1.cast"
-        >asciinema
-      </option>
-      <option
-        value="https://raw.githubusercontent.com/faressoft/terminalizer-player/master/data.json"
-        >terminalizer
-      </option>
-    </select>
-    <h2>Keyboard shortcuts</h2>
-    <ul>
-      <li><code>space</code> - play/pause</li>
-      <li><code>←</code> <code>→</code> - rewind 3 secs / fast-forward 3 secs</li>
-    </ul>
+    <div class="container">
+      <div class="row justify-content-md-center"><h1>XtermPlayer Demo</h1></div>
+
+      <div class="row justify-content-md-center" style="margin-bottom: 1em">
+        <div id="app"></div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <h3>Sample cast files</h3>
+          <select id="cast-option">
+            <option value="https://raw.githubusercontent.com/JavaCS3/xterm-player/master/assets/1.cast">asciinema</option>
+            <option value="https://raw.githubusercontent.com/faressoft/terminalizer-player/master/data.json">terminalizer</option>
+          </select>
+        </div>
+
+        <div class="col">
+          <h3>Keyboard shortcuts</h3>
+          <ul>
+            <li><code>space</code> - play/pause</li>
+            <li><code>←</code> <code>→</code> - rewind 3 secs / fast-forward 3 secs</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
   </body>
 </html>

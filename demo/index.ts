@@ -14,6 +14,5 @@ const castOption = <HTMLSelectElement>$id('cast-option')
 const player = new XtermPlayer(cast1, app)
 
 castOption.onchange = () => {
-  console.log('select', castOption.value)
   player.url = castOption.value
 }
