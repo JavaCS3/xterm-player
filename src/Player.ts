@@ -26,7 +26,7 @@ function createTerminal(options?: xterm.ITerminalOptions): xterm.Terminal {
   throw new Error('Cannot create xterm Terminal object')
 }
 
-export class CastPlayer implements XtermPlayerApi {
+export class XtermPlayer implements XtermPlayerApi {
   public readonly el: HTMLElement
 
   private _url: string = ''

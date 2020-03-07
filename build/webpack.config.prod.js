@@ -12,14 +12,8 @@ module.exports = Object.assign(configBase, {
   devtool: config.isProdEnv ? 'source-map' : 'eval',
 
   entry: {
-    'xterm-player': [
-      basedir('../src/Player.ts'),
-      basedir('../src/ui/ui.css')
-    ],
-    'xterm-player.min': [
-      basedir('../src/Player.ts'),
-      basedir('../src/ui/ui.css')
-    ]
+    'xterm-player': basedir('../src/Player.ts'),
+    'xterm-player.min': basedir('../src/Player.ts')
   },
 
   output: {
