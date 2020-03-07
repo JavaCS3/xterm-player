@@ -9,6 +9,28 @@ This repo is intended to provide an alternative asciinema player. The original [
 
 ## [Demo](https://javacs3.github.io/xterm-player/)
 
+## Usage
+
+```html
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm-player@0.0.13/dist/css/xterm-player.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xterm@4.4.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-player@0.0.13/dist/js/xterm-player.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const div = document.getElementById('app')
+      const player = new XtermPlayer.XtermPlayer(
+        'https://raw.githubusercontent.com/JavaCS3/xterm-player/master/assets/1.cast',
+        div
+      )
+    </script>
+  </body>
+</html>
+```
+
 ## Instructions
 
 ```shell
