@@ -20,32 +20,48 @@
     ></script>
   </head>
   <body>
-    <div class="container">
-      <div class="row justify-content-md-center"><h1>XtermPlayer Demo</h1></div>
-
-      <div class="row justify-content-md-center" style="margin-bottom: 1em">
-        <div id="app"></div>
+    <main>
+      <div class="jumbotron">
+        <div class="container">
+          <div class="row justify-content-center">
+            <h1 class="display-3">XtermPlayer</h1>
+          </div>
+          <div class="row justify-content-center">
+            <div id="app"></div>
+          </div>
+        </div>
       </div>
+    </main>
 
+    <div class="container">
       <div class="row">
         <div class="col">
           <h3>Sample cast files</h3>
           <select id="cast-option">
-            <option value="https://raw.githubusercontent.com/JavaCS3/xterm-player/master/assets/1.cast">asciinema</option>
-            <option value="https://raw.githubusercontent.com/faressoft/terminalizer-player/master/data.json">terminalizer</option>
+            <option value="asciinema-1">asciinema 1</option>
+            <option value="asciinema-2">asciinema 2</option>
+            <option value="asciinema-3">asciinema 3</option>
+            <option value="terminalizer">terminalizer</option>
           </select>
+        </div>
+
+        <div class="col">
+          <h3>Features</h3>
+          <ul>
+            <li>asciinema v1/v2 cast file support</li>
+            <li>terminalizer cast file support</li>
+            <li>audio support</li>
+          </ul>
         </div>
 
         <div class="col">
           <h3>Keyboard shortcuts</h3>
           <ul>
-            <li><code>space</code> - play/pause</li>
-            <li><code>←</code> <code>→</code> - rewind 3 secs / fast-forward 3 secs</li>
+            <li><code>space</code> play/pause</li>
+            <li><code>← →</code> rewind 3 secs / fast-forward 3 secs</li>
           </ul>
         </div>
-
       </div>
-
     </div>
   </body>
 </html>
