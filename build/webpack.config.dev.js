@@ -8,7 +8,7 @@ module.exports = Object.assign(configBase, {
   devtool: 'inline-source-map',
 
   devServer: {
-    contentBase: basedir('../demo/dist')
+    contentBase: basedir('../assets')
   },
 
   entry: basedir('../demo/index.ts'),
