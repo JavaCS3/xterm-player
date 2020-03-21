@@ -346,6 +346,7 @@ export class MediaTimer implements ITimer {
     return this
   }
   public dispose(): void {
+    this._media.pause()
     this._disposes.forEach(d => d.dispose())
   }
 }
