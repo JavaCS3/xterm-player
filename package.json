@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src --ext .ts",
-    "clean": "rm -rf out/",
+    "clean": "rm -rf out dist",
     "test": "jest && yarn lint",
     "watch": "jest --watch --color",
     "demo": "webpack-dev-server --config build/webpack.config.dev.js --open",
