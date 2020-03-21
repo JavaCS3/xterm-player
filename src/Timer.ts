@@ -137,7 +137,6 @@ export class SimpleTimer implements ITimer {
   public readonly ready = true
   private _lasttime: number = 0
   private _time: number = 0
-  private _delay: number = 0
   private _timescale: number = 1
   private _state: ITimerState = ITimerState.PAUSED
   private _onReadyCb: ITimerReadyCallback = NULL_FN
@@ -169,7 +168,6 @@ export class SimpleTimer implements ITimer {
     } else {
       this._time = time
     }
-    this._delay = 0
     this._lasttime = this._ticker.now()
   }
 
@@ -212,20 +210,7 @@ export class SimpleTimer implements ITimer {
     this._lasttime = this._ticker.now()
     this._ticker.start(() => {
       const now = this._ticker.now()
-
-      let elapsed = now - this._lasttime
-      if (this._delay) {
-        if (elapsed > this._delay) {
-          elapsed -= this._delay
-          this._delay = 0
-        } else {
-          this._delay -= elapsed
-        }
-        this._lasttime = now
-        return
-      }
-
-      const delta = elapsed * this._timescale
+      const delta = (now - this._lasttime) * this._timescale
       if ((this._time + delta) > this._duration) {
         this._time = this._duration
         this.stop()
@@ -243,11 +228,6 @@ export class SimpleTimer implements ITimer {
   public stop(): void {
     this._ticker.stop()
     this._setState(ITimerState.STOPPED)
-  }
-  public delay(t: number): void {
-    if (t > 0) {
-      this._delay += t
-    }
   }
   public dispose(): void {
     this.stop()

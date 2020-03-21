@@ -318,21 +318,6 @@ test(title(SimpleTimer, 'onStateChange double start'), () => {
   expect(mock).toBeCalledTimes(1)
 })
 
-test(title(SimpleTimer, 'delay'), () => {
-  const ticker = new DummyTicker(1)
-  const t = new SimpleTimer(ticker)
-  const mock = jest.fn()
-
-  t.onTick(mock)
-  t.start()
-  ticker.tick(); expect(mock).toBeCalledTimes(1); expect(mock).toBeCalledWith(1)
-  t.delay(2)
-  ticker.tick(); expect(mock).toBeCalledTimes(1); expect(mock).toBeCalledWith(1)
-  ticker.tick(); expect(mock).toBeCalledTimes(1); expect(mock).toBeCalledWith(1)
-  ticker.tick(); expect(mock).toBeCalledTimes(2); expect(mock).toBeCalledWith(2)
-  ticker.tick(); expect(mock).toBeCalledTimes(3); expect(mock).toBeCalledWith(3)
-})
-
 test(title(MediaTimer, 'test onReady'), () => {
   const audio = new Audio()
   const t = new MediaTimer(audio)
