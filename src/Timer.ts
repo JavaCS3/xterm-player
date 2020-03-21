@@ -1,5 +1,5 @@
 import { IDisposable } from './Types'
-import { addDisposableDomListener } from './Utils'
+import { addDisposableDomListener } from './ui/DomHelper'
 
 export const TICK_INTERVAL = 1000 / 30
 

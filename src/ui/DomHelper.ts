@@ -1,3 +1,5 @@
+import { IDisposable } from "../Types"
+
 export interface IHTMLElementOption {
   attrs?: { [key: string]: string }
   class?: string
@@ -19,4 +21,28 @@ export function createElement(name: string, opts?: IHTMLElementOption, ...childr
   }
   el.append(...children)
   return el
+}
+
+/**
+ * Adds a disposable listener to a node in the DOM, returning the disposable.
+ * @param type The event type.
+ * @param handler The handler for the listener.
+ */
+export function addDisposableDomListener(
+  node: Element | Window | Document,
+  type: string,
+  handler: (e: any) => void,
+  useCapture?: boolean
+): IDisposable {
+  node.addEventListener(type, handler, useCapture)
+  let disposed = false
+  return {
+    dispose: () => {
+      if (!disposed) {
+        return
+      }
+      disposed = true
+      node.removeEventListener(type, handler, useCapture)
+    }
+  }
 }

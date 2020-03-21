@@ -1,5 +1,3 @@
-import { IDisposable } from './Types'
-
 export function title(cls: Function, str: string) {
   return cls.name + ': ' + str
 }
@@ -19,29 +17,4 @@ export class Slice<T> {
     return this._arr[index + this._start]
   }
   public len(): number { return this._end - this._start }
-}
-
-
-/**
- * Adds a disposable listener to a node in the DOM, returning the disposable.
- * @param type The event type.
- * @param handler The handler for the listener.
- */
-export function addDisposableDomListener(
-  node: Element | Window | Document,
-  type: string,
-  handler: (e: any) => void,
-  useCapture?: boolean
-): IDisposable {
-  node.addEventListener(type, handler, useCapture)
-  let disposed = false
-  return {
-    dispose: () => {
-      if (!disposed) {
-        return
-      }
-      disposed = true
-      node.removeEventListener(type, handler, useCapture)
-    }
-  }
 }
