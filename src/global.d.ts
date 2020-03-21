@@ -13,7 +13,7 @@ declare module '*.mp3' {
   export default content
 }
 
-// tslint:disable-next-line
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface Window {
   Terminal: any
 }

@@ -1,8 +1,8 @@
 export interface ICastHeader {
   version: number
   width: number
-  height: number,
-  duration: number,
+  height: number
+  duration: number
   audio?: string
 }
 

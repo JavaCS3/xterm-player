@@ -97,7 +97,7 @@ export class AsciinemaCastV2Parser implements ICastParser {
 export class TerminalizerParser implements ICastParser {
   public parse(text: string): ICastObject {
     const j = JSON.parse(text)
-    const records: Array<{ delay: number, content: string }> = j.records
+    const records: Array<{ delay: number; content: string }> = j.records
 
     let timestamp = 0.0
     const events = records.map(rec => {

@@ -5,7 +5,6 @@ const configBase = require('./webpack.config.base')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const TSLintPlugin = require('tslint-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = Object.assign(configBase, {
@@ -79,10 +78,6 @@ module.exports = Object.assign(configBase, {
 
   plugins: [
     new CleanWebpackPlugin({ verbose: true }),
-    new MiniCssExtractPlugin({ filename: 'css/[name].css' }),
-    new TSLintPlugin({
-      files: [basedir('../src/**/*.ts')],
-      config: basedir('../tslint.json')
-    })
+    new MiniCssExtractPlugin({ filename: 'css/[name].css' })
   ]
 })
