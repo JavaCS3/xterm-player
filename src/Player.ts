@@ -110,6 +110,7 @@ export class XtermPlayer implements XtermPlayerApi {
 
       this._timer.onReady(() => {
         this._updateDuration()
+        this._updateProgressAndCurrentTime()
         this._timer
           .onTick(this._render.bind(this))
           .onStateChange(this._updatePlaying.bind(this))
