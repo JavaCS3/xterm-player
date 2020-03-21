@@ -97,6 +97,6 @@ typings/
 
 # End of https://www.gitignore.io/api/node,code
 
-dist
-out
+dist/
+out/
 .DS_Store
