@@ -51,6 +51,7 @@ export class XtermPlayer implements XtermPlayerApi {
     const view = this._view = new PlayerView()
     el.append(this._view.element)
     this._term.open(this._view.videoWrapper)
+    this._term.focus()
 
     this._load()
 
