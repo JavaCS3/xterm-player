@@ -247,6 +247,7 @@ export class MediaTimer implements ITimer {
 
   constructor(private _media: HTMLMediaElement) {
     this._disposes = [
+      addDisposableDomListener(_media, 'error', () => { console.error('error') }),
       addDisposableDomListener(_media, 'waiting', () => { console.log('waiting') }),
       addDisposableDomListener(_media, 'durationchange', () => { console.log('durationchange') }),
       addDisposableDomListener(_media, 'canplay', () => { this._ready = true; this._onReadyCb() }),
