@@ -13,6 +13,7 @@
     "typeRoots": ["./node_modules/@types"]
   },
   "include": [
+    "./demo/*",
     "./src/**/*",
     "./typings/xterm-player.d.ts"
   ],
