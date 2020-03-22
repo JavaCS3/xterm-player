@@ -38,7 +38,7 @@ export function addDisposableDomListener(
   let disposed = false
   return {
     dispose: () => {
-      if (!disposed) {
+      if (disposed) {
         return
       }
       disposed = true
