@@ -14,8 +14,6 @@ export class ControlBarView implements IComponent {
   public readonly element: HTMLElement
 
   private _playbackButton: HTMLElement
-  private _playbackIcon: HTMLElement
-
   private _timeDisplay: HTMLElement
 
   private _playing: boolean = false
@@ -24,9 +22,7 @@ export class ControlBarView implements IComponent {
 
   constructor() {
     this.element = createElement('div', { class: 'control-bar' },
-      this._playbackButton = createElement('span', { class: 'playback-button' },
-        this._playbackIcon = createElement('i', { class: 'icon' })
-      ),
+      this._playbackButton = createElement('span', { class: 'playback-button' }),
       this._timeDisplay = createElement('div', { class: 'time-display' })
     )
     this._updatePlaybackButton()
