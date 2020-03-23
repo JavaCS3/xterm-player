@@ -26,7 +26,7 @@
   transform: translate(-50%, -50%);
 }
 
-.xterm-player .overlay.big-pause {
+.xterm-player .overlay.big-button {
   cursor: pointer;
   font-size: 0;
   width: 80px;

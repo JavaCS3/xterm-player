@@ -55,12 +55,6 @@ export class XtermPlayer implements XtermPlayerApi {
 
     this._load()
 
-    view.element.addEventListener('mouseenter', () => {
-      view.showBottom(true)
-    })
-    view.element.addEventListener('mouseleave', () => {
-      view.showBottom(false)
-    })
     view.element.addEventListener('keyup', (ev: KeyboardEvent) => {
       switch (ev.code) {
         case 'Space':
@@ -76,8 +70,8 @@ export class XtermPlayer implements XtermPlayerApi {
           break
       }
     })
-    view.onBigPauseClick(this._togglePlayPauseReplay.bind(this))
-    view.controlBar.onPlayButtonClick(this._togglePlayPauseReplay.bind(this))
+    view.onBigButtonClick(this._togglePlayPauseReplay.bind(this))
+    view.controlBar.onPlaybackButtonClick(this._togglePlayPauseReplay.bind(this))
     view.progressBar.onSeek((percent: number) => {
       this._timer.time = percent * this._timer.duration
       this._updateProgressAndCurrentTime()
@@ -113,7 +107,7 @@ export class XtermPlayer implements XtermPlayerApi {
         this._updateProgressAndCurrentTime()
         this._timer
           .onTick(this._render.bind(this))
-          .onStateChange(this._updatePlaying.bind(this))
+          .onStateChange(this._updateUIState.bind(this))
       })
     }).catch(console.error)
   }
@@ -148,9 +142,9 @@ export class XtermPlayer implements XtermPlayerApi {
   }
 
   private _updateDuration(): void { this._view.controlBar.duration = this._timer.duration }
-  private _updatePlaying(): void {
-    this._view.controlBar.playing = this._timer.isRunning()
-    this._view.showBigPause(!this._timer.isRunning())
+  private _updateUIState(): void {
+    this._view.controlBar.state = this._timer.state
+    this._view.state = this._timer.state
   }
   private _updateProgressAndCurrentTime(): void {
     this._view.progressBar.progress = this._timer.progress

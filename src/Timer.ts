@@ -230,8 +230,8 @@ export class SimpleTimer implements ITimer {
     this._setState('Stopped')
   }
   public dispose(): void {
-    this.stop()
     this._onReadyCb = this._onStateChangeCb = this._onTickCb = NULL_FN
+    this.stop()
   }
 }
 
