@@ -85,7 +85,7 @@ export class AnimationFrameTicker implements ITicker {
 
 const TIMESCALE_MIN = 0, TIMESCALE_MAX = 5
 
-export enum ITimerState { RUNNING, PAUSED, STOPPED }
+export type ITimerState = 'Running' | 'Paused' | 'Stopped'
 export type ITimerReadyCallback = () => void
 export type ITimerTickCallback = (time: number) => void
 export type ITimerStateChangeCallback = (state: ITimerState) => void
@@ -115,7 +115,7 @@ export interface ITimer extends IDisposable {
 
 export class NullTimer implements ITimer {
   ready: boolean = false
-  state: ITimerState = ITimerState.PAUSED
+  state: ITimerState = 'Paused'
   duration: number = NaN
   progress: number = NaN
   timescale: number = 1
@@ -138,7 +138,7 @@ export class SimpleTimer implements ITimer {
   private _lasttime: number = 0
   private _time: number = 0
   private _timescale: number = 1
-  private _state: ITimerState = ITimerState.PAUSED
+  private _state: ITimerState = 'Paused'
   private _onReadyCb: ITimerReadyCallback = NULL_FN
   private _onTickCb: ITimerTickCallback = NULL_FN
   private _onStateChangeCb: ITimerStateChangeCallback = NULL_FN
@@ -195,9 +195,9 @@ export class SimpleTimer implements ITimer {
     return this
   }
 
-  public isRunning(): boolean { return this._state === ITimerState.RUNNING }
-  public isPaused(): boolean { return this._state === ITimerState.PAUSED }
-  public isStopped(): boolean { return this._state === ITimerState.STOPPED }
+  public isRunning(): boolean { return this._state === 'Running' }
+  public isPaused(): boolean { return this._state === 'Paused' }
+  public isStopped(): boolean { return this._state === 'Stopped' }
 
   public start(): void {
     if (this.isRunning()) {
@@ -206,7 +206,7 @@ export class SimpleTimer implements ITimer {
     if ((!this.isRunning()) && (this.time >= this._duration)) {
       return
     }
-    this._setState(ITimerState.RUNNING)
+    this._setState('Running')
     this._lasttime = this._ticker.now()
     this._ticker.start(() => {
       const now = this._ticker.now()
@@ -223,11 +223,11 @@ export class SimpleTimer implements ITimer {
   }
   public pause(): void {
     this._ticker.stop()
-    this._setState(ITimerState.PAUSED)
+    this._setState('Paused')
   }
   public stop(): void {
     this._ticker.stop()
-    this._setState(ITimerState.STOPPED)
+    this._setState('Stopped')
   }
   public dispose(): void {
     this.stop()
@@ -237,7 +237,7 @@ export class SimpleTimer implements ITimer {
 
 export class MediaTimer implements ITimer {
   private _ready: boolean = false
-  private _state: ITimerState = ITimerState.PAUSED
+  private _state: ITimerState = 'Paused'
   private _ticker = new AnimationFrameTicker()
   private _onReadyCb: ITimerReadyCallback = NULL_FN
   private _onTickCb: ITimerTickCallback = NULL_FN
@@ -251,8 +251,8 @@ export class MediaTimer implements ITimer {
       addDisposableDomListener(_media, 'waiting', () => { console.log('waiting') }),
       addDisposableDomListener(_media, 'durationchange', () => { console.log('durationchange') }),
       addDisposableDomListener(_media, 'canplay', () => { this._ready = true; this._onReadyCb() }),
-      addDisposableDomListener(_media, 'play', () => { this._setState(ITimerState.RUNNING) }),
-      addDisposableDomListener(_media, 'pause', () => { this._setState(ITimerState.PAUSED) }),
+      addDisposableDomListener(_media, 'play', () => { this._setState('Running') }),
+      addDisposableDomListener(_media, 'pause', () => { this._setState('Paused') }),
       addDisposableDomListener(_media, 'ended', () => {
         this.stop()
         this._onTickCb(this.time)
@@ -308,7 +308,7 @@ export class MediaTimer implements ITimer {
   public stop(): void {
     if (!this._ready) { return }
     this._ticker.stop()
-    this._setState(ITimerState.STOPPED)
+    this._setState('Stopped')
   }
   public isRunning(): boolean { return !this._media.paused && !this._media.ended }
   public isPaused(): boolean { return this._media.paused }
