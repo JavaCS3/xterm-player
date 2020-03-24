@@ -1,4 +1,4 @@
-![ci](https://github.com/JavaCS3/xterm-player/workflows/Node.js%20CI/badge.svg)
+![CI](https://github.com/JavaCS3/xterm-player/workflows/CI/badge.svg)
 [![codecov](https://codecov.io/gh/JavaCS3/xterm-player/branch/master/graph/badge.svg)](https://codecov.io/gh/JavaCS3/xterm-player)
 [![npm version](https://img.shields.io/npm/v/xterm-player)](https://www.npmjs.com/package/xterm-player)
 [![downloads](https://img.shields.io/npm/dw/xterm-player)](https://www.npmjs.com/package/xterm-player)
@@ -31,16 +31,24 @@ This repo is intended to provide an alternative asciinema player. The original [
 </html>
 ```
 
-## Instructions
+## Features
+
+1. Support orginal asciinema [v1](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v1.md), [v2](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md) format and features
+2. Support [Terminalizer](https://github.com/faressoft/terminalizer-player) format
+3. Support Audio
+
+## How to record terminal session with audio
+
+```shell
+$ npm i -g xterm-recorder   # install xterm-recorder first
+$ xterm-recorder rec        # exit terminal session will automatically save your record to out.cast
+```
+check peer project https://github.com/JavaCS3/xterm-recorder for details
+
+## Develop Guide
 
 ```shell
 $ cd <repo> && yarn
 $ yarn demo
 $ yarn test
 ```
-
-## Features
-
-1. Support orginal asciinema [v1](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v1.md), [v2](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md) format and features
-2. Support [Terminalizer](https://github.com/faressoft/terminalizer-player) format
-3. Support Audio
