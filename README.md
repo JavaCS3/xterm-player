@@ -41,7 +41,7 @@ This repo is intended to provide an alternative asciinema player. The original [
 
 ```shell
 $ npm i -g xterm-recorder   # install xterm-recorder first
-$ xterm-recorder rec        # exit terminal session will automatically save your record to out.cast
+$ xterm-recorder rec        # exit terminal session will automatically save your recording to out.cast
 ```
 check peer project https://github.com/JavaCS3/xterm-recorder for details
 
