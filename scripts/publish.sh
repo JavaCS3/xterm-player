@@ -13,7 +13,7 @@ function green() {
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 OLD_VERSION=$(node -e "console.log(require('./package.json').version)")
 
-git clean -fd
+git clean -fd && git pull
 yarn version $*
 
 NEW_VERSION=$(node -e "console.log(require('./package.json').version)")

@@ -35,7 +35,7 @@ jobs:
         run: yarn test
 
       - name: Packaging
-        run: yarn package
+        run: yarn build:prod
 
       - name: Setup authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
