@@ -87,21 +87,14 @@ export class XtermPlayer implements XtermPlayerApi {
       this._queue.dispose()
 
       if (cast.header.audio) {
-        this._audio.src = cast.header.audio
-      }
-
-      if (cast.header.audio) {
         this._timer = new MediaTimer(this._audio)
+        this._audio.src = cast.header.audio
+        this._audio.load()
       } else {
         this._timer = new SimpleTimer(new AnimationFrameTicker(), cast.header.duration)
       }
 
-      if (cast.header.audio) {
-        this._audio.load()
-      }
-
       this._queue = new CastFrameQueue(cast, 30)
-
       this._timer.onReady(() => {
         this._updateDuration()
         this._updateProgressAndCurrentTime()
