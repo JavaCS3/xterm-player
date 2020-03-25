@@ -238,14 +238,16 @@ export class SimpleTimer implements ITimer {
 export class MediaTimer implements ITimer {
   private _ready: boolean = false
   private _state: ITimerState = 'Paused'
-  private _ticker = new AnimationFrameTicker()
   private _onReadyCb: ITimerReadyCallback = NULL_FN
   private _onTickCb: ITimerTickCallback = NULL_FN
   private _onStateChangeCb: ITimerStateChangeCallback = NULL_FN
 
   private _disposes: IDisposable[] = []
 
-  constructor(private _media: HTMLMediaElement) {
+  constructor(
+    private _media: HTMLMediaElement,
+    private _ticker: ITicker = new AnimationFrameTicker()
+  ) {
     this._disposes = [
       addDisposableDomListener(_media, 'error', () => { console.error('error') }),
       addDisposableDomListener(_media, 'waiting', () => { console.log('waiting') }),
@@ -327,7 +329,12 @@ export class MediaTimer implements ITimer {
     return this
   }
   public dispose(): void {
+    this._ready = false
     this._media.pause()
     this._disposes.forEach(d => d.dispose())
+
+    this._onReadyCb = this._onStateChangeCb = this._onTickCb = NULL_FN
+    this._ticker.stop()
+    this._setState('Stopped')
   }
 }

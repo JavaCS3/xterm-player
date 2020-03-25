@@ -3,10 +3,18 @@ import { title } from './Utils'
 
 const intervalTicker = new IntervalTicker()
 const animationFrameTicker = new AnimationFrameTicker()
+const audioPlayStub = jest
+  .spyOn(window.HTMLMediaElement.prototype, 'play')
+  .mockImplementation(() => Promise.resolve())
+const audioPauseStub = jest
+  .spyOn(window.HTMLMediaElement.prototype, 'pause')
+  .mockImplementation(() => {})
 
 beforeEach(() => {
   intervalTicker.stop()
   animationFrameTicker.stop()
+  audioPlayStub.mockClear()
+  audioPauseStub.mockClear()
 })
 
 test(title(IntervalTicker, 'tick one time'), (done) => {
@@ -354,4 +362,69 @@ test(title(MediaTimer, 'test properties'), () => {
 
   expect(t.time).toBe(100)
   expect(t.progress).toBe(100 / (100 * 1000))
+})
+
+test(title(MediaTimer, 'test play'), () => {
+  const ticker = new DummyTicker(1)
+  const audio = new Audio()
+  const t = new MediaTimer(audio, ticker)
+  const onReadyMock = jest.fn()
+  const onTickMock = jest.fn()
+
+  t.onTick(onTickMock)
+  t.onReady(onReadyMock)
+
+  audio.dispatchEvent(new Event('canplay'))
+
+  expect(onReadyMock).toBeCalled()
+  expect(t.ready).toBeTruthy()
+
+  t.start()
+
+  expect(onTickMock).not.toBeCalled()
+  expect(audioPlayStub).toBeCalled()
+
+  ticker.tick()
+
+  expect(onTickMock).toBeCalledTimes(1)
+  expect(onTickMock).toBeCalledWith(audio.currentTime * 1000)
+})
+
+test(title(MediaTimer, 'dispose'), () => {
+  const ticker = new DummyTicker(1)
+  const audio = new Audio()
+  const t = new MediaTimer(audio, ticker)
+  const onReadyMock = jest.fn()
+  const onTickMock = jest.fn()
+
+  t.onTick(onTickMock)
+  t.onReady(onReadyMock)
+
+  audio.dispatchEvent(new Event('canplay'))
+
+  expect(onReadyMock).toBeCalled()
+  expect(t.ready).toBeTruthy()
+
+  t.start()
+
+  expect(onTickMock).not.toBeCalled()
+  expect(audioPlayStub).toBeCalled()
+
+  ticker.tick()
+
+  expect(onTickMock).toBeCalledTimes(1)
+  expect(onTickMock).toBeCalledWith(audio.currentTime * 1000)
+
+  t.dispose()
+
+  ticker.tick()
+  ticker.tick()
+  ticker.tick()
+
+  t.start()
+
+  expect(audioPauseStub).toBeCalled()
+  expect(audioPlayStub).toBeCalledTimes(1)
+  expect(onTickMock).toBeCalledTimes(1)
+  expect(onTickMock).toBeCalledWith(audio.currentTime * 1000)
 })
