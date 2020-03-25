@@ -96,6 +96,7 @@ export class XtermPlayer implements XtermPlayerApi {
 
       this._queue = new CastFrameQueue(cast, 30)
       this._timer.onReady(() => {
+        this._updateUIState()
         this._updateDuration()
         this._updateProgressAndCurrentTime()
         this._timer
