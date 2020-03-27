@@ -9,6 +9,8 @@ This repo is intended to provide an alternative asciinema player. The original [
 
 ## [Demo](https://javacs3.github.io/xterm-player/)
 
+![demo-gif](https://user-images.githubusercontent.com/4168698/77246289-beaeac00-6c60-11ea-93eb-c10506fe484e.gif)
+
 ## Usage
 
 ```html
