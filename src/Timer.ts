@@ -200,12 +200,8 @@ export class SimpleTimer implements ITimer {
   public isStopped(): boolean { return this._state === 'Stopped' }
 
   public start(): void {
-    if (this.isRunning()) {
-      return
-    }
-    if ((!this.isRunning()) && (this.time >= this._duration)) {
-      return
-    }
+    if (this.isRunning()) { return }
+    if ((!this.isRunning()) && (this.time >= this._duration)) { return }
     this._setState('Running')
     this._lasttime = this._ticker.now()
     this._ticker.start(() => {

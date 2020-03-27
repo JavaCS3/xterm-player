@@ -36,6 +36,7 @@ export class XtermPlayer implements XtermPlayerApi {
   private _queue: IFrameQueue = new NullFrameQueue()
   private _audio: HTMLAudioElement
 
+  private _loading: boolean = false
   private _lasttime: number = 0
   private _lastframe: IFrame = NULL_FRAME
 
@@ -79,6 +80,8 @@ export class XtermPlayer implements XtermPlayerApi {
   }
 
   private _load(): void {
+    this._loading = true
+    this._updateUIState()
     fetchCast(this._url).then((cast) => {
       this._term.reset()
       this._term.resize(cast.header.width, cast.header.height)
@@ -96,6 +99,7 @@ export class XtermPlayer implements XtermPlayerApi {
 
       this._queue = new CastFrameQueue(cast, 30)
       this._timer.onReady(() => {
+        this._loading = false
         this._updateUIState()
         this._updateDuration()
         this._updateProgressAndCurrentTime()
@@ -136,10 +140,7 @@ export class XtermPlayer implements XtermPlayerApi {
   }
 
   private _updateDuration(): void { this._view.controlBar.duration = this._timer.duration }
-  private _updateUIState(): void {
-    this._view.controlBar.state = this._timer.state
-    this._view.state = this._timer.state
-  }
+  private _updateUIState(): void { this._view.state = this._loading ? 'Loading' : this._timer.state }
   private _updateProgressAndCurrentTime(): void {
     this._view.progressBar.progress = this._timer.progress
     this._view.controlBar.currentTime = this._timer.time

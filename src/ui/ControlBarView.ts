@@ -1,6 +1,6 @@
 import { IComponent } from './Component'
 import { createElement } from './DomHelper'
-import { ITimerState as State } from '../Timer'
+import { State } from './Types'
 import IconPlay from './icons/play.svg'
 import IconPause from './icons/pause.svg'
 import IconReplay from './icons/replay.svg'

@@ -2,7 +2,7 @@ import { createElement } from './DomHelper'
 import { IComponent } from './Component'
 import { ControlBarView } from './ControlBarView'
 import { ProgressBarView } from './ProgressBarView'
-import { ITimerState as State } from '../Timer'
+import { State } from './Types'
 import IconPause from './icons/pause.svg'
 import IconReplay from './icons/replay.svg'
 
@@ -12,15 +12,17 @@ export class PlayerView implements IComponent {
   public readonly progressBar: ProgressBarView = new ProgressBarView()
   public readonly controlBar: ControlBarView = new ControlBarView()
 
-  private _bigPause: HTMLElement
   private _bottom: HTMLElement
+  private _bigButton: HTMLElement
+  private _spinner: HTMLElement
 
   private _state: State = 'Paused'
 
   constructor() {
     this.element = createElement('div', { class: 'xterm-player', attrs: { tabindex: '0' } },
       this.videoWrapper = createElement('div', { class: 'video-wrapper' }),
-      this._bigPause = createElement('div', { class: 'overlay center big-button' }),
+      this._bigButton = createElement('div', { class: 'overlay center big-button ' }),
+      this._spinner = createElement('div', { class: 'overlay center sk-plane' }),
       this._bottom = createElement('div', { class: 'bottom' },
         this.progressBar.element,
         this.controlBar.element
@@ -43,6 +45,7 @@ export class PlayerView implements IComponent {
   public set state(v: State) {
     if (this._state !== v) {
       this._state = v
+      this.controlBar.state = v
       this._updateBigButton()
       if (this._state !== 'Running') {
         this._showBottom(true)
@@ -51,7 +54,7 @@ export class PlayerView implements IComponent {
   }
 
   public onBigButtonClick(cb: EventListenerOrEventListenerObject): void {
-    this._bigPause.addEventListener('click', cb)
+    this._bigButton.addEventListener('click', cb)
   }
 
   private _showBottom(value: boolean) {
@@ -60,15 +63,23 @@ export class PlayerView implements IComponent {
   private _updateBigButton(): void {
     switch (this.state) {
       case 'Paused':
-        this._bigPause.style.display = 'block'
-        this._bigPause.innerHTML = IconPause
+        this._bigButton.style.display = 'block'
+        this._bigButton.innerHTML = IconPause
+        this._spinner.style.display = 'none'
         break
       case 'Stopped':
-        this._bigPause.style.display = 'block'
-        this._bigPause.innerHTML = IconReplay
+        this._bigButton.style.display = 'block'
+        this._bigButton.innerHTML = IconReplay
+        this._spinner.style.display = 'none'
         break
+      case 'Running':
+        this._bigButton.style.display = 'none'
+        this._spinner.style.display = 'none'
+        break
+      case 'Loading':
+        this._bigButton.style.display = 'none'
+        this._spinner.style.display = 'block'
       default:
-        this._bigPause.style.display = 'none'
         break
     }
   }
