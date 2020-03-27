@@ -22,7 +22,11 @@ export class PlayerView implements IComponent {
     this.element = createElement('div', { class: 'xterm-player', attrs: { tabindex: '0' } },
       this.videoWrapper = createElement('div', { class: 'video-wrapper' }),
       this._bigButton = createElement('div', { class: 'overlay center big-button ' }),
-      this._spinner = createElement('div', { class: 'overlay center sk-plane' }),
+      this._spinner = createElement('div', { class: 'overlay center sk-flow' },
+        createElement('div', { class: 'sk-flow-dot' }),
+        createElement('div', { class: 'sk-flow-dot' }),
+        createElement('div', { class: 'sk-flow-dot' }),
+      ),
       this._bottom = createElement('div', { class: 'bottom' },
         this.progressBar.element,
         this.controlBar.element
@@ -78,7 +82,7 @@ export class PlayerView implements IComponent {
         break
       case 'Loading':
         this._bigButton.style.display = 'none'
-        this._spinner.style.display = 'block'
+        this._spinner.style.display = 'flex'
       default:
         break
     }
