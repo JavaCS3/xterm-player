@@ -1,8 +1,8 @@
-import { createElement } from './DomHelper'
-import { IComponent } from './Component'
+import { createElement, addDisposableDomListener } from './DomHelper'
 import { ControlBarView } from './ControlBarView'
 import { ProgressBarView } from './ProgressBarView'
-import { State } from './Types'
+import { IDisposable } from '../Types'
+import { State, IComponent } from './Types'
 import IconPause from './icons/pause.svg'
 import IconReplay from './icons/replay.svg'
 
@@ -33,12 +33,12 @@ export class PlayerView implements IComponent {
       )
     )
     this._updateBigButton()
-    this.element.addEventListener('mouseenter', () => {
+    addDisposableDomListener(this.element, 'mouseenter', () => {
       if (this.state === 'Running') {
         this._showBottom(true)
       }
     })
-    this.element.addEventListener('mouseleave', () => {
+    addDisposableDomListener(this.element, 'mouseleave', () => {
       if (this.state === 'Running') {
         this._showBottom(false)
       }
@@ -57,8 +57,11 @@ export class PlayerView implements IComponent {
     }
   }
 
-  public onBigButtonClick(cb: EventListenerOrEventListenerObject): void {
-    this._bigButton.addEventListener('click', cb)
+  public onBigButtonClick(cb: (ev: any) => void): IDisposable {
+    return addDisposableDomListener(this._bigButton, 'click', cb)
+  }
+  public onKeyDown(cb: (ev: any) => void): IDisposable {
+    return addDisposableDomListener(this.element, 'keydown', cb)
   }
 
   private _showBottom(value: boolean) {

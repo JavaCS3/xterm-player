@@ -1,5 +1,5 @@
-import { createElement } from './DomHelper'
-import { IComponent } from './Component'
+import { createElement, addDisposableDomListener } from './DomHelper'
+import { IComponent } from './Types'
 
 type SeekCallback = (percent: number) => void
 
@@ -19,17 +19,14 @@ export class ProgressBarView implements IComponent {
       this._progressHover = createElement('div', { class: 'progress-hover', attrs: { style: 'opacity: 0' } })
     )
 
-    el.addEventListener('mousemove', this._updateProgressHover.bind(this))
-    el.addEventListener('mouseenter', () => {
-      this._progressHover.style.opacity = '1'
-    })
-    el.addEventListener('mouseleave', () => {
-      this._progressHover.style.opacity = '0'
-    })
-    el.addEventListener('mousedown', (evt: MouseEvent) => {
+    addDisposableDomListener(el, 'mousemove', this._updateProgressHover.bind(this))
+    addDisposableDomListener(el, 'mouseenter', () => this._progressHover.style.opacity = '1')
+    addDisposableDomListener(el, 'mouseleave', () => this._progressHover.style.opacity = '0')
+    addDisposableDomListener(el, 'mousedown', (evt: MouseEvent) => {
       const percent = (evt.clientX - el.getBoundingClientRect().left) / el.clientWidth
       this._onSeek(percent)
     })
+
     this._updateProgress()
   }
 

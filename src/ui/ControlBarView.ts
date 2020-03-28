@@ -1,6 +1,6 @@
-import { IComponent } from './Component'
-import { createElement } from './DomHelper'
-import { State } from './Types'
+import { createElement, addDisposableDomListener } from './DomHelper'
+import { State, IComponent } from './Types'
+import { IDisposable } from '../Types'
 import IconPlay from './icons/play.svg'
 import IconPause from './icons/pause.svg'
 import IconReplay from './icons/replay.svg'
@@ -52,8 +52,8 @@ export class ControlBarView implements IComponent {
     }
   }
 
-  public onPlaybackButtonClick(listener: EventListenerOrEventListenerObject): void {
-    this._playbackButton.addEventListener('click', listener)
+  public onPlaybackButtonClick(listener: (ev: any) => void): IDisposable {
+    return addDisposableDomListener(this._playbackButton, 'click', listener)
   }
 
   private _updatePlaybackButton() {

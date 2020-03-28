@@ -56,7 +56,7 @@ export class XtermPlayer implements XtermPlayerApi {
 
     this._load()
 
-    view.element.addEventListener('keyup', (ev: KeyboardEvent) => {
+    view.onKeyDown((ev: KeyboardEvent) => {
       switch (ev.code) {
         case 'Space':
           this._togglePlayPauseReplay()
