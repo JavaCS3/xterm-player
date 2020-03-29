@@ -2,6 +2,7 @@
 [![codecov](https://codecov.io/gh/JavaCS3/xterm-player/branch/master/graph/badge.svg)](https://codecov.io/gh/JavaCS3/xterm-player)
 [![npm version](https://img.shields.io/npm/v/xterm-player)](https://www.npmjs.com/package/xterm-player)
 [![downloads](https://img.shields.io/npm/dw/xterm-player)](https://www.npmjs.com/package/xterm-player)
+[![gitter chat](https://badges.gitter.im/xterm-player/community.png)](https://gitter.im/xterm-player/community)
 
 # XtermPlayer [中文文档](./README.zh.md)
 
