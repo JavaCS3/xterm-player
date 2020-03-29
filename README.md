@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/xterm-player)](https://www.npmjs.com/package/xterm-player)
 [![downloads](https://img.shields.io/npm/dw/xterm-player)](https://www.npmjs.com/package/xterm-player)
 
-# XtermPlayer
+# XtermPlayer [中文文档](./README.zh.md)
 
 This repo is intended to provide an alternative asciinema player. The original [player](https://github.com/asciinema/asciinema-player) is writtern in `Clojure`. I think it's hard for frontend people to contribute that directly. This project is intended to make it easier for people to contribute by using `Typescript`.
 
