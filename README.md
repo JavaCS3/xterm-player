@@ -2,11 +2,12 @@
 [![codecov](https://codecov.io/gh/JavaCS3/xterm-player/branch/master/graph/badge.svg)](https://codecov.io/gh/JavaCS3/xterm-player)
 [![npm version](https://img.shields.io/npm/v/xterm-player)](https://www.npmjs.com/package/xterm-player)
 [![downloads](https://img.shields.io/npm/dw/xterm-player)](https://www.npmjs.com/package/xterm-player)
+[![](https://data.jsdelivr.com/v1/package/npm/xterm-player/badge)](https://www.jsdelivr.com/package/npm/xterm-player)
 [![gitter chat](https://badges.gitter.im/xterm-player/community.png)](https://gitter.im/xterm-player/community)
 
 # XtermPlayer [中文文档](./README.zh.md)
 
-This repo is intended to provide an alternative asciinema player. The original [player](https://github.com/asciinema/asciinema-player) is writtern in `Clojure`. I think it's hard for frontend people to contribute that directly. This project is intended to make it easier for people to contribute by using `Typescript`.
+This repo is intended to provide an alternative asciinema player. The original [player](https://github.com/asciinema/asciinema-player) is writtern in `ClojureScript`. I think it's hard for frontend people to contribute that directly. This project is intended to make it easier for people to contribute by using `Typescript`.
 
 ## [Demo](https://javacs3.github.io/xterm-player/)
 
@@ -17,9 +18,9 @@ This repo is intended to provide an alternative asciinema player. The original [
 ```html
 <html>
   <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm-player@0.0.13/dist/css/xterm-player.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm-player@latest/dist/css/xterm-player.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@4.4.0/lib/xterm.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xterm-player@0.0.13/dist/js/xterm-player.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-player@latest/dist/js/xterm-player.min.js"></script>
   </head>
   <body>
     <div id="app"></div>
