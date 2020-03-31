@@ -62,21 +62,16 @@ export class XtermPlayer implements XtermPlayerApi {
           this._togglePlayPauseReplay()
           break
         case 'ArrowRight':
-          this._timer.time += 3000
-          this._updateProgressAndCurrentTime()
+          this.currentTime += 3000
           break
         case 'ArrowLeft':
-          this._timer.time -= 3000
-          this._updateProgressAndCurrentTime()
+          this.currentTime -= 3000
           break
       }
     })
     view.onBigButtonClick(this._togglePlayPauseReplay.bind(this))
     view.controlBar.onPlaybackButtonClick(this._togglePlayPauseReplay.bind(this))
-    view.progressBar.onSeek((percent: number) => {
-      this._timer.time = percent * this._timer.duration
-      this._updateProgressAndCurrentTime()
-    })
+    view.progressBar.onSeek(percent => this.currentTime = percent * this._timer.duration)
   }
 
   private _load(): void {
@@ -121,9 +116,15 @@ export class XtermPlayer implements XtermPlayerApi {
   public get playbackRate(): number { return this._timer.timescale }
   public set playbackRate(rate: number) { this._timer.timescale = rate }
 
+  public get currentTime(): number { return this._timer.time }
+  public set currentTime(time: number) {
+    this._timer.time = time
+    this._updateProgressAndCurrentTime()
+  }
+
   public play(): void { this._timer.start() }
   public replay(): void {
-    this._timer.time = 0
+    this.currentTime = 0
     this._timer.start()
   }
   public pause(): void { this._timer.pause() }
@@ -143,7 +144,7 @@ export class XtermPlayer implements XtermPlayerApi {
   private _updateUIState(): void { this._view.state = this._loading ? 'Loading' : this._timer.state }
   private _updateProgressAndCurrentTime(): void {
     this._view.progressBar.progress = this._timer.progress
-    this._view.controlBar.currentTime = this._timer.time
+    this._view.controlBar.currentTime = this.currentTime
   }
 
   private _render(now: number): void {

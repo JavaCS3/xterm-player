@@ -17,6 +17,12 @@ declare module 'xterm-player' {
      */
     playbackRate: number
 
+
+    /**
+     * Current time of XtermPlayer in milliseconds
+     */
+    currentTime: number
+
     /**
      * Create XtermPlayer object
      * @param url The url of xterm video cast file
