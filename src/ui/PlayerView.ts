@@ -1,7 +1,7 @@
+import { XtermPlayer } from 'xterm-player'
 import { createElement, addDisposableDomListener } from './DomHelper'
 import { ControlBarView } from './ControlBarView'
 import { ProgressBarView } from './ProgressBarView'
-import { IDisposable } from '../Types'
 import { State, IComponent } from './Types'
 import Icons from './Icons'
 
@@ -17,8 +17,8 @@ export class PlayerView implements IComponent {
 
   private _state: State = 'Paused'
 
-  constructor() {
-    this.element = createElement('div', { class: 'xterm-player', attrs: { tabindex: '0' } },
+  constructor(private _player: XtermPlayer) {
+    const el = this.element = createElement('div', { class: 'xterm-player', attrs: { tabindex: '0' } },
       this.videoWrapper = createElement('div', { class: 'video-wrapper' }),
       this._bigButton = createElement('div', { class: 'overlay center big-button ' }),
       this._spinner = createElement('div', { class: 'overlay center sk-flow' },
@@ -31,17 +31,34 @@ export class PlayerView implements IComponent {
         this.controlBar.element
       )
     )
-    this._updateBigButton()
-    addDisposableDomListener(this.element, 'mouseenter', () => {
+    addDisposableDomListener(el, 'mouseenter', () => {
       if (this.state === 'Running') {
         this._showBottom(true)
       }
     })
-    addDisposableDomListener(this.element, 'mouseleave', () => {
+    addDisposableDomListener(el, 'mouseleave', () => {
       if (this.state === 'Running') {
         this._showBottom(false)
       }
     })
+    addDisposableDomListener(el, 'keydown', (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Space':
+          this._togglePlayPauseReplay()
+          break
+        case 'ArrowRight':
+          this._player.currentTime += 3000
+          break
+        case 'ArrowLeft':
+          this._player.currentTime -= 3000
+          break
+      }
+    }, true)
+    addDisposableDomListener(this._bigButton, 'click', this._togglePlayPauseReplay.bind(this))
+
+    this.controlBar.onPlaybackButtonClick(this._togglePlayPauseReplay.bind(this))
+
+    this._updateBigButton()
   }
 
   public get state(): State { return this._state }
@@ -54,13 +71,6 @@ export class PlayerView implements IComponent {
         this._showBottom(true)
       }
     }
-  }
-
-  public onBigButtonClick(cb: (ev: any) => void): IDisposable {
-    return addDisposableDomListener(this._bigButton, 'click', cb)
-  }
-  public onKeyDown(cb: (ev: any) => void): IDisposable {
-    return addDisposableDomListener(this.element, 'keydown', cb, true)
   }
 
   private _showBottom(value: boolean) {
@@ -87,6 +97,15 @@ export class PlayerView implements IComponent {
         this._spinner.style.display = 'flex'
       default:
         break
+    }
+  }
+  private _togglePlayPauseReplay(): void {
+    if (this.state === 'Running') {
+      this._player.pause()
+    } else if (this.state === 'Stopped') {
+      this._player.replay()
+    } else {
+      this._player.play()
     }
   }
 }

@@ -49,29 +49,14 @@ export class XtermPlayer implements XtermPlayerApi {
     this._term = createTerminal({ fontFamily: 'Consolas, Menlo' })
     this._audio = new Audio()
 
-    const view = this._view = new PlayerView()
+    const view = this._view = new PlayerView(this)
     el.append(this._view.element)
     this._term.open(this._view.videoWrapper)
     this._term.focus()
 
     this._load()
 
-    view.onKeyDown((ev: KeyboardEvent) => {
-      switch (ev.code) {
-        case 'Space':
-          this._togglePlayPauseReplay()
-          break
-        case 'ArrowRight':
-          this.currentTime += 3000
-          break
-        case 'ArrowLeft':
-          this.currentTime -= 3000
-          break
-      }
-    })
-    view.onBigButtonClick(this._togglePlayPauseReplay.bind(this))
-    view.controlBar.onPlaybackButtonClick(this._togglePlayPauseReplay.bind(this))
-    view.progressBar.onSeek(percent => this.currentTime = percent * this._timer.duration)
+    view.progressBar.onSeek((percent: number) => this.currentTime = percent * this._timer.duration)
   }
 
   private _load(): void {
@@ -129,16 +114,6 @@ export class XtermPlayer implements XtermPlayerApi {
   }
   public pause(): void { this._timer.pause() }
   public stop(): void { this._timer.stop() }
-
-  private _togglePlayPauseReplay(): void {
-    if (this._timer.isRunning()) {
-      this.pause()
-    } else if (this._timer.isStopped()) {
-      this.replay()
-    } else {
-      this.play()
-    }
-  }
 
   private _updateDuration(): void { this._view.controlBar.duration = this._timer.duration }
   private _updateUIState(): void { this._view.state = this._loading ? 'Loading' : this._timer.state }
