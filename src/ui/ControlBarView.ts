@@ -1,9 +1,7 @@
 import { createElement, addDisposableDomListener } from './DomHelper'
 import { State, IComponent } from './Types'
 import { IDisposable } from '../Types'
-import IconPlay from './icons/play.svg'
-import IconPause from './icons/pause.svg'
-import IconReplay from './icons/replay.svg'
+import Icons from './Icons'
 
 function formatTime(time: number) {
   let minutes = Math.floor(time / 60000)
@@ -59,13 +57,13 @@ export class ControlBarView implements IComponent {
   private _updatePlaybackButton() {
     switch (this.state) {
       case 'Running':
-        this._playbackButton.innerHTML = IconPause
+        this._playbackButton.innerHTML = Icons.Pause
         break
       case 'Paused':
-        this._playbackButton.innerHTML = IconPlay
+        this._playbackButton.innerHTML = Icons.Play
         break
       case 'Stopped':
-        this._playbackButton.innerHTML = IconReplay
+        this._playbackButton.innerHTML = Icons.Replay
         break
     }
   }

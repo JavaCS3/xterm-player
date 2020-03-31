@@ -3,8 +3,7 @@ import { ControlBarView } from './ControlBarView'
 import { ProgressBarView } from './ProgressBarView'
 import { IDisposable } from '../Types'
 import { State, IComponent } from './Types'
-import IconPause from './icons/pause.svg'
-import IconReplay from './icons/replay.svg'
+import Icons from './Icons'
 
 export class PlayerView implements IComponent {
   public readonly element: HTMLElement
@@ -71,12 +70,12 @@ export class PlayerView implements IComponent {
     switch (this.state) {
       case 'Paused':
         this._bigButton.style.display = 'block'
-        this._bigButton.innerHTML = IconPause
+        this._bigButton.innerHTML = Icons.Pause
         this._spinner.style.display = 'none'
         break
       case 'Stopped':
         this._bigButton.style.display = 'block'
-        this._bigButton.innerHTML = IconReplay
+        this._bigButton.innerHTML = Icons.Replay
         this._spinner.style.display = 'none'
         break
       case 'Running':
