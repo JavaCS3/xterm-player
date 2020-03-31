@@ -60,7 +60,7 @@ export class PlayerView implements IComponent {
     return addDisposableDomListener(this._bigButton, 'click', cb)
   }
   public onKeyDown(cb: (ev: any) => void): IDisposable {
-    return addDisposableDomListener(this.element, 'keydown', cb)
+    return addDisposableDomListener(this.element, 'keydown', cb, true)
   }
 
   private _showBottom(value: boolean) {
