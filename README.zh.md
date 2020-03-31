@@ -14,9 +14,9 @@
 ```html
 <html>
   <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm-player@0.0.13/dist/css/xterm-player.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm-player@latest/dist/css/xterm-player.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@4.4.0/lib/xterm.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xterm-player@0.0.13/dist/js/xterm-player.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-player@latest/dist/js/xterm-player.min.js"></script>
   </head>
   <body>
     <div id="app"></div>
