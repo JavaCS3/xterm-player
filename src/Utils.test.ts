@@ -1,4 +1,4 @@
-import { Slice } from './Utils'
+import { title, Slice, formatTime } from './Utils'
 
 test('Slice: test slice without start end', () => {
   const l = [1, 2, 3, 4, 5]
@@ -55,4 +55,13 @@ test('Slice: test slice empty #2', () => {
   for (let i = 0; i < ref.length; i++) {
     expect(s.get(i)).toBe(ref[i])
   }
+})
+
+test(title(formatTime, 'test hh:mm:ss'), () => {
+  expect(formatTime((60 + 10) * 1000)).toBe('01:10')
+  expect(formatTime((60 * 60 + 60 + 10) * 1000)).toBe('01:01:10')
+  expect(formatTime(60 * 1000)).toBe('01:00')
+  expect(formatTime(1000)).toBe('00:01')
+  expect(formatTime(100)).toBe('00:00')
+  expect(formatTime(Infinity)).toBe('00:00')
 })

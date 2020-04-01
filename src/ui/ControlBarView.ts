@@ -1,14 +1,9 @@
 import { createElement, addDisposableDomListener } from './DomHelper'
 import { State, IComponent } from './Types'
 import { IDisposable } from '../Types'
+import { formatTime } from '../Utils'
 import Icons from './Icons'
 
-function formatTime(time: number) {
-  let minutes = Math.floor(time / 60000)
-  let seconds = Math.floor((time - (minutes * 60000)) / 1000)
-
-  return `${minutes < 10 ? ('0' + minutes) : minutes}:${seconds < 10 ? ('0' + seconds) : seconds}`
-}
 
 export class ControlBarView implements IComponent {
   public readonly element: HTMLElement

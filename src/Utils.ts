@@ -18,3 +18,22 @@ export class Slice<T> {
   }
   public len(): number { return this._end - this._start }
 }
+
+
+function add0(n: number): string { return n < 10 ? '0' + n : '' + n }
+/**
+ * Parse second to time string
+ *
+ * @param {Number} millisecond
+ * @return {String} 00:00 or 00:00:00
+ */
+export function formatTime(millisecond: number): string {
+  const second = millisecond / 1000
+  if (second === 0 || second === Infinity || isNaN(millisecond)) {
+    return '00:00'
+  }
+  const hour = Math.floor(second / 3600)
+  const min = Math.floor((second - hour * 3600) / 60)
+  const sec = Math.floor(second - hour * 3600 - min * 60)
+  return (hour > 0 ? [hour, min, sec] : [min, sec]).map(add0).join(':')
+}
