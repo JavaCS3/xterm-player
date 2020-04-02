@@ -76,6 +76,56 @@
 
 .xterm-player .control-bar * {
   box-sizing: inherit;
+  user-select: none;
+}
+
+.xterm-player .control-bar .left {
+  position: absolute;
+  height: 100%;
+  left: 0;
+  bottom: 0;
+}
+
+.xterm-player .control-bar .right {
+  position: absolute;
+  height: 100%;
+  right: 0;
+  bottom: 0;
+}
+
+.xterm-player .control-bar .playback-rate-setting {
+  display: inline-block;
+  height: 100%;
+}
+
+.xterm-player .control-bar .setting-box {
+  display: none;
+  width: 70px;
+  text-align: center;
+  position: absolute;
+  bottom: 50px;
+  right: 0px;
+  padding: 10px 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.xterm-player .control-bar .setting-box.open {
+  display: block;
+}
+
+.xterm-player .control-bar .setting-box .setting-item {
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.xterm-player .control-bar .playback-rate {
+  display: inline-block;
+  width: 40px;
+  line-height: 36px;
+  text-align: center;
+  font-size: 14px;
+  vertical-align: middle;
+  cursor: pointer;
 }
 
 .xterm-player .control-bar {
@@ -90,20 +140,20 @@
 }
 
 .xterm-player .control-bar .playback-button {
-  display: block;
-  float: left;
+  display: inline-block;
+  vertical-align: middle;
   cursor: pointer;
   height: 100%;
   width: 36px;
 }
 
 .xterm-player .control-bar .time-display {
-  display: inline-block;
+  vertical-align: middle;
   padding: 0 5px;
-  height: 100%;
   line-height: 36px;
+  font-size: 14px;
   white-space: nowrap;
-  font-family: Roboto, Arial, Helvetica, sans-serif;
+  cursor: default;
 }
 
 .xterm-player .progress-bar {

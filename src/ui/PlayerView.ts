@@ -9,7 +9,7 @@ export class PlayerView implements IComponent {
   public readonly element: HTMLElement
   public readonly videoWrapper: HTMLElement
   public readonly progressBar: ProgressBarView = new ProgressBarView()
-  public readonly controlBar: ControlBarView = new ControlBarView()
+  public readonly controlBar: ControlBarView = new ControlBarView(this._player)
 
   private _bottom: HTMLElement
   private _bigButton: HTMLElement

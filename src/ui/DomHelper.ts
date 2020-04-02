@@ -3,6 +3,7 @@ import { IDisposable } from "../Types"
 export interface IHTMLElementOption {
   attrs?: { [key: string]: string }
   class?: string
+  text?: string
   on?: { [event: string]: EventListenerOrEventListenerObject }
 }
 
@@ -18,9 +19,20 @@ export function createElement(name: string, opts?: IHTMLElementOption, ...childr
     if (opts.on) {
       for (const ev in opts.on) { el.addEventListener(ev, opts.on[ev]) }
     }
+    if (opts.text) {
+      el.innerText = opts.text
+    }
   }
   el.append(...children)
   return el
+}
+
+export function $div(opts?: IHTMLElementOption, ...children: HTMLElement[]): HTMLElement {
+  return createElement('div', opts, ...children)
+}
+
+export function $span(opts?: IHTMLElementOption, ...children: HTMLElement[]): HTMLElement {
+  return createElement('span', opts, ...children)
 }
 
 /**

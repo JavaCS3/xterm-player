@@ -99,7 +99,9 @@ export class XtermPlayer implements XtermPlayerApi {
   }
 
   public get playbackRate(): number { return this._timer.timescale }
-  public set playbackRate(rate: number) { this._timer.timescale = rate }
+  public set playbackRate(rate: number) {
+    this._view.controlBar.currentPlaybackRate = this._timer.timescale = rate
+  }
 
   public get currentTime(): number { return this._timer.time }
   public set currentTime(time: number) {
