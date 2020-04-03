@@ -1,5 +1,5 @@
 import 'xterm/css/xterm.css'
-import './ui/ui.css'
+import './ui/ui.scss'
 import * as xterm from 'xterm'
 import { XtermPlayer as XtermPlayerApi } from 'xterm-player'
 import fetchCast from './CastFetcher'
