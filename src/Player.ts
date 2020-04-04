@@ -1,7 +1,7 @@
 import 'xterm/css/xterm.css'
 import './ui/ui.css'
 import * as xterm from 'xterm'
-import { XtermPlayer as XtermPlayerApi } from 'xterm-player'
+import { XtermPlayer as XtermPlayerApi, IPlayerOptions, ITerminalOptions } from 'xterm-player'
 import fetchCast from './CastFetcher'
 import { SimpleTimer, MediaTimer, AnimationFrameTicker, IntervalTicker, ITimer, NullTimer } from './Timer'
 import { CastFrameQueue, NULL_FRAME, IFrame, NullFrameQueue, IFrameQueue } from './Frame'
@@ -13,7 +13,10 @@ function writeSync(term: xterm.Terminal, data: string) {
   }
 }
 
-function createTerminal(options?: xterm.ITerminalOptions): xterm.Terminal {
+function createTerminal(options?: ITerminalOptions): xterm.Terminal {
+  // XtermPlayer.ITerminalOptions is a subset of xter.ITerminalOptions
+  options = options as xterm.ITerminalOptions
+
   // Workaround: xterm.js only supports browser env via global variable Terminal,
   // which is different from typescript usage.
   // Use constructor from window.Terminal if it's browser env
@@ -30,6 +33,7 @@ export class XtermPlayer implements XtermPlayerApi {
   public readonly el: HTMLElement
 
   private _url: string = ''
+  private _playerOptions: IPlayerOptions
   private _term: xterm.Terminal
   private _view: PlayerView
   private _timer: ITimer = new NullTimer()
@@ -42,11 +46,17 @@ export class XtermPlayer implements XtermPlayerApi {
 
   constructor(
     url: string,
-    el: HTMLElement
+    el: HTMLElement,
+    options: IPlayerOptions = {
+      terminalOptions: {
+        fontFamily: 'Consolas, Menlo'
+      }
+    }
   ) {
     this.el = el
     this._url = url
-    this._term = createTerminal({ fontFamily: 'Consolas, Menlo' })
+    this._playerOptions = options
+    this._term = createTerminal(this._playerOptions.terminalOptions)
     this._audio = new Audio()
 
     const view = this._view = new PlayerView(this)
@@ -96,6 +106,11 @@ export class XtermPlayer implements XtermPlayerApi {
       this._url = url
       this._load()
     }
+  }
+
+  public get playerOptions(): IPlayerOptions { return this._playerOptions }
+  public set playerOptions(options: IPlayerOptions) {
+    this._playerOptions = options
   }
 
   public get playbackRate(): number { return this._timer.timescale }

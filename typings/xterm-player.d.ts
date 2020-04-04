@@ -1,6 +1,52 @@
 /// <reference lib="dom"/>
 
+
 declare module 'xterm-player' {
+
+  import * as xterm from 'xterm'
+
+  /**
+   * An object containing theme settings of the player
+   *
+   * This is a subset of `xterm.ITerminalOptions`
+   */
+  export interface ITerminalOptions {
+    /**
+     * The font size used to render text
+     */
+    fontSize?: number
+
+    /**
+     * The font family used to render text
+     */
+    fontFamily?: string
+
+    /**
+     * The font weight used to render non-bold text
+     */
+    fontWeight?: xterm.FontWeight
+
+    /**
+     * The font weight used to render bold text
+     */
+    fontWeightBold?: xterm.FontWeight
+
+    /**
+     * The color theme of the terminal
+     */
+    theme?: xterm.ITheme
+  }
+
+  /**
+   * An object containing start up options for the player
+   */
+  export interface IPlayerOptions {
+    /**
+     * The options of the terminal
+     */
+    terminalOptions?: ITerminalOptions
+  }
+
   export class XtermPlayer {
     /**
      * The element containing the XtermPlayer
@@ -11,6 +57,11 @@ declare module 'xterm-player' {
      * The url of xterm video cast file
      */
     url: string
+
+    /**
+     * The options of the player
+     */
+    playerOptions: IPlayerOptions
 
     /**
      * The playback rate of XtermPlayer
@@ -27,8 +78,9 @@ declare module 'xterm-player' {
      * Create XtermPlayer object
      * @param url The url of xterm video cast file
      * @param el The element to create the XtermPlayer within
+     * @param options The options for XtermPlayer
      */
-    constructor(url: string, el: HTMLElement)
+    constructor(url: string, el: HTMLElement, options?: IPlayerOptions)
 
     /**
      * Play the xterm video
