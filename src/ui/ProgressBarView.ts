@@ -1,7 +1,7 @@
-import { createElement, addDisposableDomListener } from './DomHelper'
+import { $div, addDisposableDomListener } from './DomHelper'
 import { IComponent } from './Types'
 
-type SeekCallback = (percent: number) => void
+export type SeekCallback = (percent: number) => void
 
 export class ProgressBarView implements IComponent {
   public readonly element: HTMLElement
@@ -14,9 +14,9 @@ export class ProgressBarView implements IComponent {
   private _progress: number = 0
 
   constructor() {
-    const el = this.element = createElement('div', { class: 'progress-bar' },
-      this._progressElement = createElement('div', { class: 'progress' }),
-      this._progressHover = createElement('div', { class: 'progress-hover', attrs: { style: 'opacity: 0' } })
+    const el = this.element = $div({ class: 'xp-progress-bar' },
+      this._progressElement = $div({ class: 'xp-progress' }),
+      this._progressHover = $div({ class: 'xp-progress-hover', attrs: { style: 'opacity: 0' } })
     )
 
     addDisposableDomListener(el, 'mousemove', this._updateProgressHover.bind(this))
@@ -40,7 +40,7 @@ export class ProgressBarView implements IComponent {
     }
   }
   public onSeek(cb: SeekCallback): void {
-    this._onSeek = cb
+    this._onSeek = cb  // TODO: Do we need to make this disposable?
   }
 
   private _updateProgress() {

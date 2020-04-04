@@ -6,6 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const autoprefixer = require('autoprefixer')
+const cssnano = require('cssnano')
 
 module.exports = Object.assign(configBase, {
   devtool: config.isProdEnv ? 'source-map' : 'eval',
@@ -40,6 +42,25 @@ module.exports = Object.assign(configBase, {
           //   loader: 'postcss-loader',
           //   options: { plugins: [require('autoprefixer')] }
           // }
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: [autoprefixer, cssnano]
+            }
+          },
+          'sass-loader'
         ]
       },
       {

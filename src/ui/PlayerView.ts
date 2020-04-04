@@ -1,44 +1,38 @@
 import { XtermPlayer } from 'xterm-player'
-import { createElement, addDisposableDomListener } from './DomHelper'
+import { $div, addDisposableDomListener } from './DomHelper'
 import { ControlBarView } from './ControlBarView'
-import { ProgressBarView } from './ProgressBarView'
 import { State, IComponent } from './Types'
 import Icons from './Icons'
 
 export class PlayerView implements IComponent {
   public readonly element: HTMLElement
   public readonly videoWrapper: HTMLElement
-  public readonly progressBar: ProgressBarView = new ProgressBarView()
   public readonly controlBar: ControlBarView = new ControlBarView(this._player)
 
-  private _bottom: HTMLElement
   private _bigButton: HTMLElement
   private _spinner: HTMLElement
 
   private _state: State = 'Paused'
 
   constructor(private _player: XtermPlayer) {
-    const el = this.element = createElement('div', { class: 'xterm-player', attrs: { tabindex: '0' } },
-      this.videoWrapper = createElement('div', { class: 'video-wrapper' }),
-      this._bigButton = createElement('div', { class: 'overlay center big-button ' }),
-      this._spinner = createElement('div', { class: 'overlay center sk-flow' },
-        createElement('div', { class: 'sk-flow-dot' }),
-        createElement('div', { class: 'sk-flow-dot' }),
-        createElement('div', { class: 'sk-flow-dot' }),
+    const el = this.element = $div({ class: 'xp', attrs: { tabindex: '0' } },
+      this.videoWrapper = $div({ class: 'video-wrapper' }),
+      this._bigButton = $div({ class: 'xp-overlay xp-overlay-center xp-big-button' }),
+      this._spinner = $div({ class: 'xp-overlay xp-overlay-center sk-flow' },
+        $div({ class: 'sk-flow-dot' }),
+        $div({ class: 'sk-flow-dot' }),
+        $div({ class: 'sk-flow-dot' }),
       ),
-      this._bottom = createElement('div', { class: 'bottom' },
-        this.progressBar.element,
-        this.controlBar.element
-      )
+      this.controlBar.element
     )
     addDisposableDomListener(el, 'mouseenter', () => {
       if (this.state === 'Running') {
-        this._showBottom(true)
+        this._showControlBar()
       }
     })
     addDisposableDomListener(el, 'mouseleave', () => {
       if (this.state === 'Running') {
-        this._showBottom(false)
+        this._hideControlBar()
       }
     })
     addDisposableDomListener(el, 'keydown', (ev: KeyboardEvent) => {
@@ -68,13 +62,16 @@ export class PlayerView implements IComponent {
       this.controlBar.state = v
       this._updateBigButton()
       if (this._state !== 'Running') {
-        this._showBottom(true)
+        this._showControlBar()
       }
     }
   }
 
-  private _showBottom(value: boolean) {
-    this._bottom.style.opacity = value ? '1' : '0'
+  private _showControlBar(): void {
+    this.controlBar.element.style.opacity = '1'
+  }
+  private _hideControlBar(): void {
+    this.controlBar.element.style.opacity = '0'
   }
   private _updateBigButton(): void {
     switch (this.state) {

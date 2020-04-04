@@ -3,6 +3,8 @@ const configBase = require('./webpack.config.base')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const autoprefixer = require('autoprefixer')
+const cssnano = require('cssnano')
 
 module.exports = Object.assign(configBase, {
   devtool: 'inline-source-map',
@@ -29,6 +31,25 @@ module.exports = Object.assign(configBase, {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: [autoprefixer, cssnano]
+            }
+          },
+          'sass-loader'
+        ]
       },
       {
         test: /\.(ts|tsx)?$/,

@@ -1,5 +1,5 @@
 import 'xterm/css/xterm.css'
-import './ui/ui.css'
+import './ui/ui.scss'
 import * as xterm from 'xterm'
 import { XtermPlayer as XtermPlayerApi, IPlayerOptions, ITerminalOptions } from 'xterm-player'
 import fetchCast from './CastFetcher'
@@ -66,7 +66,7 @@ export class XtermPlayer implements XtermPlayerApi {
 
     this._load()
 
-    view.progressBar.onSeek((percent: number) => this.currentTime = percent * this._timer.duration)
+    view.controlBar.onSeek((percent: number) => this.currentTime = percent * this._timer.duration)
   }
 
   private _load(): void {
@@ -134,10 +134,7 @@ export class XtermPlayer implements XtermPlayerApi {
 
   private _updateDuration(): void { this._view.controlBar.duration = this._timer.duration }
   private _updateUIState(): void { this._view.state = this._loading ? 'Loading' : this._timer.state }
-  private _updateProgressAndCurrentTime(): void {
-    this._view.progressBar.progress = this._timer.progress
-    this._view.controlBar.currentTime = this.currentTime
-  }
+  private _updateProgressAndCurrentTime(): void { this._view.controlBar.currentTime = this.currentTime }
 
   private _render(now: number): void {
     // console.log('now ' + now.toFixed(2) + ' duration: ' + this._timer.duration.toFixed(2))
