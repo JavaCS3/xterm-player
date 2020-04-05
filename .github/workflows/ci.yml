@@ -72,6 +72,8 @@ jobs:
       #     path: dist
 
   update-docs:
+    if: github.event_name == 'push'
+
     needs: [build-and-test]
 
     runs-on: ubuntu-18.04
