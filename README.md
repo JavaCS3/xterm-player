@@ -53,7 +53,7 @@ check peer project https://github.com/JavaCS3/xterm-recorder for details
 
 ### How to customize theme
 
-Here is a solarized dard example
+Here is a solarized dark example
 ```javascript
 const solarized_dark_theme = {
   background: '#002b36',
