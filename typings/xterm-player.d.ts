@@ -6,11 +6,9 @@ declare module 'xterm-player' {
   import * as xterm from 'xterm'
 
   /**
-   * An object containing theme settings of the player
-   *
-   * This is a subset of `xterm.ITerminalOptions`
+   * An object containing start up options for the player
    */
-  export interface ITerminalOptions {
+  export interface IPlayerOptions {
     /**
      * The font size used to render text
      */
@@ -37,16 +35,6 @@ declare module 'xterm-player' {
     theme?: xterm.ITheme
   }
 
-  /**
-   * An object containing start up options for the player
-   */
-  export interface IPlayerOptions {
-    /**
-     * The options of the terminal
-     */
-    terminalOptions?: ITerminalOptions
-  }
-
   export class XtermPlayer {
     /**
      * The element containing the XtermPlayer
@@ -57,11 +45,6 @@ declare module 'xterm-player' {
      * The url of xterm video cast file
      */
     url: string
-
-    /**
-     * The options of the player
-     */
-    playerOptions: IPlayerOptions
 
     /**
      * The playback rate of XtermPlayer

@@ -23,33 +23,29 @@ const castOption = <HTMLSelectElement>$id('cast-option')
 let player = new XtermPlayer(audioCast, app)
 let prevCast = 'sample cast with audio'
 
-const solarized_dark_theme_options = {
-  terminalOptions: {
-    theme: {
-      // a solarized dark theme
-      background: '#002b36',
-      foreground: '#839496',
-      cursor: '#839496',
-      cursorAccent: '#839496',
-      selection: '#073642',
-      black: '#073642',
-      brightBlack: '#002b36',
-      blue: '#268bd2',
-      brightBlue: '#839496',
-      red: '#dc322f',
-      brightRed: '#cb4b16',
-      green: '#859900',
-      brightGreen: '#586e75',
-      yellow: '#b58900',
-      brightYellow: '#657b83',
-      magenta: '#d33682',
-      brightMagenta: '#6c71c4',
-      cyan: '#2aa198',
-      brightCyan: '#93a1a1',
-      white: '#eee8d5',
-      brightWhite: '#fdf6e3',
-    }
-  }
+const solarized_dark_theme = {
+  // a solarized dark theme
+  background: '#002b36',
+  foreground: '#839496',
+  cursor: '#839496',
+  cursorAccent: '#839496',
+  selection: '#073642',
+  black: '#073642',
+  brightBlack: '#002b36',
+  blue: '#268bd2',
+  brightBlue: '#839496',
+  red: '#dc322f',
+  brightRed: '#cb4b16',
+  green: '#859900',
+  brightGreen: '#586e75',
+  yellow: '#b58900',
+  brightYellow: '#657b83',
+  magenta: '#d33682',
+  brightMagenta: '#6c71c4',
+  cyan: '#2aa198',
+  brightCyan: '#93a1a1',
+  white: '#eee8d5',
+  brightWhite: '#fdf6e3',
 }
 
 castOption.onchange = () => {
@@ -61,7 +57,7 @@ castOption.onchange = () => {
     player = new XtermPlayer(
       SAMPLE_CAST_URLS[castOption.value],
       app,
-      solarized_dark_theme_options
+      { theme: solarized_dark_theme },
     )
   } else if (prevCast === 'asciinema-custom-theme') {
     $id('app').innerHTML = ''
