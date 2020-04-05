@@ -37,7 +37,9 @@
 2. 支持 [Terminalizer](https://github.com/faressoft/terminalizer-player) 文件格式
 3. 支持嵌入音频
 
-## 如何录制一个带有声音的终端录屏
+## 常见问题
+
+### 如何录制一个带有声音的终端录屏
 
 ```shell
 $ npm i -g xterm-recorder   # 首先安装 xterm-recorder

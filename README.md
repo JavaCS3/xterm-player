@@ -41,7 +41,9 @@ This repo is intended to provide an alternative asciinema player. The original [
 2. Support [Terminalizer](https://github.com/faressoft/terminalizer-player) format
 3. Support Audio
 
-## How to record terminal session with audio
+## FAQ
+
+### How to record terminal session with audio
 
 ```shell
 $ npm i -g xterm-recorder   # install xterm-recorder first
