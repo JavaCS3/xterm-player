@@ -53,6 +53,20 @@ export class PlayerView implements IComponent {
     this.controlBar.onPlaybackButtonClick(this._togglePlayPauseReplay.bind(this))
 
     this._updateBigButton()
+
+    this._player.onReady(() => {
+      this.controlBar.currentTime = this._player.currentTime
+      this.controlBar.duration = this._player.duration
+    })
+    this._player.onAfterRender(() => {
+      this.controlBar.currentTime = this._player.currentTime
+    })
+    this._player.onCurrentTimeChanged(() => {
+      this.controlBar.currentTime = this._player.currentTime
+    })
+    this._player.onStateChanged(() => {
+      this.state = this._player.state
+    })
   }
 
   public get state(): State { return this._state }

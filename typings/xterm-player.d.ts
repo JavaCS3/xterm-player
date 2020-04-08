@@ -35,6 +35,23 @@ declare module 'xterm-player' {
     theme?: xterm.ITheme
   }
 
+  /**
+   * An object that can be disposed via a dispose function.
+   */
+  export interface IDisposable {
+    dispose(): void
+  }
+
+  /**
+   * An event that can be listened to.
+   * @returns an `IDisposable` to stop listening.
+   */
+  export interface IEvent<T> {
+    (listener: (arg?: T) => void): IDisposable
+  }
+
+  export type IPlayerState = 'Loading' | 'Running' | 'Paused' | 'Stopped'
+
   export class XtermPlayer {
     /**
      * The element containing the XtermPlayer
@@ -58,12 +75,47 @@ declare module 'xterm-player' {
     currentTime: number
 
     /**
+     * The duration of XtermPlayer, might be NaN if XtermPlayer is not ready yet
+     */
+    readonly duration: number
+
+    /**
+     * The state of xterm player
+     */
+    readonly state: IPlayerState
+
+    /**
      * Create XtermPlayer object
      * @param url The url of xterm video cast file
      * @param el The element to create the XtermPlayer within
      * @param options The options for XtermPlayer
      */
     constructor(url: string, el: HTMLElement, options?: IPlayerOptions)
+
+    /**
+    * Adds an event listener for when the player is ready to play
+    */
+    readonly onReady: IEvent<void>
+
+    /**
+     * Adds an event listener for when the player is loading
+     */
+    readonly onLoading: IEvent<void>
+
+    /**
+     * Adds an event listener for when the player finished current render
+     */
+    readonly onAfterRender: IEvent<void>
+
+    /**
+     * Adds an event listener for when the player currentTime changed
+     */
+    readonly onCurrentTimeChanged: IEvent<void>
+
+    /**
+     * Adds an event listener for when the player state changed
+     */
+    readonly onStateChanged: IEvent<void>
 
     /**
      * Play the xterm video
@@ -84,5 +136,6 @@ declare module 'xterm-player' {
      * Stop the xterm video
      */
     stop(): void
+
   }
 }
