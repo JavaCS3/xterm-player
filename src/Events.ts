@@ -9,7 +9,7 @@ export interface IEvent<T> {
 }
 
 export interface IEventEmitter<T> {
-  event: IEvent<T>
+  onEvent: IEvent<T>
   fire(arg?: T): void
   dispose(): void
 }
@@ -19,7 +19,7 @@ export class EventEmitter<T> implements IEventEmitter<T> {
   private _event?: IEvent<T>
   private _disposed: boolean = false
 
-  public get event(): IEvent<T> {
+  public get onEvent(): IEvent<T> {
     if (!this._event) {
       this._event = (listener: IListener<T>) => {
         this._listeners.push(listener)
