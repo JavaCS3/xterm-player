@@ -51,8 +51,11 @@ export class PlayerView implements IComponent {
     addDisposableDomListener(this._bigButton, 'click', this._togglePlayPauseReplay.bind(this))
 
     this.controlBar.onPlaybackButtonClick(this._togglePlayPauseReplay.bind(this))
-
-    this._updateBigButton()
+    this.controlBar.onSeek((percent: number) => {
+      if (this.state !== 'Loading') {
+        this._player.currentTime = percent * this._player.duration
+      }
+    })
 
     this._player.onReady(() => {
       this.controlBar.currentTime = this._player.currentTime
@@ -67,6 +70,8 @@ export class PlayerView implements IComponent {
     this._player.onStateChanged(() => {
       this.state = this._player.state
     })
+
+    this._updateBigButton()
   }
 
   public get state(): State { return this._state }

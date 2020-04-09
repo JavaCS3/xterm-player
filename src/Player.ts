@@ -70,15 +70,13 @@ export class XtermPlayer implements XtermPlayerApi {
     this._url = url
     this._term = createTerminal(options)
     this._audio = new Audio()
+    this._view = new PlayerView(this)
 
-    const view = this._view = new PlayerView(this)
     el.append(this._view.element)
     this._term.open(this._view.videoWrapper)
     this._term.focus()
 
     this._load()
-
-    view.controlBar.onSeek((percent: number) => this.currentTime = percent * this._timer.duration)
   }
 
   private _load(): void {
