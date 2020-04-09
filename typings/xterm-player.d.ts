@@ -113,6 +113,11 @@ declare module 'xterm-player' {
     readonly onCurrentTimeChanged: IEvent<void>
 
     /**
+     * Adds an event listener for when the player playbackRate changed
+     */
+    readonly onPlaybackRateChanged: IEvent<void>
+
+    /**
      * Adds an event listener for when the player state changed
      */
     readonly onStateChanged: IEvent<void>

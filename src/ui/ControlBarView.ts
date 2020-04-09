@@ -67,8 +67,8 @@ export class ControlBarView implements IComponent {
       this._updateProgress()
     }
   }
-  public get currentPlaybackRate(): number { return this._player.playbackRate }
-  public set currentPlaybackRate(value: number) { this._playbackRate.innerText = value.toFixed(1) + 'x' }
+  public get playbackRate(): number { return this._player.playbackRate }
+  public set playbackRate(value: number) { this._playbackRate.innerText = value.toFixed(1) + 'x' }
   public get duration(): number { return this._duration }
   public set duration(value: number) {
     if (value !== this._duration) {

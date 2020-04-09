@@ -53,12 +53,14 @@ export class XtermPlayer implements XtermPlayerApi {
   private _onLoading = new EventEmitter<void>()
   private _onAfterRender = new EventEmitter<void>()
   private _onCurrentTimeChanged = new EventEmitter<void>()
+  private _onPlaybackRateChanged = new EventEmitter<void>()
   private _onStateChanged = new EventEmitter<void>()
 
   public get onReady(): IEvent<void> { return this._onReady.onEvent }
   public get onLoading(): IEvent<void> { return this._onLoading.onEvent }
   public get onAfterRender(): IEvent<void> { return this._onAfterRender.onEvent }
   public get onCurrentTimeChanged(): IEvent<void> { return this._onCurrentTimeChanged.onEvent }
+  public get onPlaybackRateChanged(): IEvent<void> { return this._onPlaybackRateChanged.onEvent }
   public get onStateChanged(): IEvent<void> { return this._onStateChanged.onEvent }
 
   constructor(
@@ -119,7 +121,8 @@ export class XtermPlayer implements XtermPlayerApi {
 
   public get playbackRate(): number { return this._timer.timescale }
   public set playbackRate(rate: number) {
-    this._view.controlBar.currentPlaybackRate = this._timer.timescale = rate
+    this._timer.timescale = rate
+    this._onPlaybackRateChanged.fire()
   }
 
   public get currentTime(): number { return this._timer.time }

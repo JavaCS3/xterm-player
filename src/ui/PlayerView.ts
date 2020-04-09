@@ -67,6 +67,9 @@ export class PlayerView implements IComponent {
     this._player.onCurrentTimeChanged(() => {
       this.controlBar.currentTime = this._player.currentTime
     })
+    this._player.onPlaybackRateChanged(() => {
+      this.controlBar.playbackRate = this._player.playbackRate
+    })
     this._player.onStateChanged(() => {
       this.state = this._player.state
     })
