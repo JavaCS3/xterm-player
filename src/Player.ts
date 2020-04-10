@@ -131,6 +131,9 @@ export class XtermPlayer implements XtermPlayerApi {
     this._onCurrentTimeChanged.fire(this._timer.time)
   }
 
+  public get volume(): number { return this._audio.volume }
+  public set volume(v: number) { this._audio.volume = Math.min(Math.max(v, 0), 1) }
+
   public get duration(): number { return this._timer.duration }
 
   public get state(): IPlayerState {

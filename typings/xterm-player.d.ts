@@ -54,41 +54,45 @@ declare module 'xterm-player' {
 
   export class XtermPlayer {
     /**
-     * The element containing the XtermPlayer
+     * The element containing the player
      */
     readonly el: HTMLElement
 
     /**
-     * The url of xterm video cast file
+     * Gets or sets the address or URL of the cast
      */
     url: string
 
     /**
-     * The playback rate of XtermPlayer
+     * Gets or sets the current rate of speed for the cast to play
      */
     playbackRate: number
 
-
     /**
-     * Current time of XtermPlayer in milliseconds
+     * Gets or sets the current playback position, in milliseconds
      */
     currentTime: number
 
     /**
-     * The duration of XtermPlayer, might be NaN if XtermPlayer is not ready yet
+     * Gets or sets the volume level if the cast has audio
+     */
+    volume: number
+
+    /**
+     * Returns the duration in milliseconds of the current cast. A NaN value is returned if duration is not available, or Infinity if the cast is streaming.
      */
     readonly duration: number
 
     /**
-     * The state of xterm player
+     * The state of the player
      */
     readonly state: IPlayerState
 
     /**
-     * Create XtermPlayer object
+     * Create the player object
      * @param url The url of xterm video cast file
-     * @param el The element to create the XtermPlayer within
-     * @param options The options for XtermPlayer
+     * @param el The element to create the the player within
+     * @param options The options for the player
      */
     constructor(url: string, el: HTMLElement, options?: IPlayerOptions)
 
@@ -123,17 +127,17 @@ declare module 'xterm-player' {
     readonly onStateChanged: IEvent<IPlayerState>
 
     /**
-     * Play the xterm video
+     * Starts the cast playback
      */
     play(): void
 
     /**
-     * Replay the xterm video
+     * Replay the cast playback
      */
     replay(): void
 
     /**
-     * Pause the xterm video
+     * Pause the cast playback
      */
     pause(): void
   }
