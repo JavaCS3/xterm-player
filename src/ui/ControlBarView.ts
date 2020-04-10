@@ -1,6 +1,6 @@
 import { XtermPlayer } from 'xterm-player'
 import { $div, $span, addDisposableDomListener } from './DomHelper'
-import { ProgressBarView, SeekCallback } from './ProgressBarView'
+import { ProgressBarView } from './ProgressBarView'
 import { State, IComponent } from './Types'
 import { IDisposable } from '../Types'
 import { formatTime } from '../Utils'
@@ -80,8 +80,8 @@ export class ControlBarView implements IComponent {
   public onPlaybackButtonClick(listener: (ev: any) => void): IDisposable {
     return addDisposableDomListener(this._playbackButton, 'click', listener)
   }
-  public onSeek(listener: SeekCallback): void {
-    this._progressBar.onSeek(listener)
+  public onSeek(listener: (p: number) => void): IDisposable {
+    return this._progressBar.onSeek(listener)
   }
 
   private _updatePlaybackButton() {

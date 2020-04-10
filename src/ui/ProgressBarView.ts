@@ -1,7 +1,6 @@
 import { $div, addDisposableDomListener } from './DomHelper'
 import { IComponent } from './Types'
-
-export type SeekCallback = (percent: number) => void
+import { EventEmitter, IEvent } from '../Events'
 
 export class ProgressBarView implements IComponent {
   public readonly element: HTMLElement
@@ -9,7 +8,8 @@ export class ProgressBarView implements IComponent {
   private _progressElement: HTMLElement
   private _progressHover: HTMLElement
 
-  private _onSeek: SeekCallback = () => { }
+  private _onSeek: EventEmitter<number> = new EventEmitter<number>()
+  public get onSeek(): IEvent<number> { return this._onSeek.onEvent }
 
   private _progress: number = 0
 
@@ -23,8 +23,7 @@ export class ProgressBarView implements IComponent {
     addDisposableDomListener(el, 'mouseenter', () => this._progressHover.style.opacity = '1')
     addDisposableDomListener(el, 'mouseleave', () => this._progressHover.style.opacity = '0')
     addDisposableDomListener(el, 'mousedown', (evt: MouseEvent) => {
-      const percent = (evt.clientX - el.getBoundingClientRect().left) / el.clientWidth
-      this._onSeek(percent)
+      this._onSeek.fire((evt.clientX - el.getBoundingClientRect().left) / el.clientWidth)
     })
 
     this._updateProgress()
@@ -38,9 +37,6 @@ export class ProgressBarView implements IComponent {
       this._progress = Math.max(0.0, Math.min(value, 1.0))
       this._updateProgress()
     }
-  }
-  public onSeek(cb: SeekCallback): void {
-    this._onSeek = cb  // TODO: Do we need to make this disposable?
   }
 
   private _updateProgress() {

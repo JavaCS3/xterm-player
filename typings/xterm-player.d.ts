@@ -47,7 +47,7 @@ declare module 'xterm-player' {
    * @returns an `IDisposable` to stop listening.
    */
   export interface IEvent<T> {
-    (listener: (arg?: T) => void): IDisposable
+    (listener: (arg: T) => void): IDisposable
   }
 
   export type IPlayerState = 'Loading' | 'Running' | 'Paused' | 'Stopped'

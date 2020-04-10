@@ -1,7 +1,7 @@
 import { IDisposable } from './Types'
 
 interface IListener<T> {
-  (arg?: T): void
+  (arg: T): void
 }
 
 export interface IEvent<T> {
@@ -10,7 +10,7 @@ export interface IEvent<T> {
 
 export interface IEventEmitter<T> {
   onEvent: IEvent<T>
-  fire(arg?: T): void
+  fire(arg: T): void
   dispose(): void
 }
 
@@ -41,7 +41,7 @@ export class EventEmitter<T> implements IEventEmitter<T> {
     return this._event
   }
 
-  public fire(arg?: T): void {
+  public fire(arg: T): void {
     for (let i = 0; i < this._listeners.length; i++) {
       this._listeners[i](arg)
     }
