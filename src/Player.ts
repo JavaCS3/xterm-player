@@ -52,16 +52,16 @@ export class XtermPlayer implements XtermPlayerApi {
   private _onReady = new EventEmitter<void>()
   private _onLoading = new EventEmitter<void>()
   private _onAfterRender = new EventEmitter<void>()
-  private _onCurrentTimeChanged = new EventEmitter<void>()
-  private _onPlaybackRateChanged = new EventEmitter<void>()
-  private _onStateChanged = new EventEmitter<void>()
+  private _onCurrentTimeChanged = new EventEmitter<number>()
+  private _onPlaybackRateChanged = new EventEmitter<number>()
+  private _onStateChanged = new EventEmitter<IPlayerState>()
 
   public get onReady(): IEvent<void> { return this._onReady.onEvent }
   public get onLoading(): IEvent<void> { return this._onLoading.onEvent }
   public get onAfterRender(): IEvent<void> { return this._onAfterRender.onEvent }
-  public get onCurrentTimeChanged(): IEvent<void> { return this._onCurrentTimeChanged.onEvent }
-  public get onPlaybackRateChanged(): IEvent<void> { return this._onPlaybackRateChanged.onEvent }
-  public get onStateChanged(): IEvent<void> { return this._onStateChanged.onEvent }
+  public get onCurrentTimeChanged(): IEvent<number> { return this._onCurrentTimeChanged.onEvent }
+  public get onPlaybackRateChanged(): IEvent<number> { return this._onPlaybackRateChanged.onEvent }
+  public get onStateChanged(): IEvent<IPlayerState> { return this._onStateChanged.onEvent }
 
   constructor(
     url: string,
@@ -84,7 +84,7 @@ export class XtermPlayer implements XtermPlayerApi {
   private _load(): void {
     this._loading = true
     this._onLoading.fire()
-    this._onStateChanged.fire()
+    this._onStateChanged.fire(this.state)
     fetchCast(this._url).then((cast) => {
       this._term.reset()
       this._term.resize(cast.header.width, cast.header.height)
@@ -104,9 +104,9 @@ export class XtermPlayer implements XtermPlayerApi {
       this._timer.onReady(() => {
         this._loading = false
         this._onReady.fire()
-        this._onStateChanged.fire()
+        this._onStateChanged.fire(this.state)
         this._timer.onTick(this._render.bind(this))
-        this._timer.onStateChange(() => this._onStateChanged.fire())
+        this._timer.onStateChange(() => this._onStateChanged.fire(this.state))
       })
     }).catch(console.error)
   }
@@ -122,13 +122,13 @@ export class XtermPlayer implements XtermPlayerApi {
   public get playbackRate(): number { return this._timer.timescale }
   public set playbackRate(rate: number) {
     this._timer.timescale = rate
-    this._onPlaybackRateChanged.fire()
+    this._onPlaybackRateChanged.fire(this._timer.timescale)
   }
 
   public get currentTime(): number { return this._timer.time }
   public set currentTime(time: number) {
     this._timer.time = time
-    this._onCurrentTimeChanged.fire()
+    this._onCurrentTimeChanged.fire(this._timer.time)
   }
 
   public get duration(): number { return this._timer.duration }

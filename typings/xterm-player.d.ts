@@ -110,17 +110,17 @@ declare module 'xterm-player' {
     /**
      * Adds an event listener for when the player currentTime changed
      */
-    readonly onCurrentTimeChanged: IEvent<void>
+    readonly onCurrentTimeChanged: IEvent<number>
 
     /**
      * Adds an event listener for when the player playbackRate changed
      */
-    readonly onPlaybackRateChanged: IEvent<void>
+    readonly onPlaybackRateChanged: IEvent<number>
 
     /**
      * Adds an event listener for when the player state changed
      */
-    readonly onStateChanged: IEvent<void>
+    readonly onStateChanged: IEvent<IPlayerState>
 
     /**
      * Play the xterm video

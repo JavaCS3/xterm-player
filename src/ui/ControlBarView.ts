@@ -1,7 +1,7 @@
-import { XtermPlayer } from 'xterm-player'
+import { XtermPlayer, IPlayerState } from 'xterm-player'
 import { $div, $span, addDisposableDomListener } from './DomHelper'
 import { ProgressBarView } from './ProgressBarView'
-import { State, IComponent } from './Types'
+import { IComponent } from './Types'
 import { IDisposable } from '../Types'
 import { formatTime } from '../Utils'
 import Icons from './Icons'
@@ -22,7 +22,7 @@ export class ControlBarView implements IComponent {
 
   private _progressBar: ProgressBarView = new ProgressBarView()
 
-  private _state: State = 'Paused'
+  private _state: IPlayerState = 'Paused'
   private _currentTime: number = 0
   private _duration: number = 0
 
@@ -52,10 +52,10 @@ export class ControlBarView implements IComponent {
     this._updateTimeDisplay()
   }
 
-  public get state(): State { return this._state }
-  public set state(v: State) {
-    if (this._state !== v) {
-      this._state = v
+  public get state(): IPlayerState { return this._state }
+  public set state(s: IPlayerState) {
+    if (this._state !== s) {
+      this._state = s
       this._updatePlaybackButton()
     }
   }

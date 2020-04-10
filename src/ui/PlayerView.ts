@@ -1,7 +1,7 @@
-import { XtermPlayer } from 'xterm-player'
+import { XtermPlayer, IPlayerState } from 'xterm-player'
 import { $div, addDisposableDomListener } from './DomHelper'
 import { ControlBarView } from './ControlBarView'
-import { State, IComponent } from './Types'
+import { IComponent } from './Types'
 import Icons from './Icons'
 
 export class PlayerView implements IComponent {
@@ -12,7 +12,7 @@ export class PlayerView implements IComponent {
   private _bigButton: HTMLElement
   private _spinner: HTMLElement
 
-  private _state: State = 'Paused'
+  private _state: IPlayerState = 'Paused'
 
   constructor(private _player: XtermPlayer) {
     const el = this.element = $div({ class: 'xp', attrs: { tabindex: '0' } },
@@ -77,11 +77,11 @@ export class PlayerView implements IComponent {
     this._updateBigButton()
   }
 
-  public get state(): State { return this._state }
-  public set state(v: State) {
-    if (this._state !== v) {
-      this._state = v
-      this.controlBar.state = v
+  public get state(): IPlayerState { return this._state }
+  public set state(s: IPlayerState) {
+    if (this._state !== s) {
+      this._state = s
+      this.controlBar.state = s
       this._updateBigButton()
       if (this._state !== 'Running') {
         this._showControlBar()
