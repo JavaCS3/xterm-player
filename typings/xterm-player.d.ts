@@ -136,11 +136,5 @@ declare module 'xterm-player' {
      * Pause the xterm video
      */
     pause(): void
-
-    /**
-     * Stop the xterm video
-     */
-    stop(): void
-
   }
 }

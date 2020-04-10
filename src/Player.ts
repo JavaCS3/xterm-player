@@ -143,7 +143,6 @@ export class XtermPlayer implements XtermPlayerApi {
     this._timer.start()
   }
   public pause(): void { this._timer.pause() }
-  public stop(): void { this._timer.stop() }
 
   private _render(now: number): void {
     // console.log('now ' + now.toFixed(2) + ' duration: ' + this._timer.duration.toFixed(2))
