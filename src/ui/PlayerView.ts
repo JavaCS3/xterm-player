@@ -36,6 +36,7 @@ export class PlayerView implements IComponent {
       }
     })
     addDisposableDomListener(el, 'keydown', (ev: KeyboardEvent) => {
+      ev.preventDefault()
       switch (ev.code) {
         case 'Space':
           this._togglePlayPauseReplay()
@@ -45,6 +46,12 @@ export class PlayerView implements IComponent {
           break
         case 'ArrowLeft':
           this._player.currentTime -= 3000
+          break
+        case 'ArrowUp':
+          this._player.volume += 0.1
+          break
+        case 'ArrowDown':
+          this._player.volume -= 0.1
           break
       }
     }, true)
