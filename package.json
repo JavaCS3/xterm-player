@@ -1,6 +1,6 @@
 {
   "name": "xterm-player",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A web player for xterm recording",
   "style": "./dist/css/xterm-player.css",
   "main": "./dist/js/xterm-player.js",
