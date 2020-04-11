@@ -121,17 +121,21 @@ export class PlayerView implements IComponent {
       case 'Loading':
         this._bigButton.style.display = 'none'
         this._spinner.style.display = 'flex'
+        break
+      case 'Error':
+        this._bigButton.style.display = 'block'
+        this._bigButton.innerHTML = Icons.Warning
+        this._spinner.style.display = 'none'
+        break
       default:
         break
     }
   }
   private _togglePlayPauseReplay(): void {
-    if (this.state === 'Running') {
-      this._player.pause()
-    } else if (this.state === 'Stopped') {
-      this._player.replay()
-    } else {
-      this._player.play()
+    switch (this.state) {
+      case 'Running': this._player.pause(); break
+      case 'Stopped': this._player.replay(); break
+      case 'Paused': this._player.play(); break
     }
   }
 }

@@ -45,6 +45,7 @@ export class XtermPlayer implements XtermPlayerApi {
   private _queue: IFrameQueue = new NullFrameQueue()
   private _audio: HTMLAudioElement
 
+  private _error: Error | null = null
   private _loading: boolean = false
   private _lasttime: number = 0
   private _lastframe: IFrame = NULL_FRAME
@@ -86,15 +87,20 @@ export class XtermPlayer implements XtermPlayerApi {
   }
 
   private _load(): void {
+    this._error = null
     this._loading = true
+
+    this._term.reset()
+    this._timer.dispose()
+    this._queue.dispose()
+    this._timer = new NullTimer()
+    this._queue = new NullFrameQueue()
+
     this._onLoading.fire()
     this._onStateChanged.fire(this.state)
-    fetchCast(this._url).then((cast) => {
-      this._term.reset()
-      this._term.resize(cast.header.width, cast.header.height)
 
-      this._timer.dispose()
-      this._queue.dispose()
+    fetchCast(this._url).then((cast) => {
+      this._term.resize(cast.header.width, cast.header.height)
 
       if (cast.header.audio) {
         this._timer = new MediaTimer(this._audio)
@@ -112,7 +118,11 @@ export class XtermPlayer implements XtermPlayerApi {
         this._timer.onTick(this._render.bind(this))
         this._timer.onStateChange(() => this._onStateChanged.fire(this.state))
       })
-    }).catch(console.error)
+    }).catch(err => {
+      console.error(err)
+      this._error = err
+      this._onStateChanged.fire(this.state)
+    })
   }
 
   public get url(): string { return this._url }
@@ -150,6 +160,7 @@ export class XtermPlayer implements XtermPlayerApi {
   public get duration(): number { return this._timer.duration }
 
   public get state(): IPlayerState {
+    if (this._error) { return 'Error' }
     return this._loading ? 'Loading' : this._timer.state
   }
 

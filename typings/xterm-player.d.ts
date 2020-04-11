@@ -50,7 +50,7 @@ declare module 'xterm-player' {
     (listener: (arg: T) => void): IDisposable
   }
 
-  export type IPlayerState = 'Loading' | 'Running' | 'Paused' | 'Stopped'
+  export type IPlayerState = 'Error' | 'Loading' | 'Running' | 'Paused' | 'Stopped'
 
   export class XtermPlayer {
     /**
