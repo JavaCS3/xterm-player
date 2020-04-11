@@ -65,7 +65,7 @@ export class XtermPlayer implements XtermPlayerApi {
   public get onCurrentTimeChanged(): IEvent<number> { return this._onCurrentTimeChanged.onEvent }
   public get onPlaybackRateChanged(): IEvent<number> { return this._onPlaybackRateChanged.onEvent }
   public get onVolumeChanged(): IEvent<number> { return this._onVolumeChanged.onEvent }
-  public get onMuteChanged(): IEvent<boolean> { return this._onMutedChanged.onEvent }
+  public get onMutedChanged(): IEvent<boolean> { return this._onMutedChanged.onEvent }
   public get onStateChanged(): IEvent<IPlayerState> { return this._onStateChanged.onEvent }
 
   constructor(

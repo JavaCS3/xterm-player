@@ -134,7 +134,7 @@ declare module 'xterm-player' {
     /**
      * Adds an event listener for when the player muted changed.
      */
-    readonly onMuteChanged: IEvent<boolean>
+    readonly onMutedChanged: IEvent<boolean>
 
     /**
      * Adds an event listener for when the player state changed.

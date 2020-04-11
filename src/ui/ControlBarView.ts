@@ -58,7 +58,7 @@ export class ControlBarView implements IComponent {
       }
     })
     this._player.onVolumeChanged(this._updateVolume.bind(this))
-    this._player.onMuteChanged(this._updateVolume.bind(this))
+    this._player.onMutedChanged(this._updateVolume.bind(this))
     this._updatePlaybackButton()
     this._updateTimeDisplay()
     this._updateVolume()
