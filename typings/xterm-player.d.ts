@@ -79,6 +79,11 @@ declare module 'xterm-player' {
     volume: number
 
     /**
+     * Gets or sets a flag that indicates whether the audio is muted
+     */
+    muted: boolean
+
+    /**
      * Returns the duration in milliseconds of the current cast. A NaN value is returned if duration is not available, or Infinity if the cast is streaming.
      */
     readonly duration: number
@@ -125,6 +130,11 @@ declare module 'xterm-player' {
      * Adds an event listener for when the player volume changed
      */
     readonly onVolumeChanged: IEvent<number>
+
+    /**
+     * Adds an event listener for when the player muted changed
+     */
+    readonly onMuteChanged: IEvent<boolean>
 
     /**
      * Adds an event listener for when the player state changed

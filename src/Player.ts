@@ -55,6 +55,7 @@ export class XtermPlayer implements XtermPlayerApi {
   private _onCurrentTimeChanged = new EventEmitter<number>()
   private _onPlaybackRateChanged = new EventEmitter<number>()
   private _onVolumeChanged = new EventEmitter<number>()
+  private _onMutedChanged = new EventEmitter<boolean>()
   private _onStateChanged = new EventEmitter<IPlayerState>()
 
   public get onReady(): IEvent<void> { return this._onReady.onEvent }
@@ -63,6 +64,7 @@ export class XtermPlayer implements XtermPlayerApi {
   public get onCurrentTimeChanged(): IEvent<number> { return this._onCurrentTimeChanged.onEvent }
   public get onPlaybackRateChanged(): IEvent<number> { return this._onPlaybackRateChanged.onEvent }
   public get onVolumeChanged(): IEvent<number> { return this._onVolumeChanged.onEvent }
+  public get onMuteChanged(): IEvent<boolean> { return this._onMutedChanged.onEvent }
   public get onStateChanged(): IEvent<IPlayerState> { return this._onStateChanged.onEvent }
 
   constructor(
@@ -137,6 +139,12 @@ export class XtermPlayer implements XtermPlayerApi {
   public set volume(v: number) {
     this._audio.volume = Math.min(Math.max(v, 0), 1)
     this._onVolumeChanged.fire(this._audio.volume)
+  }
+
+  public get muted(): boolean { return this._audio.muted }
+  public set muted(m: boolean) {
+    this._audio.muted = m
+    this._onMutedChanged.fire(this._audio.muted)
   }
 
   public get duration(): number { return this._timer.duration }

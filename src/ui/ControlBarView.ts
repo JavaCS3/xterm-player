@@ -50,9 +50,15 @@ export class ControlBarView implements IComponent {
         this._player.playbackRate = parseFloat(item.dataset['rate'] || '1')
       })
     })
-    this._player.onVolumeChanged(() => {
-      this._updateVolume()
+    addDisposableDomListener(this._volume, 'click', () => {
+      if (this._player.muted) {
+        this._player.muted = false
+      } else {
+        this._player.muted = true
+      }
     })
+    this._player.onVolumeChanged(this._updateVolume.bind(this))
+    this._player.onMuteChanged(this._updateVolume.bind(this))
     this._updatePlaybackButton()
     this._updateTimeDisplay()
     this._updateVolume()
@@ -110,6 +116,10 @@ export class ControlBarView implements IComponent {
     this._progressBar.progress = this.currentTime / this.duration
   }
   private _updateVolume() {
+    if (this._player.muted) {
+      this._volume.innerHTML = Icons.VolumeMute
+      return
+    }
     const v = this._player.volume
     if (v >= 0.95) {
       this._volume.innerHTML = Icons.VolumeHigh
