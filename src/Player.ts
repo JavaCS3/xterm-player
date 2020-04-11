@@ -133,6 +133,25 @@ export class XtermPlayer implements XtermPlayerApi {
     }
   }
 
+  public get options(): IPlayerOptions {
+    const term = this._term
+    return {
+      fontSize: term.getOption('fontSize'),
+      fontFamily: term.getOption('fontFamily'),
+      fontWeight: <xterm.FontWeight>term.getOption('fontWeight'),
+      fontWeightBold: <xterm.FontWeight>term.getOption('fontWeightBold'),
+      theme: term.getOption('theme')
+    }
+  }
+  public set options(opt: IPlayerOptions) {
+    const term = this._term
+    if (opt.fontSize) { term.setOption('fontSize', opt.fontSize) }
+    if (opt.fontFamily) { term.setOption('fontFamily', opt.fontFamily) }
+    if (opt.fontWeight) { term.setOption('fontWeight', opt.fontWeight) }
+    if (opt.fontWeightBold) { term.setOption('fontWeightBold', opt.fontWeightBold) }
+    if (opt.theme) { term.setOption('theme', opt.theme) }
+  }
+
   public get playbackRate(): number { return this._timer.timescale }
   public set playbackRate(rate: number) {
     this._timer.timescale = rate

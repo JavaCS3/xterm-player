@@ -64,6 +64,11 @@ declare module 'xterm-player' {
     url: string
 
     /**
+     * Gets or sets the options of the player.
+     */
+    options: IPlayerOptions
+
+    /**
      * Gets or sets the current rate of speed for the cast to play.
      */
     playbackRate: number
