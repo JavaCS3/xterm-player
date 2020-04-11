@@ -19,6 +19,7 @@ export class ControlBarView implements IComponent {
     $div({ class: 'xp-setting-item', text: '1.5x', attrs: { 'data-rate': '1.5' } }),
     $div({ class: 'xp-setting-item', text: '2.0x', attrs: { 'data-rate': '2.0' } }),
   ]
+  private _volume: HTMLElement
 
   private _progressBar: ProgressBarView = new ProgressBarView()
 
@@ -30,8 +31,9 @@ export class ControlBarView implements IComponent {
     this.element = $div({ class: 'xp-control-bar' },
       this._progressBar.element,
       $div({ class: 'xp-control-bar-left' },
-        this._playbackButton = $div({ class: 'xp-playback-button' }),
-        this._timeDisplay = $span({ class: 'xp-time-display' })
+        this._playbackButton = $div({ class: 'xp-icon-button' }),
+        this._volume = $div({ class: 'xp-icon-button' }),
+        this._timeDisplay = $span({ class: 'xp-time-display' }),
       ),
       $div({ class: 'xp-control-bar-right' },
         $div({ class: 'xp-playback-rate-setting' },
@@ -48,8 +50,12 @@ export class ControlBarView implements IComponent {
         this._player.playbackRate = parseFloat(item.dataset['rate'] || '1')
       })
     })
+    this._player.onVolumeChanged(() => {
+      this._updateVolume()
+    })
     this._updatePlaybackButton()
     this._updateTimeDisplay()
+    this._updateVolume()
   }
 
   public get state(): IPlayerState { return this._state }
@@ -102,5 +108,15 @@ export class ControlBarView implements IComponent {
   }
   private _updateProgress() {
     this._progressBar.progress = this.currentTime / this.duration
+  }
+  private _updateVolume() {
+    const v = this._player.volume
+    if (v >= 0.95) {
+      this._volume.innerHTML = Icons.VolumeHigh
+    } else if (v > 0) {
+      this._volume.innerHTML = Icons.VolumeLow
+    } else {
+      this._volume.innerHTML = Icons.VolumeMute
+    }
   }
 }

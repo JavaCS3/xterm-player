@@ -122,6 +122,11 @@ declare module 'xterm-player' {
     readonly onPlaybackRateChanged: IEvent<number>
 
     /**
+     * Adds an event listener for when the player volume changed
+     */
+    readonly onVolumeChanged: IEvent<number>
+
+    /**
      * Adds an event listener for when the player state changed
      */
     readonly onStateChanged: IEvent<IPlayerState>
