@@ -54,6 +54,12 @@ declare module 'xterm-player' {
 
   export class XtermPlayer {
     /**
+     * Builtin themes
+     */
+    static readonly THEME_SOLARIZED_DARK: xterm.ITheme
+    static readonly THEME_SOLARIZED_LIGHT: xterm.ITheme
+
+    /**
      * The element containing the player.
      */
     readonly el: HTMLElement
