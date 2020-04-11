@@ -36,15 +36,15 @@ declare module 'xterm-player' {
   }
 
   /**
-   * An object that can be disposed via a dispose function..
+   * An object that can be disposed via a dispose function.
    */
   export interface IDisposable {
     dispose(): void
   }
 
   /**
-   * An event that can be listened to..
-   * @returns an `IDisposable` to stop listening..
+   * An event that can be listened to.
+   * @returns an `IDisposable` to stop listening.
    */
   export interface IEvent<T> {
     (listener: (arg: T) => void): IDisposable
@@ -84,7 +84,7 @@ declare module 'xterm-player' {
     muted: boolean
 
     /**
-     * Returns the duration in milliseconds of the current cast. A NaN value is returned if duration is not available, or Infinity if the cast is streaming..
+     * Returns the duration in milliseconds of the current cast. A NaN value is returned if duration is not available, or Infinity if the cast is streaming.
      */
     readonly duration: number
 
