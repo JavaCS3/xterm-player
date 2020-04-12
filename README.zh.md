@@ -76,7 +76,7 @@ const solarized_dark_theme = {
 }
 const player = new XtermPlayer.XtermPlayer(url, div, { theme: solarized_dark_theme })
 // 或者你也可以使用预制的主题
-const player = new XtermPlayer.XtermPlayer(url, div, { theme: XtermPlayer.THEME_SOLARIZED_DARK })
+const player = new XtermPlayer.XtermPlayer(url, div, { theme: XtermPlayer.XtermPlayer.THEME_SOLARIZED_DARK })
 ```
 
 ## 如何开发
