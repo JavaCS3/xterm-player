@@ -5,6 +5,8 @@
 因此本项目希望利用`Typescript`让项目的贡献变得简单一点。
 当然还远不止这些！
 
+[![creatorsdaily-xterm-player](https://creatorsdaily.com/api/3903ee8a-9a86-421b-81fe-540ef0a5dd95/vote.svg?theme=light)](https://creatorsdaily.com/3903ee8a-9a86-421b-81fe-540ef0a5dd95?utm_source=vote)
+
 ## [Demo展示](https://javacs3.github.io/xterm-player/)
 
 ![demo-gif](https://user-images.githubusercontent.com/4168698/77246289-beaeac00-6c60-11ea-93eb-c10506fe484e.gif)
