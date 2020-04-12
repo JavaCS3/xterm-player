@@ -79,6 +79,8 @@ const solarized_dark_theme = {
   brightWhite: '#fdf6e3',
 }
 const player = new XtermPlayer.XtermPlayer(url, div, { theme: solarized_dark_theme })
+// or just use builtin theme
+const player = new XtermPlayer.XtermPlayer(url, div, { theme: XtermPlayer.THEME_SOLARIZED_DARK })
 ```
 
 ## Develop Guide
